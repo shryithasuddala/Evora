@@ -1,0 +1,42 @@
+services:
+  # ─────────────────────────────────────────────────────────────
+  # EVORA Backend Web Service (Node.js + Express)
+  # ─────────────────────────────────────────────────────────────
+  - type: web
+    name: evora-backend
+    runtime: node
+    rootDir: evora-backend
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CLIENT_URL
+        sync: false
+
+  # ─────────────────────────────────────────────────────────────
+  # EVORA Frontend (React 19 + Vite Static Site)
+  # ─────────────────────────────────────────────────────────────
+  - type: web
+    name: evora-frontend
+    runtime: static
+    rootDir: evora-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    plan: free
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false

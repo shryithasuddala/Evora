@@ -68,6 +68,17 @@ app.get("/api/health", (req, res) => {
   res.json({ success: true, message: "EVORA API is running 🎉", env: process.env.NODE_ENV });
 });
 
+// ── Serve Frontend Production Build (Single-Service Deployment fallback) ───
+const fs = require("fs");
+const frontendDist = path.join(__dirname, "../evora-frontend/dist");
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api/")) return next();
+    res.sendFile(path.join(frontendDist, "index.html"));
+  });
+}
+
 // ── 404 ─────────────────────────────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ success: false, message: `Route not found: ${req.method} ${req.originalUrl}` });
