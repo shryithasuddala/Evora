@@ -1,0 +1,19 @@
+# Dependency directories
+node_modules/
+
+# Environment files (secrets & API credentials)
+.env
+.env.*
+!.env.example
+
+# Build & log outputs
+dist/
+build/
+*.log
+npm-debug.log*
+
+# OS and Editor metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

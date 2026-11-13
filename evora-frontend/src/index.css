@@ -1,0 +1,9776 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --evora-green: #315039;
+  --evora-dark-green: #203a28;
+  --evora-sage: #718365;
+  --evora-cream: #f9f5ea;
+  --evora-card: #fffdf8;
+  --evora-soft: #eee5d2;
+  --evora-gold: #b9913c;
+  --evora-light-gold: #d7b866;
+  --evora-brown: #5b4939;
+  --evora-text: #40382f;
+  --evora-muted: #81786d;
+  --evora-white: #fffdf8;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--evora-cream);
+  color: var(--evora-text);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--evora-gold);
+  outline-offset: 3px;
+}
+
+
+/* =========================================
+   EVORA LOGO
+========================================= */
+
+.evora-logo {
+  width: 270px;
+  height: auto;
+  object-fit: contain;
+}
+
+
+/* =========================================
+   SPLASH PAGE
+========================================= */
+
+.splash-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(201, 161, 58, 0.10),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(49, 80, 57, 0.08),
+      transparent 30%
+    ),
+    var(--evora-cream);
+
+  cursor: pointer;
+}
+
+.splash-content {
+  width: min(90%, 480px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+.splash-tagline {
+  margin-top: 25px;
+
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+
+  color: var(--evora-green);
+}
+
+.splash-description {
+  margin-top: 7px;
+
+  font-size: 12px;
+
+  color: var(--evora-muted);
+}
+
+.splash-button {
+  margin-top: 38px;
+
+  padding: 13px 38px;
+
+  border: 1px solid var(--evora-gold);
+  border-radius: 30px;
+
+  background: var(--evora-green);
+  color: var(--evora-white);
+
+  font-size: 12px;
+  font-weight: 500;
+
+  transition: 0.25s ease;
+}
+
+.splash-button:hover {
+  background: var(--evora-dark-green);
+  transform: translateY(-2px);
+}
+
+.splash-decoration {
+  position: absolute;
+
+  color: var(--evora-gold);
+
+  pointer-events: none;
+}
+
+.splash-decoration-one {
+  top: 15%;
+  right: 22%;
+
+  font-size: 20px;
+}
+
+.splash-decoration-two {
+  bottom: 15%;
+  left: 20%;
+
+  font-size: 18px;
+}
+
+
+/* =========================================
+   EVORA ROLE SELECTION PAGE
+========================================= */
+
+.role-selection-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background:
+    radial-gradient(
+      circle at 10% 25%,
+      rgba(201, 161, 58, 0.07),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 90% 75%,
+      rgba(49, 80, 57, 0.06),
+      transparent 30%
+    ),
+    var(--evora-cream);
+}
+
+
+/* =========================================
+   TOP LEFT EVORA BRAND
+========================================= */
+
+.role-brand {
+  position: absolute;
+
+  top: 22px;
+  left: 25px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  z-index: 10;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+
+  overflow: hidden;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(185, 145, 60, 0.55);
+
+  background: #f8f1df;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-mark .evora-logo {
+  width: 82px;
+  max-width: none;
+
+  transform: scale(1.12);
+}
+
+.brand-name {
+  font-family: 'Playfair Display', serif;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  letter-spacing: 1.8px;
+
+  color: #4a392b;
+}
+
+
+/* =========================================
+   DECORATIVE BACKGROUND
+========================================= */
+
+.role-selection-page::before {
+  content: '';
+
+  position: absolute;
+
+  width: 330px;
+  height: 330px;
+
+  border: 1px solid rgba(185, 145, 60, 0.12);
+
+  border-radius: 50%;
+
+  top: -210px;
+  right: -120px;
+}
+
+.role-selection-page::after {
+  content: '';
+
+  position: absolute;
+
+  width: 280px;
+  height: 280px;
+
+  border: 1px solid rgba(49, 80, 57, 0.08);
+
+  border-radius: 50%;
+
+  bottom: -190px;
+  left: -120px;
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.role-content {
+  width: 100%;
+  max-width: 460px;
+
+  padding: 72px 22px 58px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  position: relative;
+  z-index: 3;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.role-title {
+  text-align: center;
+}
+
+.welcome-text {
+  font-family: 'Playfair Display', serif;
+
+  font-size: 13px;
+
+  color: var(--evora-brown);
+
+  margin-bottom: 2px;
+}
+
+.role-title h1 {
+  font-family: 'Playfair Display', serif;
+
+  font-size: 31px;
+
+  font-weight: 500;
+
+  letter-spacing: 3px;
+
+  color: var(--evora-green);
+}
+
+.choose-text {
+  margin-top: 6px;
+
+  font-size: 10px;
+
+  line-height: 1.6;
+
+  color: var(--evora-muted);
+}
+
+
+/* =========================================
+   ROLE GRID
+========================================= */
+
+.role-options {
+  width: 100%;
+  max-width: 360px;
+
+  margin-top: 28px;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 12px;
+}
+
+
+/* =========================================
+   ROLE CARD
+========================================= */
+
+.role-option {
+  position: relative;
+
+  min-height: 150px;
+
+  padding: 18px 12px;
+
+  border: 1px solid rgba(185, 145, 60, 0.30);
+
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 253, 248, 0.96),
+      rgba(247, 241, 226, 0.88)
+    );
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  color: var(--evora-text);
+
+  box-shadow:
+    0 5px 18px rgba(67, 54, 39, 0.045);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+
+  cursor: pointer;
+}
+
+.role-option::before {
+  content: '';
+
+  position: absolute;
+
+  width: 70px;
+  height: 70px;
+
+  border-radius: 50%;
+
+  top: -35px;
+  right: -25px;
+
+  background: rgba(201, 161, 58, 0.07);
+}
+
+.role-option::after {
+  content: '✦';
+
+  position: absolute;
+
+  top: 10px;
+  right: 13px;
+
+  color: rgba(185, 145, 60, 0.50);
+
+  font-size: 12px;
+}
+
+.role-option:hover {
+  transform: translateY(-3px);
+
+  border-color: rgba(185, 145, 60, 0.72);
+
+  box-shadow:
+    0 11px 27px rgba(67, 54, 39, 0.10);
+}
+
+.role-option:active {
+  transform: scale(0.98);
+}
+
+
+/* =========================================
+   ROLE ICON
+========================================= */
+
+.role-icon-circle {
+  width: 45px;
+  height: 45px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #a47b2d;
+
+  background:
+    radial-gradient(
+      circle,
+      #fffaf0 0%,
+      #eee5d2 100%
+    );
+
+  border: 1px solid rgba(185, 145, 60, 0.18);
+
+  margin-bottom: 10px;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.role-option:hover .role-icon-circle {
+  background: var(--evora-green);
+
+  color: #f7e6ad;
+
+  transform: scale(1.05);
+}
+
+
+/* =========================================
+   ROLE TITLE
+========================================= */
+
+.role-option h2 {
+  font-family: 'Playfair Display', serif;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  letter-spacing: 1px;
+
+  color: var(--evora-green);
+}
+
+
+/* =========================================
+   ROLE DESCRIPTION
+========================================= */
+
+.role-option p {
+  max-width: 125px;
+
+  margin-top: 5px;
+
+  font-size: 7.5px;
+
+  line-height: 1.45;
+
+  color: var(--evora-muted);
+}
+
+
+/* =========================================
+   DECORATIONS
+========================================= */
+
+.decor {
+  position: absolute;
+
+  color: var(--evora-gold);
+
+  opacity: 0.55;
+
+  z-index: 1;
+
+  pointer-events: none;
+}
+
+.decor-top-left {
+  top: 21%;
+  left: 13%;
+
+  font-size: 13px;
+}
+
+.decor-top-right {
+  top: 18%;
+  right: 14%;
+
+  font-size: 10px;
+}
+
+.decor-middle-left {
+  left: 7%;
+  bottom: 28%;
+
+  font-size: 15px;
+
+  opacity: 0.20;
+}
+
+.decor-middle-right {
+  right: 7%;
+  bottom: 25%;
+
+  font-size: 13px;
+
+  opacity: 0.22;
+}
+
+
+/* =========================================
+   BOTTOM DECORATION
+========================================= */
+
+.bottom-decoration {
+  position: absolute;
+
+  bottom: 20px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: #bd9342;
+
+  opacity: 0.45;
+
+  font-family: 'Playfair Display', serif;
+
+  font-size: 11px;
+
+  z-index: 3;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+  .role-brand {
+    top: 16px;
+    left: 17px;
+  }
+
+  .brand-mark {
+    width: 30px;
+    height: 30px;
+  }
+
+  .brand-mark .evora-logo {
+    width: 72px;
+  }
+
+  .brand-name {
+    font-size: 14px;
+  }
+
+  .role-content {
+    padding: 65px 18px 50px;
+  }
+
+  .role-title h1 {
+    font-size: 28px;
+  }
+
+  .role-options {
+    max-width: 310px;
+
+    gap: 10px;
+
+    margin-top: 25px;
+  }
+
+  .role-option {
+    min-height: 135px;
+
+    border-radius: 13px;
+
+    padding: 14px 9px;
+  }
+
+  .role-icon-circle {
+    width: 40px;
+    height: 40px;
+
+    margin-bottom: 8px;
+  }
+
+  .role-option h2 {
+    font-size: 11px;
+  }
+
+  .role-option p {
+    font-size: 12px;
+  }
+
+  .decor-top-left {
+    left: 7%;
+  }
+
+  .decor-top-right {
+    right: 8%;
+  }
+}
+
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media (max-width: 360px) {
+
+  .role-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .role-options {
+    max-width: 290px;
+  }
+
+  .role-option {
+    min-height: 125px;
+  }
+
+  .role-icon-circle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .role-option p {
+    max-width: 110px;
+  }
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (min-width: 601px) and (max-width: 1024px) {
+
+  .role-content {
+    width: 100%;
+    max-width: 600px;
+    padding: 90px 30px 70px;
+  }
+
+  .role-title h1 {
+    font-size: 36px;
+  }
+
+  .role-options {
+    width: 100%;
+    max-width: 500px;
+    gap: 18px;
+    margin-top: 35px;
+  }
+
+  .role-option {
+    min-height: 190px;
+    border-radius: 19px;
+    padding: 25px 20px;
+  }
+
+  .role-icon-circle {
+    width: 55px;
+    height: 55px;
+    margin-bottom: 13px;
+  }
+
+  .role-option h2 {
+    font-size: 15px;
+  }
+
+  .role-option p {
+    max-width: 160px;
+    font-size: 12px;
+  }
+
+  .decor-top-left {
+    left: 12%;
+  }
+
+  .decor-top-right {
+    right: 12%;
+  }
+}
+
+
+/* =========================================
+   LAPTOP / DESKTOP
+========================================= */
+
+@media (min-width: 1025px) {
+
+  .role-selection-page {
+    padding: 30px;
+  }
+
+  .role-content {
+    max-width: 720px;
+    padding: 85px 30px 65px;
+  }
+
+  .role-title {
+    margin-bottom: 42px;
+  }
+
+  .welcome-text {
+    font-size: 17px;
+  }
+
+  .role-title h1 {
+    font-size: 42px;
+    letter-spacing: 4px;
+  }
+
+  .choose-text {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .role-options {
+    max-width: 580px;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 22px;
+  }
+
+  .role-option {
+    min-height: 210px;
+
+    padding: 25px;
+
+    border-radius: 22px;
+  }
+
+  .role-icon-circle {
+    width: 62px;
+    height: 62px;
+
+    margin-bottom: 15px;
+  }
+
+  .role-option h2 {
+    font-size: 16px;
+    letter-spacing: 1.5px;
+  }
+
+  .role-option p {
+    max-width: 180px;
+    margin-top: 7px;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  .role-brand {
+    top: 28px;
+    left: 35px;
+  }
+
+  .brand-mark {
+    width: 42px;
+    height: 42px;
+  }
+
+  .brand-mark .evora-logo {
+    width: 95px;
+  }
+
+  .brand-name {
+    font-size: 19px;
+  }
+
+  .decor-top-left {
+    top: 24%;
+    left: 20%;
+    font-size: 17px;
+  }
+
+  .decor-top-right {
+    top: 20%;
+    right: 20%;
+    font-size: 14px;
+  }
+
+  .decor-middle-left {
+    left: 12%;
+    bottom: 25%;
+    font-size: 19px;
+  }
+
+  .decor-middle-right {
+    right: 12%;
+    bottom: 23%;
+    font-size: 17px;
+  }
+
+  .bottom-decoration {
+    bottom: 28px;
+    font-size: 13px;
+  }
+}
+
+
+/* =========================================
+   LARGE DESKTOP
+========================================= */
+
+@media (min-width: 1440px) {
+
+  .role-content {
+    max-width: 800px;
+  }
+
+  .role-options {
+    max-width: 640px;
+    gap: 25px;
+  }
+
+  .role-option {
+    min-height: 225px;
+  }
+
+  .role-icon-circle {
+    width: 68px;
+    height: 68px;
+  }
+
+  .role-option h2 {
+    font-size: 17px;
+  }
+
+  .role-option p {
+    font-size: 10px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .role-selection-page {
+    width: 100%;
+    min-height: 100dvh;
+
+    padding: 0 14px;
+
+    overflow-x: hidden;
+  }
+
+  .role-brand {
+    top: 16px;
+    left: 17px;
+
+    gap: 7px;
+  }
+
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+  }
+
+  .brand-mark .evora-logo {
+    width: 76px;
+  }
+
+  .brand-name {
+    font-size: 14px;
+    letter-spacing: 1.4px;
+  }
+
+  .role-content {
+    width: 100%;
+
+    max-width: 390px;
+
+    padding:
+      72px
+      5px
+      55px;
+  }
+
+  .role-title {
+    margin-bottom: 0;
+  }
+
+  .welcome-text {
+    font-size: 13px;
+  }
+
+  .role-title h1 {
+    font-size: 29px;
+    letter-spacing: 3px;
+  }
+
+  .choose-text {
+    margin-top: 5px;
+    font-size: 9.5px;
+  }
+
+  .role-options {
+    width: 100%;
+    max-width: 330px;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 11px;
+
+    margin-top: 26px;
+  }
+
+  .role-option {
+    width: 100%;
+    min-height: 145px;
+
+    padding: 14px 8px;
+
+    border-radius: 15px;
+  }
+
+  .role-icon-circle {
+    width: 43px;
+    height: 43px;
+
+    margin-bottom: 9px;
+  }
+
+  .role-option h2 {
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+
+  .role-option p {
+    width: 100%;
+    max-width: 120px;
+
+    margin-top: 5px;
+
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .decor-top-left {
+    top: 18%;
+    left: 7%;
+    font-size: 12px;
+  }
+
+  .decor-top-right {
+    top: 17%;
+    right: 8%;
+    font-size: 10px;
+  }
+
+  .decor-middle-left {
+    left: 5%;
+    bottom: 25%;
+    font-size: 13px;
+  }
+
+  .decor-middle-right {
+    right: 5%;
+    bottom: 23%;
+    font-size: 12px;
+  }
+
+  .bottom-decoration {
+    bottom: 18px;
+    font-size: 10px;
+  }
+}
+
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media (max-width: 380px) {
+
+  .role-content {
+    padding-top: 68px;
+    padding-bottom: 48px;
+  }
+
+  .role-title h1 {
+    font-size: 26px;
+  }
+
+  .role-options {
+    max-width: 300px;
+    gap: 9px;
+    margin-top: 22px;
+  }
+
+  .role-option {
+    min-height: 130px;
+    padding: 12px 6px;
+  }
+
+  .role-icon-circle {
+    width: 38px;
+    height: 38px;
+  }
+
+  .role-option h2 {
+    font-size: 10px;
+  }
+
+  .role-option p {
+    max-width: 105px;
+    font-size: 6.5px;
+  }
+}
+
+
+/* =========================================
+   VERY SMALL PHONES
+========================================= */
+
+@media (max-width: 330px) {
+
+  .role-brand {
+    top: 12px;
+    left: 12px;
+  }
+
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+  }
+
+  .brand-mark .evora-logo {
+    width: 67px;
+  }
+
+  .brand-name {
+    font-size: 12px;
+  }
+
+  .role-content {
+    padding-top: 62px;
+  }
+
+  .role-title h1 {
+    font-size: 24px;
+  }
+
+  .choose-text {
+    font-size: 12px;
+  }
+
+  .role-options {
+    max-width: 280px;
+  }
+
+  .role-option {
+    min-height: 120px;
+  }
+
+  .role-icon-circle {
+    width: 35px;
+    height: 35px;
+  }
+
+  .role-option h2 {
+    font-size: 12px;
+  }
+
+  .role-option p {
+    font-size: 11px;
+  }
+}
+
+/* =========================================
+   EVORA SPLASH SCREEN
+========================================= */
+
+.splash-page {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #242424;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   PHONE FRAME
+========================================= */
+
+.splash-phone {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+
+  position: relative;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 70% 20%,
+      rgba(201, 161, 58, 0.10),
+      transparent 25%
+    ),
+    linear-gradient(
+      180deg,
+      #faf6eb 0%,
+      #f6f0df 100%
+    );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.splash-content {
+  width: 100%;
+
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  justify-content: center;
+
+  position: relative;
+  z-index: 5;
+
+  padding-bottom: 30px;
+}
+
+
+/* =========================================
+   LOGO
+========================================= */
+
+.splash-logo {
+  width: 215px;
+
+  display: flex;
+  justify-content: center;
+
+  margin-top: -45px;
+}
+
+.splash-logo .evora-logo {
+  width: 215px;
+  height: auto;
+
+  object-fit: contain;
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+.splash-message {
+  margin-top: 22px;
+
+  text-align: center;
+
+  font-family: 'Playfair Display', serif;
+
+  font-size: 12px;
+
+  line-height: 1.65;
+
+  color: #5f5245;
+}
+
+
+/* =========================================
+   GET STARTED
+========================================= */
+
+.splash-start {
+  width: 125px;
+
+  margin-top: 38px;
+
+  padding: 10px 20px;
+
+  border: 1px solid rgba(185, 145, 60, 0.55);
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #d2aa53,
+      #b9913c
+    );
+
+  color: #fffdf8;
+
+  font-family: 'Poppins', sans-serif;
+
+  font-size: 12px;
+
+  font-weight: 500;
+
+  box-shadow:
+    0 5px 12px rgba(119, 87, 35, 0.14);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.splash-start:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 18px rgba(119, 87, 35, 0.20);
+}
+
+.splash-start:active {
+  transform: scale(0.97);
+}
+
+
+/* =========================================
+   SKIP
+========================================= */
+
+.splash-skip {
+  margin-top: 9px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #7c7368;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+.splash-skip:hover {
+  color: #315039;
+}
+
+
+/* =========================================
+   DECORATIVE ELEMENTS
+========================================= */
+
+.splash-flower {
+  position: absolute;
+
+  color: #b9913c;
+
+  z-index: 2;
+
+  pointer-events: none;
+}
+
+.splash-flower-top {
+  top: 16%;
+
+  right: 28%;
+
+  font-size: 14px;
+}
+
+
+/* =========================================
+   BOTTOM FLORAL EFFECT
+========================================= */
+
+.splash-floral-left {
+  position: absolute;
+
+  bottom: -20px;
+
+  left: -5px;
+
+  font-size: 170px;
+
+  line-height: 1;
+
+  color: rgba(109, 126, 89, 0.18);
+
+  transform: rotate(-15deg);
+
+  z-index: 1;
+}
+
+.splash-floral-bottom {
+  position: absolute;
+
+  bottom: -40px;
+
+  left: 20px;
+
+  font-size: 120px;
+
+  color: rgba(185, 145, 60, 0.12);
+
+  transform: rotate(15deg);
+
+  z-index: 1;
+}
+
+
+/* =========================================
+   LAPTOP / DESKTOP
+========================================= */
+
+@media (min-width: 700px) {
+
+  .splash-page {
+    width: 100%;
+    min-height: 100vh;
+
+    background:
+      radial-gradient(
+        circle at 20% 20%,
+        rgba(201, 161, 58, 0.08),
+        transparent 28%
+      ),
+      radial-gradient(
+        circle at 80% 80%,
+        rgba(49, 80, 57, 0.08),
+        transparent 30%
+      ),
+      #f9f5ea;
+  }
+
+  .splash-phone {
+    width: 100%;
+    height: 100vh;
+
+    min-height: 100vh;
+
+    border: none;
+    border-radius: 0;
+
+    box-shadow: none;
+
+    background:
+      radial-gradient(
+        circle at 70% 20%,
+        rgba(201, 161, 58, 0.10),
+        transparent 25%
+      ),
+      linear-gradient(
+        180deg,
+        #faf6eb 0%,
+        #f6f0df 100%
+      );
+  }
+
+  .splash-content {
+    padding-bottom: 20px;
+  }
+
+  .splash-logo {
+    width: 360px;
+    margin-top: -40px;
+  }
+
+  .splash-logo .evora-logo {
+    width: 360px;
+  }
+
+  .splash-message {
+    margin-top: 28px;
+
+    font-size: 17px;
+
+    line-height: 1.7;
+  }
+
+  .splash-start {
+    width: 170px;
+
+    margin-top: 42px;
+
+    padding: 14px 25px;
+
+    font-size: 11px;
+
+    border-radius: 25px;
+  }
+
+  .splash-skip {
+    margin-top: 11px;
+
+    font-size: 12px;
+  }
+
+  .splash-flower-top {
+    top: 18%;
+    right: 27%;
+
+    font-size: 19px;
+  }
+
+  .splash-floral-left {
+    bottom: -45px;
+    left: -15px;
+
+    font-size: 260px;
+  }
+
+  .splash-floral-bottom {
+    bottom: -60px;
+    left: 45px;
+
+    font-size: 190px;
+  }
+}
+
+
+/* =========================================
+   LARGE DESKTOP
+========================================= */
+
+@media (min-width: 1200px) {
+
+  .splash-logo {
+    width: 400px;
+  }
+
+  .splash-logo .evora-logo {
+    width: 400px;
+  }
+
+  .splash-message {
+    font-size: 18px;
+  }
+
+  .splash-start {
+    width: 185px;
+
+    padding: 15px 28px;
+
+    font-size: 12px;
+  }
+}
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media (max-width: 380px) {
+
+  .splash-logo {
+    width: 190px;
+  }
+
+  .splash-logo .evora-logo {
+    width: 190px;
+  }
+
+  .splash-message {
+    font-size: 11px;
+  }
+
+  .splash-start {
+    width: 115px;
+
+    margin-top: 32px;
+
+    padding: 9px 18px;
+
+    font-size: 12px;
+  }
+
+  .splash-skip {
+    font-size: 6.5px;
+  }
+
+  .splash-floral-left {
+    font-size: 145px;
+  }
+}
+
+
+/* =========================================
+   VERY SMALL PHONES
+========================================= */
+
+@media (max-width: 330px) {
+
+  .splash-logo {
+    width: 170px;
+  }
+
+  .splash-logo .evora-logo {
+    width: 170px;
+  }
+
+  .splash-message {
+    font-size: 10px;
+  }
+
+  .splash-start {
+    width: 110px;
+
+    margin-top: 28px;
+  }
+}
+
+/* =========================================
+   EVORA LOGIN
+========================================= */
+
+.login-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 40px 20px;
+
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(201, 161, 58, 0.08),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(49, 80, 57, 0.08),
+      transparent 30%
+    ),
+    var(--evora-cream);
+}
+
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+.login-back {
+  position: absolute;
+
+  top: 25px;
+  left: 25px;
+
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid rgba(185, 145, 60, 0.25);
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255, 253, 248, 0.75);
+
+  color: var(--evora-green);
+
+  transition: 0.2s ease;
+
+  z-index: 5;
+}
+
+.login-back:hover {
+  background: var(--evora-green);
+
+  color: white;
+
+  transform: translateX(-2px);
+}
+
+
+/* =========================================
+   EVORA LOGIN
+========================================= */
+
+.login-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 70px 20px 50px;
+
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(201, 161, 58, 0.08),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(49, 80, 57, 0.08),
+      transparent 30%
+    ),
+    var(--evora-cream);
+}
+
+
+/* =========================================
+   DECORATION
+========================================= */
+
+.login-page::before {
+  content: "✦";
+
+  position: absolute;
+
+  top: 15%;
+  right: 15%;
+
+  color: rgba(185, 145, 60, 0.45);
+
+  font-size: 18px;
+
+  pointer-events: none;
+}
+
+.login-page::after {
+  content: "✦";
+
+  position: absolute;
+
+  bottom: 15%;
+  left: 14%;
+
+  color: rgba(185, 145, 60, 0.25);
+
+  font-size: 14px;
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+.login-back-button {
+  position: absolute;
+
+  top: 25px;
+  left: 25px;
+
+  height: 38px;
+
+  padding: 0 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  border: 1px solid rgba(185, 145, 60, 0.25);
+
+  border-radius: 20px;
+
+  background: rgba(255, 253, 248, 0.8);
+
+  color: var(--evora-green);
+
+  font-size: 12px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+
+  z-index: 10;
+}
+
+.login-back-button:hover {
+  background: var(--evora-green);
+
+  color: white;
+
+  border-color: var(--evora-green);
+
+  transform: translateX(-2px);
+}
+
+
+/* =========================================
+   LOGIN BRAND
+========================================= */
+
+.login-brand {
+  position: absolute;
+
+  top: 23px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 10;
+}
+
+
+/*
+   Circle around EVORA logo
+*/
+
+.login-brand {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 10;
+}
+
+.login-brand .evora-logo {
+  width: 105px;
+  height: auto;
+  display: block;
+}
+
+/*
+   Logo inside circle
+*/
+
+.login-logo-circle .evora-logo {
+  width: 105px;
+
+  height: auto;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================
+   LOGIN CARD
+========================================= */
+
+.login-card {
+  width: 100%;
+
+  max-width: 390px;
+
+  padding: 40px 30px;
+
+  border: 1px solid rgba(185, 145, 60, 0.25);
+
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 253, 248, 0.96),
+      rgba(247, 241, 226, 0.91)
+    );
+
+  box-shadow:
+    0 18px 50px rgba(67, 54, 39, 0.08);
+
+  position: relative;
+
+  z-index: 5;
+}
+
+
+/* =========================================
+   ROLE ICON
+========================================= */
+
+.login-role-icon {
+  width: 58px;
+  height: 58px;
+
+  margin: 0 auto 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: var(--evora-soft);
+
+  color: var(--evora-gold);
+
+  border: 1px solid rgba(185, 145, 60, 0.18);
+
+  transition: 0.2s ease;
+}
+
+.login-card:hover .login-role-icon {
+  color: var(--evora-green);
+
+  border-color: rgba(185, 145, 60, 0.35);
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.login-heading {
+  text-align: center;
+
+  margin-bottom: 30px;
+}
+
+.login-role-label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 12px;
+
+  letter-spacing: 1.5px;
+
+  font-weight: 600;
+
+  color: var(--evora-gold);
+}
+
+.login-heading h1 {
+  margin: 0;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 27px;
+
+  line-height: 1.25;
+
+  font-weight: 500;
+
+  color: var(--evora-green);
+}
+
+.login-heading p {
+  margin: 7px 0 0;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+
+  color: var(--evora-muted);
+}
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+.login-error {
+  margin-bottom: 18px;
+
+  padding: 9px 12px;
+
+  border: 1px solid rgba(170, 75, 65, 0.2);
+
+  border-radius: 9px;
+
+  background: rgba(170, 75, 65, 0.06);
+
+  color: #9b5048;
+
+  font-size: 12px;
+
+  text-align: center;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.login-form {
+  width: 100%;
+}
+
+
+/* =========================================
+   FIELD
+========================================= */
+
+.login-field {
+  margin-bottom: 19px;
+}
+
+.login-field label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 12px;
+
+  font-weight: 500;
+
+  color: var(--evora-brown);
+}
+
+
+/* =========================================
+   INPUT WRAPPER
+========================================= */
+
+.login-input-wrapper {
+  height: 43px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 0 12px;
+
+  border: 1px solid rgba(185, 145, 60, 0.25);
+
+  border-radius: 10px;
+
+  background: rgba(255, 253, 248, 0.8);
+
+  color: var(--evora-sage);
+
+  transition: 0.2s ease;
+}
+
+.login-input-wrapper:focus-within {
+  border-color: var(--evora-gold);
+
+  box-shadow:
+    0 0 0 3px rgba(185, 145, 60, 0.08);
+}
+
+.login-input-wrapper input {
+  width: 100%;
+
+  height: 100%;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  color: var(--evora-text);
+
+  font-size: 12px;
+}
+
+.login-input-wrapper input::placeholder {
+  color: #aaa197;
+}
+
+
+/* =========================================
+   PASSWORD TOGGLE
+========================================= */
+
+.password-toggle {
+  width: 28px;
+  height: 28px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: var(--evora-muted);
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.password-toggle:hover {
+  background: var(--evora-soft);
+
+  color: var(--evora-green);
+}
+
+
+/* =========================================
+   OPTIONS
+========================================= */
+
+.login-options {
+  margin-top: 2px;
+
+  margin-bottom: 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+
+/* =========================================
+   REMEMBER ME
+========================================= */
+
+.remember-me {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  cursor: pointer;
+
+  color: var(--evora-muted);
+
+  font-size: 12px;
+}
+
+.remember-me input {
+  width: 13px;
+  height: 13px;
+
+  margin: 0;
+
+  accent-color: var(--evora-green);
+
+  cursor: pointer;
+}
+
+
+/* =========================================
+   FORGOT PASSWORD
+========================================= */
+
+.forgot-password {
+  border: none;
+
+  padding: 0;
+
+  background: transparent;
+
+  color: var(--evora-gold);
+
+  font-size: 12px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.forgot-password:hover {
+  color: var(--evora-green);
+
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   LOGIN BUTTON
+========================================= */
+
+.login-submit-button {
+  width: 100%;
+
+  height: 43px;
+
+  margin-top: 7px;
+
+  border: 1px solid var(--evora-gold);
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #d2aa53,
+      #b9913c
+    );
+
+  color: white;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.3px;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.login-submit-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 18px rgba(119, 87, 35, 0.16);
+}
+
+.login-submit-button:active {
+  transform: scale(0.98);
+}
+
+
+/* =========================================
+   REGISTER SECTION
+========================================= */
+
+.login-register {
+  margin-top: 22px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 5px;
+
+  flex-wrap: wrap;
+
+  font-size: 12px;
+
+  color: var(--evora-muted);
+}
+
+.login-register a {
+  color: var(--evora-green);
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  text-decoration: none;
+
+  transition: 0.2s ease;
+}
+
+.login-register a:hover {
+  color: var(--evora-gold);
+
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   SECURITY
+========================================= */
+
+.login-security {
+  margin-top: 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  color: var(--evora-muted);
+
+  font-size: 12px;
+
+  text-align: center;
+}
+
+.login-security svg {
+  color: var(--evora-green);
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.login-footer {
+  position: absolute;
+
+  bottom: 20px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  margin: 0;
+
+  color: var(--evora-muted);
+
+  font-size: 12px;
+
+  white-space: nowrap;
+
+  z-index: 5;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (min-width: 601px) and (max-width: 1024px) {
+
+  .login-card {
+    max-width: 430px;
+
+    padding: 45px 38px;
+  }
+
+  .login-heading h1 {
+    font-size: 31px;
+  }
+
+  .login-input-wrapper {
+    height: 47px;
+  }
+
+  .login-input-wrapper input {
+    font-size: 10px;
+  }
+
+  .login-submit-button {
+    height: 47px;
+
+    font-size: 11px;
+  }
+}
+
+
+/* =========================================
+   LAPTOP
+========================================= */
+
+@media (min-width: 1025px) {
+
+  .login-page {
+    padding: 60px;
+  }
+
+  .login-card {
+    max-width: 450px;
+
+    padding: 48px 42px;
+
+    border-radius: 28px;
+  }
+
+  .login-logo-circle {
+    width: 64px;
+    height: 64px;
+  }
+
+  .login-logo-circle .evora-logo {
+    width: 115px;
+  }
+
+  .login-heading {
+    margin-bottom: 35px;
+  }
+
+  .login-heading h1 {
+    font-size: 32px;
+  }
+
+  .login-heading p {
+    font-size: 10px;
+  }
+
+  .login-field label {
+    font-size: 10px;
+  }
+
+  .login-input-wrapper {
+    height: 48px;
+  }
+
+  .login-input-wrapper input {
+    font-size: 10px;
+  }
+
+  .login-submit-button {
+    height: 48px;
+
+    font-size: 11px;
+  }
+
+  .login-register,
+  .login-register a {
+    font-size: 12px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .login-page {
+    padding: 75px 16px 55px;
+
+    align-items: flex-start;
+
+    overflow-y: auto;
+  }
+
+  .login-back-button {
+    top: 18px;
+
+    left: 18px;
+
+    height: 34px;
+
+    padding: 0 11px;
+
+    font-size: 12px;
+  }
+
+  .login-brand {
+    top: 20px;
+  }
+
+  .login-logo-circle {
+    width: 48px;
+    height: 48px;
+  }
+
+  .login-logo-circle .evora-logo {
+    width: 88px;
+  }
+
+  .login-card {
+    max-width: 380px;
+
+    margin: 40px auto 0;
+
+    padding: 32px 22px;
+
+    border-radius: 20px;
+  }
+
+  .login-role-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .login-heading {
+    margin-bottom: 25px;
+  }
+
+  .login-heading h1 {
+    font-size: 25px;
+  }
+
+  .login-heading p {
+    font-size: 12px;
+  }
+
+  .login-field {
+    margin-bottom: 17px;
+  }
+
+  .login-field label {
+    font-size: 12px;
+  }
+
+  .login-input-wrapper {
+    height: 44px;
+  }
+
+  .login-input-wrapper input {
+    font-size: 12px;
+  }
+
+  .login-submit-button {
+    height: 44px;
+
+    font-size: 12px;
+  }
+
+  .login-register,
+  .login-register a {
+    font-size: 12px;
+  }
+
+  .login-security {
+    font-size: 12px;
+  }
+
+  .login-footer {
+    bottom: 12px;
+
+    font-size: 12px;
+  }
+}
+
+
+/* =========================================
+   SMALL PHONE
+========================================= */
+
+@media (max-width: 360px) {
+
+  .login-card {
+    padding: 28px 18px;
+  }
+
+  .login-heading h1 {
+    font-size: 23px;
+  }
+
+  .login-input-wrapper {
+    height: 42px;
+  }
+
+  .login-submit-button {
+    height: 42px;
+  }
+}
+
+/* =========================================
+   EVORA REGISTRATION
+========================================= */
+
+.register-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 40px 20px;
+
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(201, 161, 58, 0.08),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(49, 80, 57, 0.08),
+      transparent 30%
+    ),
+    var(--evora-cream);
+}
+
+
+/* Back */
+
+.register-back {
+  position: absolute;
+
+  top: 25px;
+  left: 25px;
+
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid rgba(185, 145, 60, 0.25);
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255, 253, 248, 0.8);
+
+  color: var(--evora-green);
+
+  transition: 0.2s ease;
+}
+
+.register-back:hover {
+  background: var(--evora-green);
+  color: white;
+}
+
+
+/* Brand */
+
+.register-brand {
+  position: absolute;
+
+  top: 23px;
+  left: 50%;
+
+  transform: translateX(-50%);
+}
+
+.register-brand .evora-logo {
+  width: 95px;
+}
+
+
+/* Container */
+
+.register-container {
+  width: 100%;
+  max-width: 410px;
+
+  padding: 38px 30px;
+
+  border: 1px solid rgba(185, 145, 60, 0.25);
+
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 253, 248, 0.96),
+      rgba(247, 241, 226, 0.90)
+    );
+
+  box-shadow:
+    0 18px 50px rgba(67, 54, 39, 0.08);
+}
+
+
+/* Heading */
+
+.register-heading {
+  text-align: center;
+
+  margin-bottom: 25px;
+}
+
+.register-star {
+  display: block;
+
+  color: var(--evora-gold);
+
+  font-size: 17px;
+
+  margin-bottom: 7px;
+}
+
+.register-role {
+  font-size: 12px;
+
+  font-weight: 600;
+
+  letter-spacing: 1.4px;
+
+  color: var(--evora-gold);
+}
+
+.register-heading h1 {
+  margin-top: 7px;
+
+  font-family: 'Playfair Display', serif;
+
+  font-size: 25px;
+
+  font-weight: 500;
+
+  color: var(--evora-green);
+}
+
+.register-subtitle {
+  margin-top: 7px;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+
+  color: var(--evora-muted);
+}
+
+
+/* Form */
+
+.register-input-group {
+  margin-bottom: 14px;
+}
+
+.register-input-group label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  font-size: 12px;
+
+  font-weight: 500;
+
+  color: var(--evora-brown);
+}
+
+.register-input-wrapper {
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 0 11px;
+
+  border: 1px solid rgba(185, 145, 60, 0.25);
+
+  border-radius: 10px;
+
+  background: rgba(255, 253, 248, 0.8);
+
+  color: var(--evora-sage);
+
+  transition: 0.2s ease;
+}
+
+.register-input-wrapper:focus-within {
+  border-color: var(--evora-gold);
+
+  box-shadow:
+    0 0 0 3px rgba(185, 145, 60, 0.08);
+}
+
+.register-input-wrapper input {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: var(--evora-text);
+
+  font-size: 12px;
+}
+
+.register-input-wrapper input::placeholder {
+  color: #aaa197;
+}
+
+
+/* Password toggle */
+
+.register-password-toggle {
+  border: none;
+
+  background: transparent;
+
+  color: var(--evora-muted);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+/* Terms */
+
+.terms-row {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 4px;
+
+  cursor: pointer;
+}
+
+.terms-row input {
+  accent-color: var(--evora-green);
+
+  width: 12px;
+  height: 12px;
+}
+
+.terms-row span {
+  font-size: 12px;
+
+  color: var(--evora-muted);
+}
+
+
+/* Button */
+
+.register-button {
+  width: 100%;
+
+  height: 43px;
+
+  margin-top: 18px;
+
+  border: 1px solid var(--evora-gold);
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #d2aa53,
+      #b9913c
+    );
+
+  color: white;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  transition: 0.25s ease;
+}
+
+.register-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 18px rgba(119, 87, 35, 0.16);
+}
+
+
+/* Login */
+
+.register-login {
+  margin-top: 19px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  font-size: 12px;
+
+  color: var(--evora-muted);
+}
+
+.register-login button {
+  border: none;
+
+  background: transparent;
+
+  color: var(--evora-green);
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (min-width: 601px) and (max-width: 1024px) {
+
+  .register-container {
+    max-width: 440px;
+
+    padding: 42px 36px;
+  }
+
+  .register-heading h1 {
+    font-size: 29px;
+  }
+
+  .register-input-wrapper {
+    height: 46px;
+  }
+
+  .register-input-wrapper input {
+    font-size: 12px;
+  }
+
+  .register-button {
+    height: 46px;
+    font-size: 10px;
+  }
+}
+
+
+/* =========================================
+   LAPTOP
+========================================= */
+
+@media (min-width: 1025px) {
+
+  .register-container {
+    max-width: 460px;
+
+    padding: 45px 40px;
+
+    border-radius: 28px;
+  }
+
+  .register-brand .evora-logo {
+    width: 110px;
+  }
+
+  .register-heading h1 {
+    font-size: 31px;
+  }
+
+  .register-subtitle {
+    font-size: 12px;
+  }
+
+  .register-input-group label {
+    font-size: 12px;
+  }
+
+  .register-input-wrapper {
+    height: 47px;
+  }
+
+  .register-input-wrapper input {
+    font-size: 10px;
+  }
+
+  .register-button {
+    height: 48px;
+
+    font-size: 11px;
+  }
+
+  .register-login,
+  .register-login button {
+    font-size: 12px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .register-page {
+    padding: 72px 15px 30px;
+
+    align-items: flex-start;
+  }
+
+  .register-back {
+    top: 18px;
+    left: 18px;
+
+    width: 34px;
+    height: 34px;
+  }
+
+  .register-brand {
+    top: 19px;
+  }
+
+  .register-brand .evora-logo {
+    width: 82px;
+  }
+
+  .register-container {
+    max-width: 380px;
+
+    margin: 32px auto 0;
+
+    padding: 30px 21px;
+
+    border-radius: 20px;
+  }
+
+  .register-heading {
+    margin-bottom: 22px;
+  }
+
+  .register-heading h1 {
+    font-size: 23px;
+  }
+
+  .register-input-wrapper {
+    height: 43px;
+  }
+}
+
+
+/* =========================================
+   SMALL PHONE
+========================================= */
+
+@media (max-width: 360px) {
+
+  .register-container {
+    padding: 27px 17px;
+  }
+
+  .register-heading h1 {
+    font-size: 21px;
+  }
+
+  .register-input-wrapper {
+    height: 41px;
+  }
+
+  .terms-row span {
+    font-size: 6.5px;
+  }
+}
+
+/* =========================================
+   EVORA VENDOR DASHBOARD
+========================================= */
+
+.vendor-dashboard {
+  min-height: 100vh;
+
+  display: flex;
+
+  background: #f7f3e8;
+
+  color: #3f493d;
+}
+
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.vendor-sidebar {
+  width: 225px;
+
+  min-height: 100vh;
+
+  position: fixed;
+
+  left: 0;
+  top: 0;
+  bottom: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 28px 18px;
+
+  background: #304d37;
+
+  color: #f8f3e7;
+
+  z-index: 100;
+
+  transition: transform 0.3s ease;
+}
+
+.vendor-sidebar-top {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+}
+
+.vendor-brand {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+.vendor-brand-symbol {
+  width: 38px;
+  height: 38px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(216, 181, 91, 0.7);
+
+  background: #f5ecda;
+
+  color: #a27b2e;
+
+  font-family: 'Playfair Display', serif;
+
+  font-size: 19px;
+}
+
+.vendor-brand h2 {
+  font-family: 'Playfair Display', serif;
+
+  font-size: 17px;
+
+  letter-spacing: 2px;
+
+  font-weight: 500;
+}
+
+.vendor-brand span {
+  display: block;
+
+  margin-top: 1px;
+
+  color: #cfc8b9;
+
+  font-size: 12px;
+}
+
+.vendor-close-menu {
+  display: none;
+
+  border: none;
+
+  background: transparent;
+
+  color: white;
+}
+
+
+/* =========================================
+   MENU
+========================================= */
+
+.vendor-menu-section {
+  margin-top: 42px;
+}
+
+.vendor-menu-label {
+  margin: 0 10px 10px;
+
+  color: #aebcae;
+
+  font-size: 12px;
+
+  letter-spacing: 1.5px;
+
+  font-weight: 600;
+}
+
+.vendor-menu-item {
+  width: 100%;
+
+  min-height: 42px;
+
+  margin-bottom: 4px;
+
+  padding: 0 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: transparent;
+
+  color: #d6ddd4;
+
+  text-align: left;
+
+  font-size: 12px;
+
+  transition: 0.2s ease;
+}
+
+.vendor-menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  color: white;
+}
+
+.vendor-menu-item.active {
+  background: #e0b542;
+
+  color: #263b2c;
+
+  font-weight: 600;
+}
+
+.vendor-notification-dot {
+  width: 6px;
+  height: 6px;
+
+  margin-left: auto;
+
+  border-radius: 50%;
+
+  background: #e0b542;
+}
+
+
+/* =========================================
+   SIDEBAR PROFILE
+========================================= */
+
+.vendor-sidebar-profile {
+  margin-top: auto;
+
+  padding: 14px 8px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.vendor-avatar,
+.vendor-header-avatar {
+  width: 34px;
+  height: 34px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e5d9bf;
+
+  color: #35503a;
+
+  font-family: 'Playfair Display', serif;
+
+  font-weight: 600;
+}
+
+.vendor-profile-info strong {
+  display: block;
+
+  font-size: 12px;
+}
+
+.vendor-profile-info span {
+  display: block;
+
+  margin-top: 2px;
+
+  font-size: 12px;
+
+  color: #b8c1b6;
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+.vendor-logout {
+  width: 100%;
+
+  height: 40px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 12px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #d6ddd4;
+
+  font-size: 12px;
+
+  border-radius: 9px;
+}
+
+.vendor-logout:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  color: white;
+}
+
+
+/* =========================================
+   MAIN
+========================================= */
+
+.vendor-main {
+  width: calc(100% - 225px);
+
+  margin-left: 225px;
+
+  min-height: 100vh;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.vendor-header {
+  height: 85px;
+
+  padding: 0 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  background: rgba(255, 253, 248, 0.72);
+
+  border-bottom: 1px solid rgba(185, 145, 60, 0.15);
+
+  backdrop-filter: blur(10px);
+}
+
+.vendor-header-title p {
+  font-size: 12px;
+
+  color: #a47b2d;
+
+  letter-spacing: 1.2px;
+
+  font-weight: 600;
+}
+
+.vendor-header-title h1 {
+  margin-top: 4px;
+
+  font-family: 'Playfair Display', serif;
+
+  font-size: 21px;
+
+  font-weight: 500;
+
+  color: #315039;
+}
+
+.vendor-header-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+}
+
+.vendor-header-icon {
+  position: relative;
+
+  border: none;
+
+  background: transparent;
+
+  color: #5e695e;
+}
+
+.vendor-header-icon span {
+  position: absolute;
+
+  top: -1px;
+  right: -1px;
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #d2a83e;
+}
+
+.vendor-header-avatar {
+  width: 37px;
+  height: 37px;
+}
+
+.vendor-menu-button {
+  display: none;
+
+  border: none;
+
+  background: transparent;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.vendor-content {
+  max-width: 1450px;
+
+  margin: 0 auto;
+
+  padding: 30px 38px 50px;
+}
+
+
+/* =========================================
+   WELCOME
+========================================= */
+
+.vendor-welcome-card {
+  position: relative;
+
+  overflow: hidden;
+
+  min-height: 190px;
+
+  padding: 30px 34px;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      120deg,
+      #35563d,
+      #294932
+    );
+
+  color: white;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  box-shadow:
+    0 12px 30px rgba(44, 72, 52, 0.13);
+}
+
+.vendor-welcome-card::after {
+  content: '';
+
+  position: absolute;
+
+  width: 250px;
+  height: 250px;
+
+  border-radius: 50%;
+
+  right: -90px;
+  top: -110px;
+
+  border: 1px solid rgba(224, 181, 66, 0.25);
+}
+
+.vendor-welcome-label {
+  font-size: 12px;
+
+  letter-spacing: 1.5px;
+
+  color: #dfc273;
+
+  font-weight: 600;
+}
+
+.vendor-welcome-card h2 {
+  margin-top: 8px;
+
+  font-family: 'Playfair Display', serif;
+
+  font-size: 27px;
+
+  line-height: 1.2;
+
+  font-weight: 500;
+}
+
+.vendor-welcome-card p {
+  max-width: 450px;
+
+  margin-top: 9px;
+
+  color: #d4ddd3;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+.vendor-primary-button {
+  margin-top: 18px;
+
+  height: 38px;
+
+  padding: 0 17px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  border: none;
+
+  border-radius: 20px;
+
+  background: #d6ae46;
+
+  color: #263b2c;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  transition: 0.2s ease;
+}
+
+.vendor-primary-button:hover {
+  transform: translateY(-2px);
+
+  background: #e4bf60;
+}
+
+.vendor-welcome-art {
+  position: relative;
+
+  width: 150px;
+  height: 150px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(222, 186, 92, 0.25);
+
+  border-radius: 50%;
+
+  color: #e0bd67;
+
+  font-size: 38px;
+}
+
+
+/* =========================================
+   STATS
+========================================= */
+
+.vendor-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 15px;
+
+  margin-top: 20px;
+}
+
+.vendor-stat-card {
+  min-height: 92px;
+
+  padding: 17px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  background: #fffdf8;
+
+  border: 1px solid rgba(185, 145, 60, 0.17);
+
+  border-radius: 15px;
+
+  box-shadow:
+    0 5px 20px rgba(67, 54, 39, 0.035);
+}
+
+.vendor-stat-card > svg {
+  margin-left: auto;
+
+  color: #b9913c;
+}
+
+.vendor-stat-card span {
+  display: block;
+
+  color: #898276;
+
+  font-size: 12px;
+}
+
+.vendor-stat-card strong {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #315039;
+
+  font-family: 'Playfair Display', serif;
+
+  font-size: 20px;
+
+  font-weight: 500;
+}
+
+.vendor-stat-icon {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  color: #9d772c;
+
+  background: #f1e8d4;
+}
+
+
+/* =========================================
+   GRID
+========================================= */
+
+.vendor-dashboard-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.4fr)
+    minmax(280px, 0.8fr);
+
+  gap: 18px;
+
+  margin-top: 20px;
+}
+
+
+/* =========================================
+   PANELS
+========================================= */
+
+.vendor-panel {
+  padding: 22px;
+
+  background: #fffdf8;
+
+  border: 1px solid rgba(185, 145, 60, 0.17);
+
+  border-radius: 17px;
+
+  box-shadow:
+    0 5px 20px rgba(67, 54, 39, 0.035);
+}
+
+.vendor-panel-header {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+}
+
+.vendor-panel-header span {
+  font-size: 12px;
+
+  letter-spacing: 1.2px;
+
+  color: #b9913c;
+
+  font-weight: 600;
+}
+
+.vendor-panel-header h3 {
+  margin-top: 4px;
+
+  font-family: 'Playfair Display', serif;
+
+  font-size: 17px;
+
+  color: #315039;
+
+  font-weight: 500;
+}
+
+.vendor-panel-header button {
+  border: none;
+
+  background: transparent;
+
+  color: #8e6a2d;
+
+  font-size: 12px;
+}
+
+
+/* =========================================
+   REQUESTS
+========================================= */
+
+.vendor-request-list {
+  margin-top: 18px;
+}
+
+.vendor-request {
+  min-height: 70px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  border-bottom: 1px solid #eee9dd;
+}
+
+.vendor-request:last-child {
+  border-bottom: none;
+}
+
+.vendor-request-image {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #eee5d2;
+
+  color: #315039;
+
+  font-family: 'Playfair Display', serif;
+
+  font-size: 16px;
+}
+
+.vendor-request-info {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.vendor-request-info strong {
+  display: block;
+
+  color: #455043;
+
+  font-size: 12px;
+}
+
+.vendor-request-info span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #898276;
+
+  font-size: 12px;
+}
+
+.vendor-request-info small {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #aaa298;
+
+  font-size: 11px;
+}
+
+.vendor-request-status {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  padding: 5px 8px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+
+  white-space: nowrap;
+}
+
+.vendor-request-status.pending {
+  background: #f6ecd1;
+  color: #a47b2d;
+}
+
+.vendor-request-status.accepted {
+  background: #e3eddf;
+  color: #4f704f;
+}
+
+.vendor-request-status.rejected {
+  background: #f1dfda;
+  color: #a75b4e;
+}
+
+
+/* =========================================
+   EARNINGS
+========================================= */
+
+.vendor-earnings-number {
+  margin-top: 20px;
+
+  font-family: 'Playfair Display', serif;
+
+  font-size: 29px;
+
+  color: #315039;
+}
+
+.vendor-earnings-change {
+  margin-top: 5px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 3px;
+
+  color: #65805f;
+
+  font-size: 12px;
+}
+
+.vendor-chart {
+  height: 105px;
+
+  margin-top: 20px;
+
+  padding: 0 4px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  gap: 10px;
+
+  border-bottom: 1px solid #e9e2d4;
+}
+
+.vendor-chart div {
+  flex: 1;
+
+  max-width: 25px;
+
+  border-radius: 5px 5px 0 0;
+
+  background: #b9913c;
+}
+
+.vendor-chart-labels {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-top: 6px;
+
+  color: #aaa298;
+
+  font-size: 11px;
+}
+
+
+/* =========================================
+   BOOKINGS
+========================================= */
+
+.vendor-bookings {
+  margin-top: 17px;
+}
+
+.vendor-booking {
+  min-height: 65px;
+
+  padding: 10px 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  border-bottom: 1px solid #eee9dd;
+}
+
+.vendor-booking:last-child {
+  border-bottom: none;
+}
+
+.vendor-date {
+  width: 45px;
+  height: 45px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #f0e6d0;
+
+  color: #315039;
+}
+
+.vendor-date strong {
+  font-family: 'Playfair Display', serif;
+
+  font-size: 16px;
+
+  line-height: 1;
+}
+
+.vendor-date span {
+  margin-top: 3px;
+
+  color: #a47b2d;
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+.vendor-booking > div:nth-child(2) {
+  flex: 1;
+}
+
+.vendor-booking > div:nth-child(2) strong {
+  display: block;
+
+  font-size: 12px;
+
+  color: #455043;
+}
+
+.vendor-booking > div:nth-child(2) span {
+  display: block;
+
+  margin-top: 4px;
+
+  font-size: 12px;
+
+  color: #898276;
+}
+
+.vendor-booking button {
+  padding: 6px 12px;
+
+  border: 1px solid rgba(185, 145, 60, 0.3);
+
+  border-radius: 15px;
+
+  background: transparent;
+
+  color: #8e6a2d;
+
+  font-size: 12px;
+}
+
+
+/* =========================================
+   OVERLAY
+========================================= */
+
+.vendor-overlay {
+  display: none;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1100px) {
+
+  .vendor-sidebar {
+    width: 225px;
+  }
+
+  .vendor-main {
+    width: calc(100% - 225px);
+    margin-left: 225px;
+  }
+
+  .vendor-stats {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .vendor-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-welcome-art {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+  .vendor-sidebar {
+    width: 225px;
+
+    transform: translateX(-100%);
+  }
+
+  .vendor-sidebar-open {
+    transform: translateX(0);
+  }
+
+  .vendor-close-menu {
+    display: flex;
+  }
+
+  .vendor-overlay {
+    display: block;
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(23, 32, 25, 0.45);
+
+    z-index: 90;
+  }
+
+  .vendor-main {
+    width: 100%;
+
+    margin-left: 0;
+  }
+
+  .vendor-header {
+    height: 70px;
+
+    padding: 0 17px;
+  }
+
+  .vendor-menu-button {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #315039;
+  }
+
+  .vendor-header-title {
+    flex: 1;
+
+    margin-left: 12px;
+  }
+
+  .vendor-header-title h1 {
+    font-size: 15px;
+  }
+
+  .vendor-header-actions {
+    gap: 10px;
+  }
+
+  .vendor-header-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .vendor-content {
+    padding: 18px 14px 35px;
+  }
+
+  .vendor-welcome-card {
+    min-height: 205px;
+
+    padding: 24px;
+
+    border-radius: 17px;
+  }
+
+  .vendor-welcome-card h2 {
+    font-size: 22px;
+  }
+
+  .vendor-welcome-card p {
+    max-width: 260px;
+
+    font-size: 12px;
+  }
+
+  .vendor-welcome-art {
+    display: none;
+  }
+
+  .vendor-stats {
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+  }
+
+  .vendor-stat-card {
+    min-height: 82px;
+
+    padding: 12px;
+
+    gap: 8px;
+  }
+
+  .vendor-stat-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .vendor-stat-card span {
+    font-size: 11px;
+  }
+
+  .vendor-stat-card strong {
+    font-size: 16px;
+  }
+
+  .vendor-dashboard-grid {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+
+    margin-top: 12px;
+  }
+
+  .vendor-panel {
+    padding: 17px;
+
+    border-radius: 15px;
+  }
+
+  .vendor-panel-header h3 {
+    font-size: 15px;
+  }
+
+  .vendor-request {
+    gap: 8px;
+  }
+
+  .vendor-request-info strong {
+    font-size: 12px;
+  }
+
+  .vendor-request-info span {
+    font-size: 11px;
+  }
+
+  .vendor-request-status {
+    font-size: 11px;
+
+    padding: 4px 6px;
+  }
+
+  .vendor-earnings-number {
+    font-size: 25px;
+  }
+
+  .vendor-booking {
+    gap: 9px;
+  }
+
+  .vendor-booking button {
+    padding: 5px 8px;
+  }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 380px) {
+
+  .vendor-content {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .vendor-welcome-card {
+    padding: 20px;
+  }
+
+  .vendor-welcome-card h2 {
+    font-size: 20px;
+  }
+
+  .vendor-stat-card {
+    padding: 10px;
+  }
+
+  .vendor-stat-card > svg {
+    display: none;
+  }
+
+  .vendor-stat-card strong {
+    font-size: 15px;
+  }
+
+  .vendor-request-status {
+    display: none;
+  }
+
+  .vendor-booking > div:nth-child(2) strong {
+    font-size: 12px;
+  }
+
+  .vendor-booking > div:nth-child(2) span {
+    font-size: 11px;
+  }
+}
+
+/* =========================================
+   NEW VENDOR DASHBOARD
+========================================= */
+
+.vendor-welcome-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.vendor-secondary-button {
+  height: 38px;
+  padding: 0 17px;
+  border: 1.5px solid #D5C2A5;
+  border-radius: 20px;
+  background: #FAF6F0;
+  color: #3D2B1F;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.vendor-secondary-button:hover {
+  background: #EFE6D8;
+  color: #21160E;
+  border-color: #8C6435;
+}
+
+.vendor-welcome-card .vendor-secondary-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFDF9;
+  border: 1.5px solid #D5B36A;
+}
+
+.vendor-welcome-card .vendor-secondary-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+}
+
+
+/* Welcome decoration */
+
+.vendor-welcome-art {
+  position: relative;
+  width: 150px;
+  height: 150px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(222, 186, 92, 0.25);
+  border-radius: 50%;
+
+  color: #e0bd67;
+  font-size: 38px;
+}
+
+.vendor-welcome-art div {
+  position: absolute;
+
+  width: 95px;
+  height: 95px;
+
+  border: 1px solid rgba(222, 186, 92, 0.2);
+  border-radius: 50%;
+}
+
+
+/* =========================================
+   GET STARTED
+========================================= */
+
+.vendor-onboarding-list {
+  margin-top: 18px;
+}
+
+.vendor-onboarding-item {
+  min-height: 62px;
+
+  padding: 10px 0;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  border-bottom: 1px solid #eee9dd;
+}
+
+.vendor-onboarding-item:last-child {
+  border-bottom: none;
+}
+
+.vendor-step-number {
+  width: 30px;
+  height: 30px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f0e6d0;
+  color: #a47b2d;
+
+  font-family: "Playfair Display", serif;
+  font-size: 13px;
+}
+
+.vendor-onboarding-item > div:nth-child(2) {
+  flex: 1;
+}
+
+.vendor-onboarding-item strong {
+  display: block;
+
+  color: #455043;
+  font-size: 12px;
+}
+
+.vendor-onboarding-item span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #91897d;
+
+  font-size: 6.5px;
+  line-height: 1.45;
+}
+
+.vendor-onboarding-item button {
+  padding: 5px 10px;
+
+  border: 1px solid rgba(185, 145, 60, 0.3);
+  border-radius: 15px;
+
+  background: transparent;
+
+  color: #8e6a2d;
+
+  font-size: 6.5px;
+}
+
+.vendor-onboarding-item > svg {
+  color: #62805f;
+}
+
+
+/* =========================================
+   EMPTY EARNINGS
+========================================= */
+
+.vendor-empty-message {
+  min-height: 150px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  color: #8d877c;
+}
+
+.vendor-empty-message svg {
+  margin-bottom: 10px;
+  color: #b9913c;
+}
+
+.vendor-empty-message strong {
+  font-family: "Playfair Display", serif;
+
+  font-size: 14px;
+
+  color: #5d665b;
+
+  font-weight: 500;
+}
+
+.vendor-empty-message span {
+  max-width: 190px;
+
+  margin-top: 6px;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   EMPTY SECTIONS
+========================================= */
+
+.vendor-empty-panel {
+  margin-top: 18px;
+}
+
+.vendor-empty-state {
+  min-height: 145px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.vendor-empty-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f0e6d0;
+
+  color: #a47b2d;
+
+  margin-bottom: 10px;
+}
+
+.vendor-empty-state h4 {
+  font-family: "Playfair Display", serif;
+
+  font-size: 15px;
+
+  font-weight: 500;
+
+  color: #526050;
+}
+
+.vendor-empty-state p {
+  max-width: 330px;
+
+  margin-top: 5px;
+
+  color: #938c80;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+.vendor-outline-button {
+  margin-top: 12px;
+
+  height: 31px;
+
+  padding: 0 15px;
+
+  border: 1px solid rgba(185, 145, 60, 0.4);
+
+  border-radius: 18px;
+
+  background: transparent;
+
+  color: #8e6a2d;
+
+  font-size: 12px;
+}
+
+.vendor-outline-button:hover {
+  background: #f4ead7;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+  .vendor-welcome-art {
+    display: none;
+  }
+
+  .vendor-welcome-actions {
+    margin-top: 13px;
+  }
+
+  .vendor-secondary-button,
+  .vendor-primary-button {
+    height: 36px;
+  }
+
+  .vendor-onboarding-item span {
+    max-width: 170px;
+  }
+
+  .vendor-onboarding-item button {
+    display: none;
+  }
+
+}
+
+/* =========================================================
+   EVORA VENDOR INNER PAGES
+   ========================================================= */
+
+.vendor-page {
+  width: 100%;
+  min-height: calc(100vh - 90px);
+  padding: 5px 0 40px;
+  color: #304b38;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.vendor-page-header {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+.vendor-page-label {
+  display: block;
+  margin-bottom: 7px;
+
+  color: #b58b36;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+}
+
+.vendor-page-header h1 {
+  margin: 0;
+
+  color: #304d38;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.vendor-page-header p {
+  margin: 8px 0 0;
+
+  color: #888276;
+
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   COMMON PRIMARY BUTTON
+   ========================================================= */
+
+.vendor-primary-button {
+  height: 40px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 0 19px;
+
+  border: none;
+  border-radius: 22px;
+
+  background: linear-gradient(135deg, #8C6435 0%, #6E4E28 100%);
+  color: #FFFFFF !important;
+
+  font-size: 12.5px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(140, 100, 53, 0.25);
+
+  transition: 0.2s ease;
+}
+
+.vendor-primary-button:hover {
+  background: linear-gradient(135deg, #755228 0%, #593D1E 100%);
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(140, 100, 53, 0.35);
+}
+
+
+/* =========================================================
+   LARGE EMPTY STATE
+   ========================================================= */
+
+.vendor-large-empty {
+  width: 100%;
+  min-height: 370px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 45px 25px;
+
+  text-align: center;
+
+  background: #fffdf8;
+
+  border: 1px solid #eadfc9;
+
+  border-radius: 18px;
+
+  box-shadow: 0 8px 30px rgba(70, 65, 45, 0.04);
+}
+
+.vendor-large-empty-icon {
+  width: 70px;
+  height: 70px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 18px;
+
+  border-radius: 50%;
+
+  background: #f1e7d1;
+  color: #b58b36;
+}
+
+.vendor-large-empty h2 {
+  margin: 0;
+
+  color: #304d38;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.vendor-large-empty p {
+  max-width: 420px;
+
+  margin: 9px auto 20px;
+
+  color: #8b857a;
+
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   SERVICE CARDS
+   ========================================================= */
+
+.vendor-service-grid {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+.vendor-service-card {
+  position: relative;
+
+  padding: 22px;
+
+  background: #fffdf8;
+
+  border: 1px solid #eadfc9;
+  border-radius: 17px;
+
+  box-shadow: 0 7px 25px rgba(70, 65, 45, 0.04);
+
+  transition: 0.2s ease;
+}
+
+.vendor-service-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 30px rgba(70, 65, 45, 0.08);
+}
+
+.vendor-service-icon {
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #f1e7d1;
+  color: #ad8230;
+}
+
+.vendor-service-card h3 {
+  margin: 16px 0 0;
+
+  color: #304d38;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.vendor-service-card p {
+  margin: 7px 0 0;
+
+  color: #8c857a;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.vendor-service-card strong {
+  display: block;
+
+  margin-top: 15px;
+
+  color: #304d38;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.vendor-service-actions {
+  display: flex;
+  gap: 8px;
+
+  margin-top: 17px;
+}
+
+.vendor-service-actions button {
+  height: 31px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  padding: 0 12px;
+
+  border: 1px solid #e3d7bf;
+  border-radius: 16px;
+
+  background: #fffdf8;
+  color: #746d62;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   EVENT REQUESTS
+   ========================================================= */
+
+.vendor-request-page-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vendor-request-page-card {
+  min-height: 85px;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  padding: 17px 20px;
+
+  background: #fffdf8;
+
+  border: 1px solid #eadfc9;
+  border-radius: 15px;
+
+  box-shadow: 0 5px 20px rgba(70, 65, 45, 0.03);
+}
+
+.vendor-request-page-icon {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #f1e7d1;
+  color: #ad8230;
+}
+
+.vendor-request-page-info {
+  flex: 1;
+}
+
+.vendor-request-page-info h3 {
+  margin: 0;
+
+  color: #304d38;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.vendor-request-page-info p {
+  margin: 5px 0 0;
+
+  color: #777167;
+
+  font-size: 12px;
+}
+
+.vendor-request-page-info span {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #a29b90;
+
+  font-size: 12px;
+}
+
+.vendor-request-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vendor-request-actions button {
+  height: 31px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  padding: 0 12px;
+
+  border-radius: 17px;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+.vendor-accept {
+  border: none;
+
+  background: #dfead9;
+  color: #4e704f;
+}
+
+.vendor-reject {
+  border: 1px solid #ead8d1;
+
+  background: #fffdf8;
+  color: #95695e;
+}
+
+
+/* =========================================================
+   BOOKING TABS
+   ========================================================= */
+
+.vendor-booking-tabs {
+  display: flex;
+  gap: 7px;
+
+  margin-bottom: 18px;
+}
+
+.vendor-booking-tabs button {
+  height: 34px;
+
+  padding: 0 17px;
+
+  border: 1px solid #e2d6c0;
+  border-radius: 18px;
+
+  background: #fffdf8;
+  color: #81796e;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+.vendor-booking-tabs button.active {
+  border-color: #304d38;
+
+  background: #304d38;
+  color: #fffdf8;
+}
+
+
+/* =========================================================
+   EARNINGS
+   ========================================================= */
+
+.vendor-earnings-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 15px;
+
+  margin-bottom: 20px;
+}
+
+.vendor-finance-card {
+  min-height: 125px;
+
+  padding: 20px;
+
+  background: #fffdf8;
+
+  border: 1px solid #eadfc9;
+  border-radius: 16px;
+
+  box-shadow: 0 5px 20px rgba(70, 65, 45, 0.03);
+}
+
+.vendor-finance-card svg {
+  color: #b58b36;
+}
+
+.vendor-finance-card span {
+  display: block;
+
+  margin-top: 15px;
+
+  color: #8a8378;
+
+  font-size: 12px;
+}
+
+.vendor-finance-card strong {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #304d38;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 23px;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   REVIEWS
+   ========================================================= */
+
+.vendor-review-summary {
+  min-height: 120px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 22px;
+
+  padding: 22px 25px;
+
+  margin-bottom: 20px;
+
+  background: #fffdf8;
+
+  border: 1px solid #eadfc9;
+  border-radius: 16px;
+}
+
+.vendor-rating-number {
+  color: #304d38;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 42px;
+}
+
+.vendor-stars {
+  display: flex;
+  gap: 4px;
+
+  color: #d2a644;
+}
+
+.vendor-review-summary span {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #918a80;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   LEGACY PROFILE SNIPPET (Disabled to prevent flex conflict)
+   ========================================================= */
+
+.vendor-profile-legacy-card {
+  min-height: 110px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  margin-bottom: 18px;
+  background: #fffdf8;
+  border: 1px solid #eadfc9;
+  border-radius: 17px;
+}
+
+.vendor-profile-large-avatar {
+  width: 68px;
+  height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #eadfc9;
+  color: #304d38;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 27px;
+}
+
+.vendor-profile-card h2 {
+  margin: 0;
+
+  color: #304d38;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.vendor-profile-card p {
+  margin-top: 5px;
+
+  color: #8c857b;
+
+  font-size: 12px;
+}
+
+.vendor-details-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 15px;
+}
+
+.vendor-details-grid > div {
+  min-height: 78px;
+
+  padding: 17px 19px;
+
+  background: #fffdf8;
+
+  border: 1px solid #eadfc9;
+  border-radius: 14px;
+}
+
+.vendor-details-grid label {
+  display: block;
+
+  color: #b58b36;
+
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.vendor-details-grid strong {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #4b574c;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+.vendor-settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vendor-setting-item {
+  min-height: 78px;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  padding: 15px 18px;
+
+  background: #fffdf8;
+
+  border: 1px solid #eadfc9;
+  border-radius: 14px;
+
+  transition: 0.2s ease;
+}
+
+.vendor-setting-item:hover {
+  border-color: #d8c49d;
+}
+
+.vendor-setting-icon {
+  width: 43px;
+  height: 43px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #f1e7d1;
+  color: #ad8230;
+}
+
+.vendor-setting-item div:nth-child(2) {
+  flex: 1;
+}
+
+.vendor-setting-item strong {
+  display: block;
+
+  color: #405143;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.vendor-setting-item span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #90897f;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.vendor-setting-item input {
+  width: 17px;
+  height: 17px;
+
+  accent-color: #304d38;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   EMPTY PANEL
+   ========================================================= */
+
+.vendor-empty-panel {
+  margin-top: 18px;
+}
+
+.vendor-empty-state {
+  min-height: 170px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.vendor-empty-icon {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 10px;
+
+  border-radius: 50%;
+
+  background: #f1e7d1;
+  color: #ad8230;
+}
+
+.vendor-empty-state h4 {
+  margin: 0;
+
+  color: #304d38;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.vendor-empty-state p {
+  max-width: 360px;
+
+  margin: 7px auto 0;
+
+  color: #918a80;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.vendor-outline-button {
+  height: 32px;
+
+  margin-top: 13px;
+
+  padding: 0 17px;
+
+  border: 1px solid #d9c59e;
+  border-radius: 17px;
+
+  background: transparent;
+  color: #8d6c30;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+.vendor-outline-button:hover {
+  background: #f4ecdd;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .vendor-service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vendor-earnings-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 800px) {
+
+  .vendor-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .vendor-page-header h1 {
+    font-size: 26px;
+  }
+
+  .vendor-service-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-earnings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .vendor-page {
+    padding-bottom: 25px;
+  }
+
+  .vendor-page-header {
+    margin-bottom: 18px;
+  }
+
+  .vendor-page-header h1 {
+    font-size: 23px;
+  }
+
+  .vendor-page-header p {
+    font-size: 12px;
+  }
+
+  .vendor-large-empty {
+    min-height: 300px;
+    padding: 30px 18px;
+  }
+
+  .vendor-request-page-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .vendor-request-actions {
+    width: 100%;
+    margin-left: 63px;
+  }
+
+  .vendor-profile-card {
+    padding: 18px;
+  }
+
+  .vendor-review-summary {
+    padding: 18px;
+  }
+
+}
+
+   EVORA MY SERVICES
+/*===================================================== */
+
+.vendor-service-form-panel {
+  margin-bottom: 22px;
+  padding: 25px;
+
+  background: #fffdf8;
+
+  border: 1px solid #eadfc9;
+  border-radius: 18px;
+
+  box-shadow: 0 8px 30px rgba(70, 65, 45, 0.05);
+}
+
+.vendor-form-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+}
+
+.vendor-form-header h2 {
+  margin: 0;
+
+  color: #304d38;
+
+  font-family: Georgia, serif;
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.vendor-form-header p {
+  margin: 6px 0 0;
+
+  color: #8b857a;
+
+  font-size: 12px;
+}
+
+.vendor-form-close {
+  width: 32px;
+  height: 32px;
+
+  border: 1px solid #e3d7c2;
+  border-radius: 50%;
+
+  background: #f8f2e7;
+  color: #526054;
+
+  font-size: 19px;
+
+  cursor: pointer;
+}
+
+.vendor-form-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 17px;
+}
+
+.vendor-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.vendor-form-group label {
+  margin-bottom: 7px;
+
+  color: #4c594f;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.vendor-form-group input,
+.vendor-form-group select,
+.vendor-form-group textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 11px 13px;
+
+  border: 1px solid #e2d7c3;
+  border-radius: 9px;
+
+  outline: none;
+
+  background: #fffefa;
+  color: #3e4c42;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  transition: 0.2s ease;
+}
+
+.vendor-form-group input,
+.vendor-form-group select {
+  height: 39px;
+}
+
+.vendor-form-group textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.vendor-form-group input:focus,
+.vendor-form-group select:focus,
+.vendor-form-group textarea:focus {
+  border-color: #b99545;
+
+  box-shadow: 0 0 0 3px rgba(185, 149, 69, 0.1);
+}
+
+.vendor-form-group input::placeholder,
+.vendor-form-group textarea::placeholder {
+  color: #b1aaa0;
+}
+
+.vendor-form-full {
+  grid-column: 1 / -1;
+}
+
+.vendor-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 22px;
+
+  padding-top: 18px;
+
+  border-top: 1px solid #eee5d6;
+}
+
+.vendor-form-cancel {
+  height: 40px;
+
+  padding: 0 20px;
+
+  border: 1px solid #ded3c0;
+  border-radius: 21px;
+
+  background: #fffdf8;
+  color: #706a61;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.vendor-form-cancel:hover {
+  background: #f5eee1;
+}
+
+
+/* SERVICE CARD */
+
+.vendor-service-card {
+  padding: 21px;
+
+  background: #fffdf8;
+
+  border: 1px solid #eadfc9;
+  border-radius: 17px;
+
+  box-shadow: 0 7px 25px rgba(70, 65, 45, 0.04);
+}
+
+.vendor-service-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vendor-service-category {
+  display: inline-block;
+
+  margin-top: 16px;
+
+  color: #b08a3b;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.vendor-service-card h3 {
+  margin: 6px 0 0;
+
+  color: #304d38;
+
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.vendor-service-card p {
+  min-height: 42px;
+
+  margin: 8px 0 0;
+
+  color: #878176;
+
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.vendor-status {
+  padding: 5px 9px;
+
+  border-radius: 12px;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.vendor-status.available {
+  background: #e5efdf;
+  color: #55744f;
+}
+
+.vendor-status.unavailable {
+  background: #f2e2dc;
+  color: #966a5f;
+}
+
+.vendor-service-price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 5px;
+
+  margin-top: 17px;
+
+  padding-top: 14px;
+
+  border-top: 1px solid #eee5d6;
+}
+
+.vendor-service-price span {
+  width: 100%;
+
+  color: #999187;
+
+  font-size: 12px;
+}
+
+.vendor-service-price strong {
+  color: #304d38;
+
+  font-family: Georgia, serif;
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.vendor-service-price small {
+  color: #948c80;
+
+  font-size: 12px;
+}
+
+.vendor-service-location {
+  margin-top: 11px;
+
+  color: #787268;
+
+  font-size: 12px;
+}
+
+.vendor-service-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 17px;
+}
+
+.vendor-service-actions button {
+  height: 31px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  padding: 0 10px;
+
+  border: 1px solid #dfd3bd;
+  border-radius: 16px;
+
+  background: #fffdf8;
+  color: #5f695f;
+
+  font-size: 12px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.vendor-service-actions button:hover {
+  background: #f3ecde;
+}
+
+.vendor-service-actions button.delete {
+  width: 31px;
+
+  padding: 0;
+
+  border-color: #ead8d1;
+
+  color: #9b685c;
+}
+
+.vendor-service-actions button.delete:hover {
+  background: #f5e7e2;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+
+  .vendor-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-form-full {
+    grid-column: auto;
+  }
+
+  .vendor-service-form-panel {
+    padding: 18px;
+  }
+
+  .vendor-service-actions {
+    flex-wrap: wrap;
+  }
+
+}
+
+@media (max-width: 450px) {
+
+  .vendor-page-header {
+    gap: 15px;
+  }
+
+  .vendor-page-header .vendor-primary-button {
+    width: 100%;
+  }
+
+  .vendor-form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .vendor-form-actions button {
+    width: 100%;
+  }
+
+}
+
+/* =====================================================
+   EVORA VENDOR PROFILE
+===================================================== */
+
+.vendor-profile-status {
+  display: inline-block;
+
+  margin-top: 6px;
+
+  color: #6d8b62;
+
+  font-size: 12px;
+}
+
+.vendor-profile-section {
+  margin-bottom: 18px;
+
+  padding: 24px;
+
+  background: #fffdf8;
+
+  border: 1px solid #eadfc9;
+  border-radius: 17px;
+
+  box-shadow: 0 6px 22px rgba(70, 65, 45, 0.035);
+}
+
+.vendor-section-heading {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 22px;
+}
+
+.vendor-section-heading-icon {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #f1e7d1;
+  color: #ad8230;
+}
+
+.vendor-section-heading h3 {
+  margin: 0;
+
+  color: #304d38;
+
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.vendor-section-heading p {
+  margin: 4px 0 0;
+
+  color: #918a80;
+
+  font-size: 12px;
+}
+
+.vendor-profile-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 17px;
+}
+
+.vendor-profile-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.vendor-profile-field label {
+  margin-bottom: 7px;
+
+  color: #686158;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.vendor-profile-field input,
+.vendor-profile-field select,
+.vendor-profile-field textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 11px 13px;
+
+  border: 1px solid #e1d6c2;
+  border-radius: 9px;
+
+  outline: none;
+
+  background: #fffefa;
+  color: #435046;
+
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.vendor-profile-field input,
+.vendor-profile-field select {
+  height: 39px;
+}
+
+.vendor-profile-field textarea {
+  resize: vertical;
+}
+
+.vendor-profile-field input:focus,
+.vendor-profile-field select:focus,
+.vendor-profile-field textarea:focus {
+  border-color: #b99545;
+
+  box-shadow: 0 0 0 3px rgba(185,149,69,.1);
+}
+
+.vendor-field-value {
+  min-height: 39px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #eee5d6;
+  border-radius: 9px;
+
+  background: #faf7ef;
+
+  color: #566157;
+
+  font-size: 12px;
+}
+
+.vendor-field-value svg {
+  color: #b08a3b;
+}
+
+.vendor-description-value {
+  min-height: 85px;
+
+  padding: 13px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #eee5d6;
+  border-radius: 9px;
+
+  background: #faf7ef;
+
+  color: #777066;
+
+  font-size: 12px;
+
+  line-height: 1.7;
+}
+
+.vendor-profile-full {
+  grid-column: 1 / -1;
+}
+
+.vendor-profile-status-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 22px 24px;
+
+  background: #304d38;
+
+  border-radius: 17px;
+
+  color: white;
+}
+
+.vendor-profile-status-card > div:first-child span {
+  color: #d5aa48;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.3px;
+}
+
+.vendor-profile-status-card h3 {
+  margin: 7px 0 0;
+
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.vendor-profile-status-card p {
+  max-width: 520px;
+
+  margin: 6px 0 0;
+
+  color: #d4ddd3;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.vendor-status-badge {
+  padding: 7px 13px;
+
+  border-radius: 15px;
+
+  background: #e4efdc;
+  color: #53724e;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* =====================================================
+   EVORA VENDOR SETTINGS
+===================================================== */
+
+.vendor-settings-success {
+  margin-bottom: 17px;
+
+  padding: 12px 16px;
+
+  border: 1px solid #cddfc5;
+  border-radius: 10px;
+
+  background: #eaf3e5;
+  color: #557450;
+
+  font-size: 12px;
+}
+
+.vendor-settings-section {
+  margin-bottom: 18px;
+
+  padding: 24px;
+
+  background: #fffdf8;
+
+  border: 1px solid #eadfc9;
+  border-radius: 17px;
+
+  box-shadow: 0 6px 22px rgba(70, 65, 45, 0.035);
+}
+
+.vendor-settings-section-header {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 20px;
+}
+
+.vendor-settings-section-header h2 {
+  margin: 0;
+
+  color: #304d38;
+
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.vendor-settings-section-header p {
+  margin: 4px 0 0;
+
+  color: #918a80;
+
+  font-size: 12px;
+}
+
+.vendor-settings-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 9px;
+}
+
+.vendor-setting-item {
+  min-height: 70px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 13px 15px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #eee5d6;
+  border-radius: 12px;
+
+  background: #fffefa;
+}
+
+.vendor-setting-item > div:nth-child(2) {
+  flex: 1;
+}
+
+.vendor-setting-item strong {
+  display: block;
+
+  color: #465248;
+
+  font-size: 12px;
+}
+
+.vendor-setting-item span:not(.vendor-switch span) {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #918a80;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* SWITCH */
+
+.vendor-switch {
+  width: 39px;
+  height: 22px;
+
+  position: relative;
+
+  flex-shrink: 0;
+
+  padding: 2px;
+
+  border: none;
+  border-radius: 20px;
+
+  background: #d8d3c8;
+
+  cursor: pointer;
+
+  transition: .2s ease;
+}
+
+.vendor-switch span {
+  width: 18px;
+  height: 18px;
+
+  display: block;
+
+  border-radius: 50%;
+
+  background: white;
+
+  box-shadow: 0 1px 4px rgba(0,0,0,.15);
+
+  transition: .2s ease;
+}
+
+.vendor-switch.on {
+  background: #304d38;
+}
+
+.vendor-switch.on span {
+  transform: translateX(17px);
+}
+
+
+/* SECURITY */
+
+.vendor-security-card {
+  min-height: 75px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 15px 17px;
+
+  border: 1px solid #eee5d6;
+  border-radius: 12px;
+
+  background: #fffefa;
+}
+
+.vendor-security-card strong {
+  color: #465248;
+
+  font-size: 12px;
+}
+
+.vendor-security-card p {
+  margin: 5px 0 0;
+
+  color: #918a80;
+
+  font-size: 12px;
+}
+
+.vendor-security-badge {
+  padding: 7px 11px;
+
+  border-radius: 13px;
+
+  background: #e6f0df;
+  color: #567650;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+
+  .vendor-profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-profile-full {
+    grid-column: auto;
+  }
+
+  .vendor-profile-section,
+  .vendor-settings-section {
+    padding: 18px;
+  }
+
+  .vendor-profile-status-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .vendor-security-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
+
+@media (max-width: 450px) {
+
+  .vendor-setting-item {
+    align-items: flex-start;
+  }
+
+}
+
+/* =========================================
+   EVORA VENDOR LAYOUT
+========================================= */
+
+.vendor-layout {
+  min-height: 100vh;
+  display: flex;
+
+  background: #f7f3e9;
+  color: #304d38;
+}
+
+
+/* SIDEBAR */
+
+.vendor-sidebar {
+  width: 225px;
+  min-width: 225px;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #304f39;
+  color: white;
+}
+
+
+/* BRAND */
+
+.vendor-brand {
+  height: 100px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 18px;
+
+  box-sizing: border-box;
+}
+
+.vendor-brand-circle {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f4ead4;
+  color: #a77e2d;
+
+  font-family: Georgia, serif;
+  font-size: 18px;
+}
+
+.vendor-brand-text h2 {
+  margin: 0;
+
+  font-family: Georgia, serif;
+  font-size: 17px;
+  letter-spacing: 1px;
+}
+
+.vendor-brand-text span {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #d9e0d7;
+
+  font-size: 11px;
+}
+
+
+/* SECTION */
+
+.vendor-sidebar-section {
+  padding: 13px 12px 0;
+}
+
+.vendor-sidebar-title {
+  margin: 0 0 10px 14px;
+
+  color: #d9ac45;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+}
+
+
+/* MENU */
+
+.vendor-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.vendor-nav-item {
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 0 13px;
+
+  box-sizing: border-box;
+
+  border-radius: 10px;
+
+  color: #eef1eb;
+
+  text-decoration: none;
+
+  font-size: 12px;
+
+  transition: 0.2s ease;
+}
+
+.vendor-nav-item svg {
+  flex-shrink: 0;
+}
+
+.vendor-nav-item:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.vendor-nav-item.active {
+  background: #e5b832;
+  color: #30452f;
+}
+
+.vendor-nav-item.active svg {
+  color: #30452f;
+}
+
+
+/* NOTIFICATION DOT */
+
+.vendor-notification-dot {
+  width: 6px;
+  height: 6px;
+
+  margin-left: auto;
+
+  border-radius: 50%;
+
+  background: #e7b633;
+}
+
+
+/* ACCOUNT */
+
+.vendor-account-section {
+  margin-top: 26px;
+}
+
+
+/* SIDEBAR BOTTOM */
+
+.vendor-sidebar-bottom {
+  margin-top: auto;
+
+  padding: 15px 13px;
+
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.vendor-sidebar-user {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 14px;
+}
+
+.vendor-user-avatar {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f1e6cf;
+  color: #a77e2d;
+
+  font-family: Georgia, serif;
+  font-size: 15px;
+}
+
+.vendor-user-details strong {
+  display: block;
+
+  color: white;
+
+  font-size: 12px;
+}
+
+.vendor-user-details span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #cbd5ca;
+
+  font-size: 11px;
+}
+
+.vendor-logout {
+  width: 100%;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 10px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+.vendor-logout:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+
+/* =========================================
+   MAIN
+========================================= */
+
+.vendor-main {
+  min-width: 0;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* TOP BAR */
+
+.vendor-topbar {
+  min-height: 90px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 32px;
+
+  box-sizing: border-box;
+
+  background: #fffdf8;
+
+  border-bottom: 1px solid #e9dfcc;
+}
+
+.vendor-topbar-label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #b18a3c;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+}
+
+.vendor-topbar h1 {
+  margin: 0;
+
+  color: #244936;
+
+  font-family: Georgia, serif;
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.vendor-star {
+  margin-left: 5px;
+
+  color: #c59b3c;
+}
+
+
+/* TOP RIGHT */
+
+.vendor-topbar-right {
+  display: flex;
+  align-items: center;
+
+  gap: 20px;
+}
+
+.vendor-top-notification {
+  position: relative;
+
+  border: none;
+
+  background: transparent;
+
+  color: #526054;
+
+  cursor: pointer;
+}
+
+.vendor-top-notification span {
+  width: 5px;
+  height: 5px;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  border-radius: 50%;
+
+  background: #d9a934;
+}
+
+.vendor-top-avatar {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eee4cf;
+
+  color: #304d38;
+
+  font-family: Georgia, serif;
+}
+
+
+/* CONTENT */
+
+.vendor-content {
+  flex: 1;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 800px) {
+
+  .vendor-sidebar {
+    width: 70px;
+    min-width: 70px;
+  }
+
+  .vendor-brand {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .vendor-brand-text {
+    display: none;
+  }
+
+  .vendor-sidebar-title {
+    display: none;
+  }
+
+  .vendor-nav-item {
+    justify-content: center;
+
+    padding: 0;
+  }
+
+  .vendor-nav-item span:not(.vendor-notification-dot) {
+    display: none;
+  }
+
+  .vendor-notification-dot {
+    position: absolute;
+    margin: 0;
+    transform: translate(12px, -10px);
+  }
+
+  .vendor-sidebar-user {
+    justify-content: center;
+  }
+
+  .vendor-user-details {
+    display: none;
+  }
+
+  .vendor-logout {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .vendor-logout span {
+    display: none;
+  }
+
+  .vendor-topbar {
+    padding: 0 20px;
+  }
+
+  .vendor-content {
+    padding: 20px;
+  }
+}
+
+
+@media (max-width: 500px) {
+
+  .vendor-sidebar {
+    width: 58px;
+    min-width: 58px;
+  }
+
+  .vendor-topbar h1 {
+    font-size: 16px;
+  }
+
+  .vendor-topbar {
+    min-height: 75px;
+  }
+
+  .vendor-content {
+    padding: 14px;
+  }
+
+}
+
+/* =========================================
+   VENDOR PROFILE
+========================================= */
+
+.vendor-profile-page {
+  width: 100%;
+  min-height: 100%;
+
+  padding: 30px;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.vendor-profile-header {
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 28px;
+}
+
+.vendor-section-label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: var(--evora-gold);
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  letter-spacing: 1.8px;
+}
+
+.vendor-profile-header h1 {
+  margin: 0;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 32px;
+
+  font-weight: 500;
+
+  color: var(--evora-green);
+}
+
+.vendor-profile-header p {
+  margin: 7px 0 0;
+
+  color: var(--evora-muted);
+
+  font-size: 10px;
+}
+
+
+/* =========================================
+   EDIT BUTTON
+========================================= */
+
+.vendor-profile-edit-btn {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 11px 17px;
+
+  border: 1px solid var(--evora-gold);
+
+  border-radius: 22px;
+
+  background: var(--evora-gold);
+
+  color: white;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.vendor-profile-edit-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 7px 16px rgba(119, 87, 35, 0.15);
+}
+
+
+/* =========================================
+   GRID
+========================================= */
+
+.vendor-profile-grid {
+  display: grid;
+
+  grid-template-columns: 280px minmax(0, 1fr);
+
+  gap: 20px;
+
+  max-width: 1100px;
+}
+
+
+/* =========================================
+   CARDS
+========================================= */
+
+.vendor-profile-card {
+  padding: 28px;
+
+  border: 1px solid rgba(185, 145, 60, 0.20);
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 253, 248, 0.96),
+      rgba(247, 241, 226, 0.92)
+    );
+
+  box-shadow:
+    0 10px 30px rgba(67, 54, 39, 0.05);
+}
+
+
+/* =========================================
+   MAIN PROFILE
+========================================= */
+
+.vendor-profile-main {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+
+  height: fit-content;
+}
+
+.vendor-profile-avatar {
+  width: 78px;
+  height: 78px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 15px;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f4e8ca,
+      #e7d7ae
+    );
+
+  border: 1px solid rgba(185, 145, 60, 0.35);
+
+  color: var(--evora-green);
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 29px;
+}
+
+.vendor-profile-main h2 {
+  margin: 0;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 22px;
+
+  font-weight: 500;
+
+  color: var(--evora-green);
+}
+
+.vendor-profile-role {
+  margin-top: 6px;
+
+  color: var(--evora-gold);
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  letter-spacing: 1px;
+}
+
+.vendor-profile-description {
+  margin: 18px 0 0;
+
+  color: var(--evora-muted);
+
+  font-size: 12px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   CARD HEADING
+========================================= */
+
+.vendor-card-heading {
+  margin-bottom: 25px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+}
+
+.vendor-card-heading h2 {
+  margin: 0;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 22px;
+
+  font-weight: 500;
+
+  color: var(--evora-green);
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.vendor-profile-form {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 18px;
+}
+
+.vendor-profile-field {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.vendor-profile-field label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  color: var(--evora-brown);
+
+  font-size: 12px;
+
+  font-weight: 500;
+}
+
+.vendor-profile-field label svg {
+  color: var(--evora-gold);
+}
+
+.vendor-profile-field input,
+.vendor-profile-field select,
+.vendor-profile-field textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(185, 145, 60, 0.22);
+
+  border-radius: 10px;
+
+  background: rgba(255, 253, 248, 0.8);
+
+  color: var(--evora-text);
+
+  outline: none;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  transition: 0.2s ease;
+}
+
+.vendor-profile-field input,
+.vendor-profile-field select {
+  height: 43px;
+
+  padding: 0 12px;
+}
+
+.vendor-profile-field textarea {
+  padding: 12px;
+
+  resize: vertical;
+
+  line-height: 1.6;
+}
+
+.vendor-profile-field input:focus,
+.vendor-profile-field select:focus,
+.vendor-profile-field textarea:focus {
+  border-color: var(--evora-gold);
+
+  box-shadow:
+    0 0 0 3px rgba(185, 145, 60, 0.07);
+}
+
+.vendor-profile-field input:disabled,
+.vendor-profile-field select:disabled,
+.vendor-profile-field textarea:disabled {
+  color: var(--evora-text);
+
+  opacity: 1;
+
+  cursor: default;
+}
+
+.vendor-profile-field input::placeholder,
+.vendor-profile-field textarea::placeholder {
+  color: #aaa197;
+}
+
+
+/* =========================================
+   FULL WIDTH
+========================================= */
+
+.vendor-profile-full {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.vendor-profile-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 25px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid rgba(185, 145, 60, 0.14);
+}
+
+.vendor-profile-cancel,
+.vendor-profile-save {
+  height: 40px;
+
+  padding: 0 17px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.vendor-profile-cancel {
+  border: 1px solid rgba(185, 145, 60, 0.25);
+
+  background: transparent;
+
+  color: var(--evora-muted);
+}
+
+.vendor-profile-cancel:hover {
+  background: var(--evora-soft);
+
+  color: var(--evora-green);
+}
+
+.vendor-profile-save {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  border: 1px solid var(--evora-gold);
+
+  background: var(--evora-gold);
+
+  color: white;
+}
+
+.vendor-profile-save:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 7px 15px rgba(119, 87, 35, 0.15);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .vendor-profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-profile-main {
+    max-width: none;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .vendor-profile-page {
+    padding: 20px 16px;
+  }
+
+  .vendor-profile-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    margin-bottom: 20px;
+  }
+
+  .vendor-profile-header h1 {
+    font-size: 27px;
+  }
+
+  .vendor-profile-header p {
+    font-size: 12px;
+  }
+
+  .vendor-profile-edit-btn {
+    padding: 10px 15px;
+  }
+
+  .vendor-profile-card {
+    padding: 21px;
+
+    border-radius: 17px;
+  }
+
+  .vendor-profile-form {
+    grid-template-columns: 1fr;
+
+    gap: 15px;
+  }
+
+  .vendor-profile-full {
+    grid-column: auto;
+  }
+
+  .vendor-profile-actions {
+    flex-direction: column-reverse;
+  }
+
+  .vendor-profile-cancel,
+  .vendor-profile-save {
+    width: 100%;
+  }
+}
+
+/* =========================================
+   VENDOR SETTINGS
+========================================= */
+
+.vendor-settings-page {
+  width: 100%;
+
+  min-height: 100%;
+
+  padding: 30px;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.vendor-settings-header {
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 25px;
+}
+
+.vendor-settings-header h1 {
+  margin: 0;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 32px;
+
+  font-weight: 500;
+
+  color: var(--evora-green);
+}
+
+.vendor-settings-header p {
+  margin: 7px 0 0;
+
+  color: var(--evora-muted);
+
+  font-size: 10px;
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.vendor-settings-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+}
+
+.vendor-settings-reset,
+.vendor-settings-save {
+  height: 40px;
+
+  padding: 0 15px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.vendor-settings-reset {
+  border: 1px solid rgba(185, 145, 60, 0.25);
+
+  background: transparent;
+
+  color: var(--evora-muted);
+}
+
+.vendor-settings-reset:hover {
+  background: var(--evora-soft);
+
+  color: var(--evora-green);
+}
+
+.vendor-settings-save {
+  border: 1px solid var(--evora-gold);
+
+  background: var(--evora-gold);
+
+  color: white;
+}
+
+.vendor-settings-save:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 7px 15px rgba(119, 87, 35, 0.15);
+}
+
+
+/* =========================================
+   SUCCESS MESSAGE
+========================================= */
+
+.vendor-settings-success {
+  margin-bottom: 20px;
+
+  padding: 11px 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  border: 1px solid rgba(49, 80, 57, 0.18);
+
+  border-radius: 10px;
+
+  background: rgba(49, 80, 57, 0.06);
+
+  color: var(--evora-green);
+
+  font-size: 12px;
+}
+
+.vendor-settings-success svg {
+  flex-shrink: 0;
+}
+
+
+/* =========================================
+   GRID
+========================================= */
+
+.vendor-settings-grid {
+  max-width: 1100px;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 20px;
+}
+
+
+/* =========================================
+   CARD
+========================================= */
+
+.vendor-settings-card {
+  padding: 25px;
+
+  border: 1px solid rgba(185, 145, 60, 0.20);
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 253, 248, 0.96),
+      rgba(247, 241, 226, 0.92)
+    );
+
+  box-shadow:
+    0 10px 30px rgba(67, 54, 39, 0.05);
+}
+
+
+/* =========================================
+   CARD HEADER
+========================================= */
+
+.vendor-settings-card-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  margin-bottom: 22px;
+}
+
+.vendor-settings-icon {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: var(--evora-soft);
+
+  color: var(--evora-gold);
+
+  border: 1px solid rgba(185, 145, 60, 0.15);
+}
+
+.vendor-settings-card-header h2 {
+  margin: 0;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 19px;
+
+  font-weight: 500;
+
+  color: var(--evora-green);
+}
+
+.vendor-settings-card-header p {
+  margin: 4px 0 0;
+
+  color: var(--evora-muted);
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   OPTIONS
+========================================= */
+
+.vendor-settings-options {
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+/* =========================================
+   SETTING ROW
+========================================= */
+
+.vendor-settings-row {
+  min-height: 62px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 13px 0;
+
+  border-bottom: 1px solid rgba(185, 145, 60, 0.12);
+}
+
+.vendor-settings-row:last-child {
+  border-bottom: none;
+}
+
+.vendor-settings-row-icon {
+  width: 31px;
+  height: 31px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: rgba(238, 228, 207, 0.65);
+
+  color: var(--evora-green);
+}
+
+.vendor-settings-row-content {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.vendor-settings-row-content strong {
+  color: var(--evora-text);
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.vendor-settings-row-content span {
+  color: var(--evora-muted);
+
+  font-size: 12px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================
+   TOGGLE
+========================================= */
+
+.vendor-settings-toggle {
+  width: 38px;
+  height: 21px;
+
+  flex-shrink: 0;
+
+  padding: 2px;
+
+  border: none;
+
+  border-radius: 20px;
+
+  background: #d8d0c1;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.vendor-settings-toggle span {
+  display: block;
+
+  width: 17px;
+  height: 17px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.12);
+
+  transition: 0.25s ease;
+}
+
+.vendor-settings-toggle.active {
+  background: var(--evora-green);
+}
+
+.vendor-settings-toggle.active span {
+  transform: translateX(17px);
+}
+
+
+/* =========================================
+   CHANGE BUTTON
+========================================= */
+
+.vendor-settings-small-btn {
+  flex-shrink: 0;
+
+  padding: 7px 11px;
+
+  border: 1px solid rgba(185, 145, 60, 0.25);
+
+  border-radius: 15px;
+
+  background: transparent;
+
+  color: var(--evora-green);
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.vendor-settings-small-btn:hover {
+  background: var(--evora-soft);
+}
+
+
+/* =========================================
+   PREFERENCES
+========================================= */
+
+.vendor-settings-preferences {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 15px;
+}
+
+.vendor-settings-field {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.vendor-settings-field label {
+  color: var(--evora-brown);
+
+  font-size: 12px;
+
+  font-weight: 500;
+}
+
+.vendor-settings-field select {
+  width: 100%;
+
+  height: 42px;
+
+  padding: 0 10px;
+
+  border: 1px solid rgba(185, 145, 60, 0.22);
+
+  border-radius: 10px;
+
+  background: rgba(255, 253, 248, 0.8);
+
+  color: var(--evora-text);
+
+  outline: none;
+
+  font-size: 12px;
+}
+
+.vendor-settings-field select:focus {
+  border-color: var(--evora-gold);
+
+  box-shadow:
+    0 0 0 3px rgba(185, 145, 60, 0.07);
+}
+
+
+/* =========================================
+   ACCOUNT
+========================================= */
+
+.vendor-settings-account {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.vendor-account-info {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 15px;
+
+  margin-bottom: 20px;
+}
+
+.vendor-account-info div {
+  padding: 12px;
+
+  border-radius: 10px;
+
+  background: rgba(238, 228, 207, 0.42);
+}
+
+.vendor-account-info span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: var(--evora-muted);
+
+  font-size: 12px;
+}
+
+.vendor-account-info strong {
+  color: var(--evora-text);
+
+  font-size: 12px;
+}
+
+.vendor-active-status {
+  color: var(--evora-green) !important;
+}
+
+
+/* =========================================
+   DANGER
+========================================= */
+
+.vendor-danger-button {
+  align-self: flex-start;
+
+  padding: 9px 13px;
+
+  border: 1px solid rgba(165, 75, 67, 0.20);
+
+  border-radius: 18px;
+
+  background: rgba(165, 75, 67, 0.05);
+
+  color: #a04d45;
+
+  font-size: 12px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.vendor-danger-button:hover {
+  background: rgba(165, 75, 67, 0.10);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .vendor-settings-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .vendor-settings-page {
+    padding: 20px 16px;
+  }
+
+  .vendor-settings-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    margin-bottom: 20px;
+  }
+
+  .vendor-settings-header h1 {
+    font-size: 27px;
+  }
+
+  .vendor-settings-header p {
+    font-size: 12px;
+  }
+
+  .vendor-settings-actions {
+    width: 100%;
+  }
+
+  .vendor-settings-reset,
+  .vendor-settings-save {
+    flex: 1;
+  }
+
+  .vendor-settings-card {
+    padding: 20px;
+
+    border-radius: 17px;
+  }
+
+  .vendor-settings-preferences {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-account-info {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-settings-row-content span {
+    font-size: 12px;
+  }
+
+}
+
+.splash-logo {
+  width: 215px;
+  display: flex;
+  justify-content: center;
+  margin-top: -45px;
+}
+
+.splash-logo .evora-logo {
+  width: 215px;
+  height: auto;
+  object-fit: contain;
+}
+
+
+.event-requests-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 38px 48px 70px;
+  background: #f6f3eb;
+  color: #2f4137;
+}
+
+.event-requests-header {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto 34px;
+}
+
+.event-requests-label {
+  display: block;
+  margin-bottom: 9px;
+  color: #9b7a3d;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+.event-requests-header h1 {
+  margin: 0;
+  color: #2e463a;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 42px;
+  font-weight: 500;
+}
+
+.event-requests-header p {
+  margin-top: 9px;
+  color: #71736d;
+  font-size: 15px;
+}
+
+.request-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto 20px;
+}
+
+.request-stat-card {
+  min-height: 95px;
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.48);
+  border: 1px solid #dfd7c7;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(89, 70, 38, 0.04);
+}
+
+.request-stat-card span {
+  display: block;
+  margin-bottom: 12px;
+  color: #76756e;
+  font-size: 12px;
+}
+
+.request-stat-card strong {
+  color: #31463b;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.request-filters {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto 20px;
+}
+
+.request-search {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  height: 58px;
+  padding: 0 18px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid #ded7c9;
+  border-radius: 16px;
+}
+
+.request-search svg {
+  flex-shrink: 0;
+  margin-right: 12px;
+  color: #7c7465;
+}
+
+.request-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #35483d;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.request-search input::placeholder {
+  color: #99958b;
+}
+
+.request-filter-select {
+  position: relative;
+  width: 180px;
+  height: 58px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid #ded7c9;
+  border-radius: 16px;
+}
+
+.request-filter-select select {
+  width: 100%;
+  height: 100%;
+  padding: 0 42px 0 18px;
+  appearance: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #5e625c;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.request-filter-select svg {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #767268;
+}
+
+.request-list {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.event-request-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 14px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px solid #ded7c9;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(89, 70, 38, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event-request-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 13px 32px rgba(89, 70, 38, 0.08);
+}
+
+.request-card-main {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.request-event-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  margin-right: 18px;
+  flex-shrink: 0;
+  color: #a47d2f;
+  background: #f1eadb;
+  border-radius: 17px;
+}
+
+.request-information {
+  min-width: 0;
+}
+
+.request-event-type {
+  display: block;
+  margin-bottom: 6px;
+  color: #9a7a3d;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.request-information h2 {
+  margin: 0 0 7px;
+  color: #30473c;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.request-organizer {
+  margin: 0 0 14px;
+  color: #77776f;
+  font-size: 12px;
+}
+
+.request-organizer strong {
+  color: #596057;
+}
+
+.request-organizer span {
+  margin: 0 5px;
+}
+
+.request-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.request-meta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #847d6d;
+  font-size: 11px;
+}
+
+.request-meta svg {
+  color: #a78442;
+}
+
+.request-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.request-status {
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.request-status.pending {
+  color: #9b741d;
+  background: #f6eed8;
+}
+
+.request-status.proposal-sent {
+  color: #77632f;
+  background: #eee6cc;
+}
+
+.request-status.accepted {
+  color: #52705c;
+  background: #e4eee6;
+}
+
+.request-status.declined {
+  color: #9a6962;
+  background: #f3e5e2;
+}
+
+.request-details-button,
+.request-accept-button,
+.request-decline-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 42px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.request-details-button {
+  padding: 0 17px;
+  color: #67675f;
+  background: transparent;
+  border: 1px solid #d9d1c1;
+}
+
+.request-details-button:hover {
+  background: #f3efe6;
+}
+
+.request-accept-button {
+  padding: 0 17px;
+  color: #45604d;
+  background: #e4eee6;
+  border: 1px solid #d6e4d8;
+}
+
+.request-accept-button:hover {
+  transform: translateY(-1px);
+  background: #d9e8dc;
+}
+
+.request-decline-button {
+  width: 42px;
+  color: #a36d64;
+  background: #f7ece9;
+  border: 1px solid #ead5d0;
+}
+
+.request-decline-button:hover {
+  transform: translateY(-1px);
+  background: #f1dfda;
+}
+
+.requests-empty-state {
+  display: flex;
+  min-height: 310px;
+  padding: 40px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.42);
+  border: 1px solid #ded7c9;
+  border-radius: 20px;
+}
+
+.requests-empty-state svg {
+  margin-bottom: 18px;
+  color: #aa8640;
+}
+
+.requests-empty-state h2 {
+  margin: 0 0 9px;
+  color: #33483e;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.requests-empty-state p {
+  max-width: 420px;
+  margin: 0;
+  color: #7b786f;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .event-requests-page {
+    padding: 30px 25px 60px;
+  }
+
+  .request-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .event-request-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .request-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .event-requests-page {
+    padding: 24px 16px 50px;
+  }
+
+  .event-requests-header h1 {
+    font-size: 34px;
+  }
+
+  .request-filters {
+    flex-direction: column;
+  }
+
+  .request-filter-select {
+    width: 100%;
+  }
+
+  .request-card-main {
+    align-items: flex-start;
+  }
+
+  .request-event-icon {
+    width: 48px;
+    height: 48px;
+    margin-right: 12px;
+  }
+
+  .request-information h2 {
+    font-size: 18px;
+  }
+
+  .request-meta {
+    gap: 9px;
+  }
+}
+
+/* =========================================
+   MY SERVICES
+========================================= */
+
+.vendor-services-header {
+  align-items: center;
+}
+
+.vendor-services-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.vendor-services-summary-card {
+  padding: 17px 19px;
+  border: 1px solid #eadfc9;
+  border-radius: 15px;
+  background: rgba(255, 253, 248, 0.82);
+}
+
+.vendor-services-summary-card span {
+  display: block;
+  color: #8c857a;
+  font-size: 12px;
+}
+
+.vendor-services-summary-card strong {
+  display: block;
+  margin-top: 5px;
+  color: #304d38;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+
+/* EMPTY STATE */
+
+.vendor-services-empty {
+  min-height: 370px;
+  padding: 50px 25px;
+  border: 1px solid #eadfc9;
+  border-radius: 20px;
+  background: rgba(255, 253, 248, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.vendor-services-empty-icon {
+  width: 65px;
+  height: 65px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f7f0e1;
+  color: #a07d38;
+}
+
+.vendor-services-empty h2 {
+  margin: 0;
+  color: #304d38;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.vendor-services-empty p {
+  max-width: 370px;
+  margin: 9px 0 22px;
+  color: #8c857a;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+
+/* SERVICES GRID */
+
+.vendor-services-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(280px, 1fr)
+  );
+  gap: 18px;
+}
+
+.vendor-service-card {
+  padding: 19px;
+  border: 1px solid #eadfc9;
+  border-radius: 18px;
+  background: rgba(255, 253, 248, 0.85);
+  transition: 0.25s ease;
+}
+
+.vendor-service-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 15px 35px
+    rgba(66, 54, 39, 0.08);
+}
+
+.vendor-service-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vendor-service-icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f7f0e1;
+  color: #a07d38;
+}
+
+.vendor-service-status {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.vendor-service-status.available {
+  background: #e7f0e8;
+  color: #507357;
+}
+
+.vendor-service-status.unavailable {
+  background: #f4e8e5;
+  color: #a4655d;
+}
+
+.vendor-service-content {
+  margin-top: 17px;
+}
+
+.vendor-service-category {
+  display: block;
+  color: #a07d38;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.vendor-service-content h3 {
+  margin: 5px 0 0;
+  color: #304d38;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.vendor-service-description {
+  min-height: 42px;
+  margin: 9px 0 0;
+  color: #81796e;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+
+/* SERVICE DETAILS */
+
+.vendor-service-details {
+  margin-top: 16px;
+  padding-top: 15px;
+  border-top: 1px solid #eee5d7;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.vendor-service-details div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #746d63;
+  font-size: 12px;
+}
+
+.vendor-service-details svg {
+  color: #a07d38;
+}
+
+.vendor-service-area {
+  margin-top: 14px;
+  padding: 11px;
+  border-radius: 10px;
+  background: #faf6ec;
+}
+
+.vendor-service-area span {
+  color: #a07d38;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.vendor-service-area p {
+  margin: 5px 0 0;
+  color: #746d63;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* CARD ACTIONS */
+
+.vendor-service-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 17px;
+}
+
+.vendor-service-actions button {
+  height: 35px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.vendor-service-edit {
+  flex: 1;
+  border: 1px solid #decfaf;
+  background: #fffdf8;
+  color: #76613b;
+}
+
+.vendor-service-delete {
+  padding: 0 13px;
+  border: 1px solid #ecd7d3;
+  background: #fffdf8;
+  color: #a4655d;
+}
+
+
+/* SERVICE FORM */
+
+.vendor-service-form-modal {
+  max-width: 680px;
+}
+
+.vendor-service-form {
+  margin-top: 20px;
+}
+
+.vendor-service-form-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    2,
+    minmax(0, 1fr)
+  );
+  gap: 15px;
+}
+
+.vendor-form-full {
+  grid-column: 1 / -1;
+}
+
+.vendor-service-form input,
+.vendor-service-form select,
+.vendor-service-form textarea {
+  width: 100%;
+  border: 1px solid #e2d7c3;
+  border-radius: 10px;
+  outline: none;
+  background: #fffdf8;
+  color: #4d554e;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+.vendor-service-form input,
+.vendor-service-form select {
+  height: 43px;
+  padding: 0 12px;
+}
+
+.vendor-service-form textarea {
+  padding: 12px;
+  resize: vertical;
+}
+
+.vendor-service-form input:focus,
+.vendor-service-form select:focus,
+.vendor-service-form textarea:focus {
+  border-color: #b9913c;
+  box-shadow:
+    0 0 0 3px
+    rgba(185, 145, 60, 0.08);
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+
+  .vendor-services-header {
+    align-items: flex-start;
+  }
+
+  .vendor-services-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-service-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-form-full {
+    grid-column: auto;
+  }
+
+}
+
+
+.vendor-top-avatar {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.vendor-sidebar-user {
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* ================= NOTIFICATIONS ================= */
+
+.mark-all-read-button {
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.mark-all-read-button:hover {
+  background: #f8fafc;
+}
+
+
+/* NOTIFICATION LIST */
+
+.vendor-notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+
+/* NOTIFICATION CARD */
+
+.vendor-notification-card {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  transition: 0.2s;
+}
+
+.vendor-notification-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+
+/* UNREAD */
+
+.vendor-notification-card.unread {
+  border-left: 4px solid #7c3aed;
+  background: #faf7ff;
+}
+
+
+/* READ */
+
+.vendor-notification-card.read {
+  opacity: 0.75;
+}
+
+
+/* ICON */
+
+.vendor-notification-icon {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+}
+
+
+/* CONTENT */
+
+.vendor-notification-content {
+  flex: 1;
+}
+
+.vendor-notification-content h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.vendor-notification-content p {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.vendor-notification-content span {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+
+/* UNREAD DOT */
+
+.vendor-unread-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #7c3aed;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+  .vendor-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .vendor-notification-card {
+    align-items: flex-start;
+  }
+
+}
+
+/* ========================================================
+   EVORA AUTHENTICATION GLOBAL ALIGNMENTS & BUTTON RESETS
+   ======================================================== */
+
+.login-options {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin: 16px 0 22px !important;
+  width: 100% !important;
+}
+
+.login-remember {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 13px !important;
+  color: #4F4641 !important;
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+.login-remember input[type="checkbox"] {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  accent-color: #C9A13A !important;
+  cursor: pointer !important;
+}
+
+.login-forgot {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: #8C6435 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  font-family: inherit !important;
+  transition: color 0.15s ease !important;
+}
+
+.login-forgot:hover {
+  color: #C9A13A !important;
+  text-decoration: underline !important;
+}
+
+.login-submit-button,
+.register-submit,
+.register-button {
+  width: 100% !important;
+  height: 46px !important;
+  border: none !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #C9A13A 0%, #D4AF37 50%, #B8860B 100%) !important;
+  color: #2B1D12 !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 4px 14px rgba(201, 161, 58, 0.35) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+  font-family: inherit !important;
+}
+
+.login-submit-button:hover,
+.register-submit:hover,
+.register-button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgba(201, 161, 58, 0.45) !important;
+}
+
+.login-register-link,
+.register-login-link {
+  color: #8C6435 !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  margin-left: 4px !important;
+  transition: color 0.15s ease !important;
+}
+
+.login-register-link:hover,
+.register-login-link:hover {
+  color: #C9A13A !important;
+  text-decoration: underline !important;
+}
+
+/* =========================================
+   UI & USER-FRIENDLY INTERACTION UPGRADES
+========================================= */
+
+@keyframes toastSlideIn {
+  from {
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF5EA;
+}
+::-webkit-scrollbar-thumb {
+  background: #D5B36A;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C9A13A;
+}
+
+/* Mobile responsive menu button & drawer behavior */
+.vendor-menu-button {
+  display: none;
+  background: transparent;
+  border: 1px solid #E8DCC8;
+  border-radius: 8px;
+  padding: 6px;
+  color: #2B1D12;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.vendor-menu-button:hover {
+  background: #F0E8D8;
+}
+
+@media (max-width: 992px) {
+  .vendor-menu-button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .vendor-sidebar {
+    position: fixed !important;
+    left: 0;
+    z-index: 999;
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  }
+
+  .vendor-sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  .vendor-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* Interactive Card Elevation & Micro-transitions */
+.vendor-card,
+.vendor-stat-card,
+.event-request-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+}
+
+.vendor-card:hover,
+.vendor-stat-card:hover,
+.event-request-card:hover {
+  box-shadow: 0 8px 24px rgba(43, 29, 18, 0.08) !important;
+}
+
+\n
+/* =========================================================
+   PHASE 1: UNIFIED EVORA COMPONENT SYSTEM & MISSING STYLES
+   ========================================================= */
+
+/* A. Layout Unified Rules */
+.vendor-sidebar {
+  width: 225px;
+  min-width: 225px;
+  max-width: 225px;
+  flex: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #304f39;
+  color: #fff;
+  z-index: 1000;
+  overflow-y: auto;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.vendor-main {
+  margin-left: 225px;
+  width: calc(100% - 225px);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #FAF5EA;
+  box-sizing: border-box;
+}
+
+.vendor-topbar {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 38px;
+  border-bottom: 1px solid #E8DCC8;
+  background: #FFFDF9;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+
+.vendor-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.vendor-content {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 30px 38px 80px;
+  box-sizing: border-box;
+  min-width: 0;
+  flex: 1;
+}
+
+@media (max-width: 800px) {
+  .vendor-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    height: 100vh;
+    z-index: 1001;
+    transform: translateX(-100%);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  .vendor-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .vendor-main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .vendor-topbar {
+    padding: 0 16px;
+  }
+
+  .vendor-content {
+    padding: 20px 16px 80px;
+  }
+}
+
+/* Role Option & Subtitle */
+.role-option {
+  overflow: hidden !important;
+}
+
+.choose-text {
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .choose-text {
+    white-space: normal;
+  }
+}
+
+/* B. Shared Core Components */
+.vendor-btn,
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #C9A13A 0%, #D4AF37 50%, #B8860B 100%);
+  color: #2B1D12;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(201, 161, 58, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.vendor-btn:hover,
+.primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(201, 161, 58, 0.45);
+}
+
+.vendor-card {
+  background: #FFFDF9;
+  border: 1px solid rgba(213, 179, 106, 0.45);
+  border-radius: 15px;
+  padding: 24px;
+  box-shadow: 0 6px 20px rgba(43, 29, 18, 0.05);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.vendor-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.vendor-stat-content,
+.vendor-stat-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vendor-stat-value {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2B1D12;
+  margin: 4px 0 0;
+}
+
+.vendor-stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #766C67;
+}
+
+.vendor-welcome-content {
+  max-width: 600px;
+}
+
+/* Auth Elements */
+.login-password-toggle,
+.register-toggle-password {
+  background: transparent;
+  border: none;
+  color: #766C67;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.register-footer {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 13px;
+  color: #766C67;
+}
+
+.role-illustration {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #FAF5EA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+/* Vendor Bookings & Reviews */
+.vendor-bookings-list,
+.vendor-reviews-list,
+.vendor-transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vendor-booking-card,
+.vendor-review-card,
+.vendor-transaction-card {
+  background: #FFFDF9;
+  border: 1px solid rgba(213, 179, 106, 0.4);
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 14px rgba(43, 29, 18, 0.04);
+}
+
+.vendor-booking-card-header,
+.vendor-review-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.vendor-booking-details {
+  font-size: 13px;
+  color: #6B5240;
+  line-height: 1.6;
+}
+
+.vendor-booking-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.booking-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.booking-event-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #C9A13A;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.booking-cancel-button,
+.btn-decline {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #FDF2F2;
+  border: 1px solid #F5C2C7;
+  color: #B02A37;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.booking-cancel-button:hover,
+.btn-decline:hover {
+  background: #B02A37;
+  color: #FFF;
+}
+
+.booking-complete-button,
+.btn-accept {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #EAF8EF;
+  border: 1px solid #B8E4C4;
+  color: #1A7A3A;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.booking-complete-button:hover,
+.btn-accept:hover {
+  background: #1A7A3A;
+  color: #FFF;
+}
+
+.btn-propose {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #C9A13A 0%, #D4AF37 100%);
+  border: none;
+  color: #2B1D12;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.view-request-details,
+.back-to-requests {
+  color: #8C6435;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.vendor-review-comment {
+  font-size: 13px;
+  color: #4A3A2C;
+  line-height: 1.5;
+  margin: 8px 0;
+}
+
+.vendor-review-date {
+  font-size: 12px;
+  color: #A0968E;
+}
+
+.vendor-review-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #C9A13A;
+  font-weight: 700;
+}
+
+/* Service Card Meta */
+.vendor-service-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.vendor-service-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: #766C67;
+  margin: 6px 0 12px;
+  flex-wrap: wrap;
+}
+
+.vendor-service-footer,
+.vendor-service-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #F0E8D8;
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.vendor-price-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #8B7355;
+  font-weight: 600;
+}
+
+.vendor-price-value {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2B1D12;
+}
+
+.vendor-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.vendor-area-text {
+  font-size: 12px;
+  color: #6B5240;
+}
+
+.vendor-availability-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Modals */
+.vendor-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(33, 22, 14, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.vendor-modal-card {
+  background: #FFFDF9;
+  border: 1px solid #D5B36A;
+  border-radius: 20px;
+  padding: 30px;
+  width: 100%;
+  max-width: 540px;
+  box-shadow: 0 18px 48px rgba(0,0,0,0.25);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.vendor-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.vendor-modal-tag {
+  font-size: 11px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  color: #C9A13A;
+  text-transform: uppercase;
+}
+
+.vendor-close-button,
+.vendor-icon-button {
+  background: transparent;
+  border: none;
+  color: #766C67;
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.vendor-close-button:hover,
+.vendor-icon-button:hover {
+  background: #FAF5EA;
+  color: #2B1D12;
+}
+
+.vendor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.vendor-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2B1D12;
+}
+
+.vendor-field input,
+.vendor-field select,
+.vendor-field textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #E8DCC8;
+  background: #FFF;
+  color: #2B1D12;
+  font-family: inherit;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.vendor-empty-card {
+  text-align: center;
+  padding: 48px 24px;
+  color: #8B7355;
+  background: #FFFDF9;
+  border: 1px dashed #D5B36A;
+  border-radius: 14px;
+}
+
+.vendor-notification-status {
+  font-size: 11px;
+  font-weight: 600;
+  color: #8B7355;
+}
+
+.vendor-view-button {
+  font-size: 13px;
+  color: #C9A13A;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.vendor-onboarding-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vendor-art-circle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.circle-one {
+  width: 120px;
+  height: 120px;
+  background: rgba(201, 161, 58, 0.1);
+  top: -20px;
+  right: -20px;
+}
+
+.circle-two {
+  width: 80px;
+  height: 80px;
+  background: rgba(48, 75, 53, 0.08);
+  bottom: -10px;
+  left: 30px;
+}
+
+.circle-three {
+  width: 50px;
+  height: 50px;
+  background: rgba(201, 161, 58, 0.15);
+  top: 40px;
+  right: 60px;
+}
+
+.earnings-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.vendor-change-photo,
+.vendor-remove-photo {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.vendor-change-photo {
+  background: #FAF5EA;
+  border: 1px solid #D5B36A;
+  color: #8C6435;
+}
+
+.vendor-remove-photo {
+  background: transparent;
+  border: 1px solid #F5C2C7;
+  color: #B02A37;
+}
+
+.vendor-photo-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.vendor-profile-image-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* Send Proposal Page */
+.proposal-page {
+  width: 100%;
+}
+
+.proposal-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .proposal-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.proposal-form-card,
+.proposal-summary-card {
+  background: #FFFDF9;
+  border: 1px solid rgba(213, 179, 106, 0.45);
+  border-radius: 16px;
+  padding: 26px;
+  box-shadow: 0 6px 20px rgba(43, 29, 18, 0.05);
+}
+
+.proposal-form-header {
+  margin-bottom: 20px;
+}
+
+.proposal-form-tag {
+  font-size: 11px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  color: #C9A13A;
+  text-transform: uppercase;
+}
+
+.proposal-alert {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.proposal-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.proposal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.proposal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .proposal-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.proposal-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.proposal-input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2B1D12;
+}
+
+.proposal-input-group input,
+.proposal-input-group textarea,
+.proposal-input-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #E8DCC8;
+  background: #FFF;
+  color: #2B1D12;
+  font-family: inherit;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.proposal-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.proposal-submit-btn {
+  flex: 1;
+  height: 44px;
+  background: linear-gradient(135deg, #C9A13A 0%, #D4AF37 100%);
+  color: #2B1D12;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(201, 161, 58, 0.35);
+}
+
+.proposal-cancel-btn {
+  padding: 10px 18px;
+  background: transparent;
+  border: 1px solid #E8DCC8;
+  color: #766C67;
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.proposal-back-button {
+  background: transparent;
+  border: none;
+  color: #8C6435;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.proposal-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.proposal-summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #F0E8D8;
+  font-size: 13px;
+}
+
+.summary-label {
+  color: #766C67;
+}
+
+.summary-value {
+  color: #2B1D12;
+  font-weight: 600;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+/* Vendor Welcome */
+.vendor-welcome {
+  background: #FFFDF9;
+  border: 1px solid #D5B36A;
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-content {
+  position: relative;
+  z-index: 2;
+  max-width: 580px;
+}
+
+.welcome-decoration {
+  position: absolute;
+  pointer-events: none;
+}
+
+.top {
+  top: 12px;
+}
+
+.bottom {
+  bottom: 12px;
+}
+
+/* Responsive Grid Helpers */
+.volunteer-profile-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1.8fr;
+  gap: 24px;
+}
+
+.volunteer-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.vendor-reports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 800px) {
+  .volunteer-profile-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .volunteer-form-grid {
+    grid-template-columns: 1fr;
+  }
+}

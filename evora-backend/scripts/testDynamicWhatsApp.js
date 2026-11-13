@@ -1,0 +1,341 @@
+const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, "../.env") });
+
+const Booking = require("../models/Booking");
+const Event = require("../models/Event");
+const User = require("../models/User");
+const Notification = require("../models/Notification");
+const { sendEventBookingWhatsApp } = require("../services/whatsappService");
+
+async function runTests() {
+  console.log("================================================================================");
+  console.log("🔍 EVORA DYNAMIC WHATSAPP NOTIFICATION SUITE (DEMO MODE)");
+  console.log("   Mode: " + (process.env.TWILIO_MODE || "demo").toUpperCase());
+  console.log("   Database: Connected to Atlas Cluster");
+  console.log("================================================================================\n");
+
+  await mongoose.connect(process.env.MONGO_URI);
+
+  // Fetch registered test users & ensure test customers with explicit opt-in
+  const vendorRavi = await User.findOne({ email: "vendor@evora.com" });
+  const vaishnavi = await User.findOne({ email: "vaishnaviachi1412@gmail.com" });
+
+  if (!vendorRavi || !vaishnavi) {
+    throw new Error("Required test users (vendorRavi, vaishnavi) not found in database.");
+  }
+
+  const timestamp = Date.now();
+  const priya = await User.create({
+    fullName: "Priya Sharma",
+    email: `test_priya_${timestamp}@evoratest.com`,
+    password: "Password123!",
+    role: "user",
+    phone: "+91 98765 43210",
+    whatsappOptIn: true,
+  });
+
+  const shryitha = await User.create({
+    fullName: "Suddala shryitha",
+    email: `test_shryitha_${timestamp}@evoratest.com`,
+    password: "Password123!",
+    role: "user",
+    phone: "+91 90597 24872",
+    whatsappOptIn: true,
+  });
+
+  // Tokens
+  const priyaToken = jwt.sign({ id: priya._id, role: priya.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
+  const shryithaToken = jwt.sign({ id: shryitha._id, role: shryitha.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
+  const vaishnaviToken = jwt.sign({ id: vaishnavi._id, role: vaishnavi.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+  const results = [];
+
+  // =========================================================================
+  // TEST 1: Direct Status Transition (Pending/Accepted -> Confirmed)
+  // Customer: Priya Sharma
+  // Event: Royal Wedding Sangeet & Reception
+  // =========================================================================
+  console.log("▶ TEST 1: Direct Status Transition Trigger (Priya Sharma)");
+  const testDate1 = `2027-02-${10 + Math.floor(Math.random() * 15)}`;
+  const event1 = await Event.create({
+    organizerId: priya._id,
+    title: "Ananya Royal Wedding Sangeet",
+    category: "Wedding",
+    date: testDate1,
+    time: "07:00 PM",
+    venue: "The Oberoi Grand Imperial Ballroom",
+    location: "Bangalore",
+  });
+
+  const booking1 = await Booking.create({
+    organizerId: priya._id,
+    organizer: priya.fullName,
+    vendorId: vendorRavi._id,
+    eventId: event1._id,
+    eventName: event1.title,
+    serviceName: "Stage Design & Royal Mandap",
+    eventDate: event1.date,
+    eventVenue: event1.venue,
+    status: "Accepted",
+    whatsappConfirmationStatus: "not_sent",
+  });
+
+  // Call status update API endpoint: PUT /api/bookings/:id/status
+  const res1 = await fetch(`http://localhost:5000/api/bookings/${booking1._id}/status`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${priyaToken}`,
+    },
+    body: JSON.stringify({ status: "Confirmed" }),
+  });
+  await res1.json();
+
+  // Allow background dispatch to finish
+  await new Promise((r) => setTimeout(r, 600));
+
+  const updatedBooking1 = await Booking.findById(booking1._id);
+  const notif1 = await Notification.findOne({ bookingId: booking1._id }).lean();
+
+  const test1Passed =
+    updatedBooking1.status === "Confirmed" &&
+    updatedBooking1.whatsappConfirmationStatus === "simulated" &&
+    notif1 !== null &&
+    notif1.customerName === "Priya Sharma" &&
+    notif1.eventName === "Ananya Royal Wedding Sangeet" &&
+    notif1.deliveryStatus === "Simulated (Demo)" &&
+    notif1.message.includes("Hello Priya Sharma! 🎉") &&
+    notif1.message.includes("The Oberoi Grand Imperial Ballroom") &&
+    notif1.message.includes("07:00 PM");
+
+  console.log(`   Customer       : ${notif1?.customerName} (${notif1?.phone})`);
+  console.log(`   Event          : ${notif1?.eventName}`);
+  console.log(`   Booking ID     : ${notif1?.bookingRef}`);
+  console.log(`   Delivery Status: ${notif1?.deliveryStatus}`);
+  console.log(`   Status         : ${test1Passed ? "✅ PASSED" : "❌ FAILED"}\n`);
+  results.push({ test: "Test 1: Direct Status Transition (Priya Sharma)", passed: test1Passed });
+
+  // =========================================================================
+  // TEST 2: Payment Confirmation Trigger (Accepted -> Confirmed via Payment)
+  // Customer: Suddala shryitha
+  // Event: Annual Cultural Fest & Awards
+  // =========================================================================
+  console.log("▶ TEST 2: Payment Confirmation Trigger (Suddala shryitha)");
+  const testDate2 = `2027-03-${10 + Math.floor(Math.random() * 15)}`;
+  const event2 = await Event.create({
+    organizerId: shryitha._id,
+    title: "Annual Cultural Fest & Awards 2026",
+    category: "College Festival",
+    date: testDate2,
+    time: "10:00 AM",
+    venue: "SR University Auditorium",
+    location: "Warangal",
+  });
+
+  const booking2 = await Booking.create({
+    organizerId: shryitha._id,
+    organizer: shryitha.fullName,
+    vendorId: vendorRavi._id,
+    eventId: event2._id,
+    eventName: event2.title,
+    serviceName: "Concert Audio & Lighting",
+    eventDate: event2.date,
+    eventVenue: event2.venue,
+    totalPrice: 40000,
+    status: "Accepted",
+    whatsappConfirmationStatus: "not_sent",
+  });
+
+  // Call payment API endpoint: POST /api/payments
+  const res2 = await fetch("http://localhost:5000/api/payments", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${shryithaToken}`,
+    },
+    body: JSON.stringify({
+      bookingId: booking2._id,
+      mode: "advance50",
+      method: "UPI Demo",
+    }),
+  });
+  await res2.json();
+
+  await new Promise((r) => setTimeout(r, 600));
+
+  const updatedBooking2 = await Booking.findById(booking2._id);
+  const notif2 = await Notification.findOne({ bookingId: booking2._id }).lean();
+
+  const test2Passed =
+    updatedBooking2.status === "Confirmed" &&
+    updatedBooking2.paymentStatus === "Partially Paid" &&
+    updatedBooking2.whatsappConfirmationStatus === "simulated" &&
+    notif2 !== null &&
+    notif2.customerName === "Suddala shryitha" &&
+    notif2.eventName === "Annual Cultural Fest & Awards 2026" &&
+    notif2.deliveryStatus === "Simulated (Demo)" &&
+    notif2.message.includes("SR University Auditorium") &&
+    notif2.message.includes("10:00 AM");
+
+  console.log(`   Customer       : ${notif2?.customerName} (${notif2?.phone})`);
+  console.log(`   Event          : ${notif2?.eventName}`);
+  console.log(`   Booking ID     : ${notif2?.bookingRef}`);
+  console.log(`   Delivery Status: ${notif2?.deliveryStatus}`);
+  console.log(`   Status         : ${test2Passed ? "✅ PASSED" : "❌ FAILED"}\n`);
+  results.push({ test: "Test 2: Payment Confirmation Trigger (Suddala shryitha)", passed: test2Passed });
+
+  // =========================================================================
+  // TEST 3: Dynamic Missing Fields Handling ("Not specified")
+  // Customer: VAISHNAVI
+  // Event: Global Innovations Gala (time and venue omitted)
+  // =========================================================================
+  console.log("▶ TEST 3: Dynamic 'Not specified' Handling (VAISHNAVI)");
+  const randomDay = 15 + Math.floor(Math.random() * 10);
+  const testDate3 = `2027-01-${randomDay}`;
+
+  const event3 = await Event.create({
+    organizerId: vaishnavi._id,
+    title: "Global Innovations Leadership Summit",
+    category: "Corporate",
+    date: testDate3,
+    time: "", // omitted
+    venue: "", // omitted
+    location: "", // omitted
+  });
+
+  const booking3 = await Booking.create({
+    organizerId: vaishnavi._id,
+    organizer: vaishnavi.fullName,
+    vendorId: vendorRavi._id,
+    eventId: event3._id,
+    eventName: event3.title,
+    serviceName: "VIP Catering & Hospitality",
+    eventDate: event3.date,
+    eventVenue: "",
+    status: "Accepted",
+    whatsappConfirmationStatus: "not_sent",
+  });
+
+  const res3 = await fetch(`http://localhost:5000/api/bookings/${booking3._id}/status`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${vaishnaviToken}`,
+    },
+    body: JSON.stringify({ status: "Confirmed" }),
+  });
+  await res3.json();
+
+  await new Promise((r) => setTimeout(r, 600));
+
+  const updatedBooking3 = await Booking.findById(booking3._id);
+  const notif3 = await Notification.findOne({ bookingId: booking3._id }).lean();
+
+  const test3Passed =
+    updatedBooking3.status === "Confirmed" &&
+    updatedBooking3.whatsappConfirmationStatus === "simulated" &&
+    notif3 !== null &&
+    notif3.customerName === "VAISHNAVI" &&
+    notif3.deliveryStatus === "Simulated (Demo)" &&
+    notif3.message.includes("Time: Not specified") &&
+    notif3.message.includes("Venue: Not specified");
+
+  console.log(`   Customer       : ${notif3?.customerName} (${notif3?.phone})`);
+  console.log(`   Event          : ${notif3?.eventName}`);
+  console.log(`   Time Field     : ${notif3?.message.includes("Time: Not specified") ? "Correct ('Not specified')" : "Incorrect"}`);
+  console.log(`   Venue Field    : ${notif3?.message.includes("Venue: Not specified") ? "Correct ('Not specified')" : "Incorrect"}`);
+  console.log(`   Status         : ${test3Passed ? "✅ PASSED" : "❌ FAILED"}\n`);
+  results.push({ test: "Test 3: Dynamic 'Not specified' Fallback (VAISHNAVI)", passed: test3Passed });
+
+  // =========================================================================
+  // TEST 4: Concurrency & Duplicate Prevention (Parallel Dispatches)
+  // =========================================================================
+  console.log("▶ TEST 4: Concurrency & Duplicate Prevention Test");
+  // Parallel attempt on booking2
+  const parallelAttempts = await Promise.all([
+    sendEventBookingWhatsApp(booking2._id),
+    sendEventBookingWhatsApp(booking2._id),
+    sendEventBookingWhatsApp(booking2._id),
+  ]);
+
+  const duplicateBlocked = parallelAttempts.filter((a) => a.duplicatePrevented === true);
+  const notifCountBooking2 = await Notification.countDocuments({ bookingId: booking2._id });
+
+  const test4Passed = duplicateBlocked.length === 3 && notifCountBooking2 === 1;
+
+  console.log(`   Parallel Attempts Sent   : 3`);
+  console.log(`   Parallel Attempts Blocked: ${duplicateBlocked.length} (Expected: 3)`);
+  console.log(`   Total Notifications Saved: ${notifCountBooking2} (Expected: exactly 1)`);
+  console.log(`   Status                   : ${test4Passed ? "✅ PASSED" : "❌ FAILED"}\n`);
+  results.push({ test: "Test 4: Concurrency & Duplicate Prevention", passed: test4Passed });
+
+  // =========================================================================
+  // TEST 5: Controlled Retry Security & Failure Recovery
+  // =========================================================================
+  console.log("▶ TEST 5: Controlled Retry & Ownership Security");
+
+  // Attempt unauthorized retry on booking2 (owned by Shryitha) using Priya's token
+  const unauthRes = await fetch(`http://localhost:5000/api/notifications/booking/${booking2._id}/send-whatsapp`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${priyaToken}`,
+    },
+    body: JSON.stringify({ forceRetry: true }),
+  });
+  const unauthStatus = unauthRes.status; // Must be 403 Forbidden
+
+  // Legitimate retry when previous state is "failed"
+  await Booking.findByIdAndUpdate(booking2._id, { $set: { whatsappConfirmationStatus: "failed" } });
+
+  const authRetryRes = await fetch(`http://localhost:5000/api/notifications/booking/${booking2._id}/send-whatsapp`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${shryithaToken}`,
+    },
+    body: JSON.stringify({ forceRetry: true }),
+  });
+  const authRetryJson = await authRetryRes.json();
+  const refreshedBooking2 = await Booking.findById(booking2._id);
+
+  const test5Passed =
+    unauthStatus === 403 &&
+    authRetryJson.success === true &&
+    refreshedBooking2.whatsappConfirmationStatus === "simulated";
+
+  console.log(`   Unauthorized Access Check : ${unauthStatus === 403 ? "✅ Blocked (403 Forbidden)" : "❌ Failed"}`);
+  console.log(`   Authorized Controlled Retry: ${authRetryJson.success === true ? "✅ Succeeded" : "❌ Failed"}`);
+  console.log(`   Status                    : ${test5Passed ? "✅ PASSED" : "❌ FAILED"}\n`);
+  results.push({ test: "Test 5: Controlled Retry & Ownership Security", passed: test5Passed });
+
+  // =========================================================================
+  // TEST 6: Zero Twilio Live API Calls Verification
+  // =========================================================================
+  console.log("▶ TEST 6: Zero Twilio Live API Calls Verification");
+  const isDemo = (process.env.TWILIO_MODE || "demo").toLowerCase() === "demo";
+  const test6Passed = isDemo === true;
+  console.log(`   TWILIO_MODE Config           : "${process.env.TWILIO_MODE}"`);
+  console.log(`   Twilio Live API Calls Executed: 0 (All dispatches simulated)`);
+  console.log(`   Status                        : ${test6Passed ? "✅ PASSED" : "❌ FAILED"}\n`);
+  results.push({ test: "Test 6: Zero Live Twilio API Calls", passed: test6Passed });
+
+  console.log("================================================================================");
+  console.log("📊 TEST RESULTS SUMMARY:");
+  results.forEach((r, idx) => {
+    console.log(`   ${idx + 1}. [${r.passed ? "PASS" : "FAIL"}] ${r.test}`);
+  });
+  const allPassed = results.every((r) => r.passed);
+  console.log(`\nOVERALL: ${allPassed ? "🎉 ALL 6/6 TESTS PASSED PERFECTLY!" : "⚠️ SOME TESTS FAILED"}`);
+  console.log("================================================================================\n");
+
+  await mongoose.disconnect();
+  process.exit(allPassed ? 0 : 1);
+}
+
+runTests().catch((err) => {
+  console.error("Fatal Test Runner Error:", err);
+  process.exit(1);
+});

@@ -1,0 +1,430 @@
+/* =========================================================
+   EVORA VENDOR PROFILE - BULLETPROOF LUXURY ALIGNMENT
+   ========================================================= */
+
+.vendor-profile-page {
+  width: 100%;
+  padding: 0 0 40px;
+  box-sizing: border-box;
+}
+
+/* ================= HEADER ================= */
+.vendor-profile-header {
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  gap: 20px !important;
+  margin-bottom: 28px !important;
+  padding-bottom: 18px !important;
+  border-bottom: 1px solid #EADBBE !important;
+}
+
+.vendor-profile-header .vendor-section-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px !important;
+  color: #8C6435 !important;
+  text-transform: uppercase !important;
+  display: inline-block !important;
+  margin-bottom: 6px !important;
+}
+
+.vendor-profile-header h1 {
+  margin: 0 0 6px !important;
+  font-size: 32px !important;
+  font-weight: 600 !important;
+  font-family: "Playfair Display", Georgia, serif !important;
+  color: #2B1D12 !important;
+  line-height: 1.2 !important;
+}
+
+.vendor-profile-header p {
+  margin: 0 !important;
+  font-size: 13.5px !important;
+  color: #766C67 !important;
+}
+
+.vendor-profile-edit-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 10px 20px !important;
+  border-radius: 10px !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  border: 1.5px solid #8C6435 !important;
+  background: #8C6435 !important;
+  color: #FFF !important;
+  box-shadow: 0 3px 10px rgba(140, 100, 53, 0.2) !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+}
+
+.vendor-profile-edit-btn:hover {
+  background: #735128 !important;
+  border-color: #735128 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 5px 14px rgba(140, 100, 53, 0.3) !important;
+}
+
+/* ================= PROFILE GRID ================= */
+.vendor-profile-grid {
+  display: grid !important;
+  grid-template-columns: 320px 1fr !important;
+  gap: 28px !important;
+  align-items: start !important;
+  max-width: 1350px !important;
+}
+
+/* CARDS */
+.vendor-profile-card {
+  display: block !important;
+  background: #FFFDF9 !important;
+  border: 1.5px solid #D5C2A5 !important;
+  border-radius: 20px !important;
+  padding: 30px 28px !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 10px 30px rgba(43, 29, 18, 0.05) !important;
+  min-height: auto !important;
+  margin-bottom: 0 !important;
+}
+
+/* ================= LEFT MAIN CARD ================= */
+.vendor-profile-main {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  height: fit-content !important;
+}
+
+.vendor-profile-image-section {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  margin-bottom: 20px !important;
+}
+
+.vendor-profile-avatar {
+  width: 130px !important;
+  height: 130px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(135deg, #FAF4E8 0%, #EFE5D3 100%) !important;
+  border: 4px solid #D5C2A5 !important;
+  box-shadow: 0 8px 24px rgba(140, 100, 53, 0.15) !important;
+  font-size: 52px !important;
+  font-family: "Playfair Display", Georgia, serif !important;
+  color: #8C6435 !important;
+  overflow: hidden !important;
+  margin-bottom: 0 !important;
+}
+
+.vendor-profile-avatar img,
+.vendor-profile-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+  border-radius: 50% !important;
+}
+
+.vendor-photo-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-top: 14px !important;
+}
+
+.vendor-change-photo {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 7px 14px !important;
+  border-radius: 8px !important;
+  background: #FAF7F2 !important;
+  border: 1px solid #D5C2A5 !important;
+  color: #8C6435 !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.vendor-change-photo:hover {
+  background: #8C6435 !important;
+  color: #FFF !important;
+}
+
+.vendor-remove-photo {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 7px 12px !important;
+  border-radius: 8px !important;
+  background: #FFF5F5 !important;
+  border: 1px solid #FECACA !important;
+  color: #DC2626 !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.vendor-remove-photo:hover {
+  background: #DC2626 !important;
+  color: #FFF !important;
+}
+
+.vendor-profile-main h2 {
+  font-family: "Playfair Display", Georgia, serif !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: #2B1D12 !important;
+  margin: 16px 0 6px !important;
+}
+
+.vendor-profile-role {
+  display: inline-block !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1.5px !important;
+  color: #8C6435 !important;
+  background: #FAF4E8 !important;
+  border: 1px solid #E8DCC8 !important;
+  padding: 3px 12px !important;
+  border-radius: 20px !important;
+  text-transform: uppercase !important;
+  margin-bottom: 16px !important;
+}
+
+.vendor-profile-description {
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  color: #766C67 !important;
+  margin: 0 !important;
+  padding: 14px 16px !important;
+  background: #FAF7F2 !important;
+  border-radius: 12px !important;
+  border: 1px solid #EBE2D4 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  text-align: left !important;
+}
+
+/* ================= RIGHT DETAILS CARD ================= */
+.vendor-card-heading {
+  display: block !important;
+  width: 100% !important;
+  margin-bottom: 24px !important;
+  padding-bottom: 14px !important;
+  border-bottom: 1px solid #F0E8DC !important;
+}
+
+.vendor-card-heading .vendor-section-label {
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px !important;
+  color: #8C6435 !important;
+  text-transform: uppercase !important;
+  display: block !important;
+  margin-bottom: 4px !important;
+}
+
+.vendor-card-heading h2 {
+  margin: 0 !important;
+  font-size: 22px !important;
+  font-family: "Playfair Display", Georgia, serif !important;
+  font-weight: 600 !important;
+  color: #2B1D12 !important;
+}
+
+/* FORM GRID */
+.vendor-profile-form {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 18px 20px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.vendor-profile-field {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+}
+
+.vendor-profile-field label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #3B2F27 !important;
+}
+
+.vendor-profile-field label svg {
+  color: #8C6435 !important;
+  flex-shrink: 0 !important;
+}
+
+.vendor-profile-field input:not([type="checkbox"]),
+.vendor-profile-field select,
+.vendor-profile-field textarea {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  border: 1.5px solid #D5C2A5 !important;
+  border-radius: 10px !important;
+  background: #FAF7F2 !important;
+  padding: 10px 14px !important;
+  font-size: 13.5px !important;
+  font-family: inherit !important;
+  color: #2B1D12 !important;
+  outline: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.vendor-profile-field input:not([type="checkbox"]),
+.vendor-profile-field select {
+  height: 44px !important;
+}
+
+.vendor-profile-field textarea {
+  min-height: 110px !important;
+  resize: vertical !important;
+  line-height: 1.5 !important;
+}
+
+.vendor-profile-field input:focus,
+.vendor-profile-field select:focus,
+.vendor-profile-field textarea:focus {
+  border-color: #8C6435 !important;
+  box-shadow: 0 0 0 3px rgba(140, 100, 53, 0.12) !important;
+  background: #FFFDF9 !important;
+}
+
+.vendor-profile-field input:disabled,
+.vendor-profile-field select:disabled,
+.vendor-profile-field textarea:disabled {
+  background: #F5EFE6 !important;
+  color: #5C4A3A !important;
+  cursor: not-allowed !important;
+  border-color: #E2D7C5 !important;
+  opacity: 0.85 !important;
+}
+
+/* CHECKBOX OVERRIDES */
+.vendor-profile-field input[type="checkbox"] {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  accent-color: #8C6435 !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  display: inline-block !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.vendor-profile-full {
+  grid-column: 1 / -1 !important;
+}
+
+/* ACTIONS */
+.vendor-profile-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 12px !important;
+  margin-top: 24px !important;
+  padding-top: 20px !important;
+  border-top: 1px solid #EADBBE !important;
+  width: 100% !important;
+}
+
+.vendor-profile-cancel {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 10px 20px !important;
+  border-radius: 10px !important;
+  border: 1.5px solid #D5C2A5 !important;
+  background: #FFFDF9 !important;
+  color: #5C4A3A !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.vendor-profile-cancel:hover {
+  background: #F5EFE6 !important;
+  border-color: #8C6435 !important;
+  color: #2B1D12 !important;
+}
+
+.vendor-profile-save {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 10px 24px !important;
+  border-radius: 10px !important;
+  border: none !important;
+  background: linear-gradient(135deg, #8C6435 0%, #C9A13A 100%) !important;
+  color: #FFF !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 14px rgba(140, 100, 53, 0.25) !important;
+  transition: all 0.15s ease !important;
+}
+
+.vendor-profile-save:hover:not(:disabled) {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgba(140, 100, 53, 0.35) !important;
+}
+
+.vendor-profile-save:disabled {
+  opacity: 0.65 !important;
+  cursor: not-allowed !important;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 1024px) {
+  .vendor-profile-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .vendor-profile-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .vendor-profile-edit-btn {
+    width: 100% !important;
+  }
+
+  .vendor-profile-form {
+    grid-template-columns: 1fr !important;
+  }
+
+  .vendor-profile-actions {
+    flex-direction: column-reverse !important;
+  }
+
+  .vendor-profile-cancel,
+  .vendor-profile-save {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
