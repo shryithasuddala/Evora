@@ -1,0 +1,29 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "evora-backend": {
+      "root": "evora-backend",
+      "framework": "express",
+      "buildCommand": "npm install"
+    },
+    "evora-frontend": {
+      "root": "evora-frontend",
+      "framework": "vite",
+      "buildCommand": "npm install && npm run build"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "evora-backend"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "evora-frontend"
+      }
+    }
+  ]
+}

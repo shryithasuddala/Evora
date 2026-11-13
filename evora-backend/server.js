@@ -96,3 +96,5 @@ app.listen(PORT, () => {
   startWhatsAppQueueWorker();
   startReminderScheduler();
 });
+
+module.exports = app;
