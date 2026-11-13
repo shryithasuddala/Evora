@@ -331,7 +331,18 @@ exports.sendProposal = async (req, res, next) => {
     }
 
     const { servicePrice, advanceAmount, includedServices, description, validityDate, serviceDuration } = req.body;
-    if (!servicePrice) return res.status(400).json({ success: false, message: "servicePrice is required." });
+    if (servicePrice === undefined || servicePrice === null || isNaN(Number(servicePrice)) || Number(servicePrice) <= 0) {
+      return res.status(400).json({ success: false, message: "Contract price must be a positive amount greater than zero." });
+    }
+
+    const advance = Number(advanceAmount) || 0;
+    if (advance < 0 || advance > Number(servicePrice)) {
+      return res.status(400).json({ success: false, message: "Booking advance amount cannot be negative or exceed the total contract price." });
+    }
+
+    if (description && description.trim().length < 5) {
+      return res.status(400).json({ success: false, message: "Proposal description should be at least 5 characters." });
+    }
 
     let proposal = await Proposal.findOne({ bookingId: booking._id });
     if (proposal) {

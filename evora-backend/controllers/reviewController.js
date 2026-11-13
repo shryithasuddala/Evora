@@ -20,8 +20,17 @@ exports.createReview = async (req, res, next) => {
       comment,
     } = req.body;
 
-    if (!vendorId || !bookingId || !overall) {
+    if (!vendorId || !bookingId || overall === undefined || overall === null) {
       return res.status(400).json({ success: false, message: "vendorId, bookingId, and overall rating are required." });
+    }
+
+    const ratingNum = Number(overall);
+    if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+      return res.status(400).json({ success: false, message: "Rating must be a whole number between 1 and 5 stars." });
+    }
+
+    if (!comment || comment.trim().length < 3) {
+      return res.status(400).json({ success: false, message: "Review comment must be at least 3 characters." });
     }
 
     const booking = await Booking.findById(bookingId);

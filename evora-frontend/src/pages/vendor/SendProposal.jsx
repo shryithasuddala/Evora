@@ -48,8 +48,31 @@ const SendProposal = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setSending(true);
     setMessage("");
+
+    const price = Number(formData.servicePrice);
+    if (isNaN(price) || price <= 0) {
+      setMessage("Total contract price must be a positive amount greater than 0.");
+      return;
+    }
+
+    const advance = Number(formData.advanceAmount) || 0;
+    if (advance < 0 || advance > price) {
+      setMessage("Required booking advance cannot be negative or exceed the total contract price.");
+      return;
+    }
+
+    if (formData.validityDate) {
+      const vDate = new Date(formData.validityDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (vDate < today) {
+        setMessage("Quote validity deadline cannot be in the past.");
+        return;
+      }
+    }
+
+    setSending(true);
 
     try {
       await bookingsAPI.sendProposal(id, {

@@ -7,8 +7,16 @@ const Event = require("../models/Event");
 exports.createExpense = async (req, res, next) => {
   try {
     const { eventId, title, category, amount, status, vendorName, date } = req.body;
-    if (!eventId || !title || !amount) {
+    if (!eventId || !title || amount === undefined || amount === null) {
       return res.status(400).json({ success: false, message: "eventId, title, and amount are required." });
+    }
+
+    if (!title.trim() || title.trim().length < 2) {
+      return res.status(400).json({ success: false, message: "Expense title must be at least 2 characters." });
+    }
+
+    if (isNaN(Number(amount)) || Number(amount) <= 0) {
+      return res.status(400).json({ success: false, message: "Expense amount must be a positive number greater than zero." });
     }
 
     // Verify event ownership

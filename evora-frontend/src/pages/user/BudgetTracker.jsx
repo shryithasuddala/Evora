@@ -44,7 +44,14 @@ const BudgetTracker = () => {
 
   const handleAddExpense = async (e) => {
     e.preventDefault();
-    if (!newExpense.title || !newExpense.amount) { setAddError("Title and amount are required."); return; }
+    if (!newExpense.title || !newExpense.title.trim() || newExpense.title.trim().length < 2) {
+      setAddError("Expense title must be at least 2 characters long.");
+      return;
+    }
+    if (!newExpense.amount || isNaN(Number(newExpense.amount)) || Number(newExpense.amount) <= 0) {
+      setAddError("Amount must be a positive number greater than 0.");
+      return;
+    }
     setAddLoading(true);
     setAddError("");
     try {

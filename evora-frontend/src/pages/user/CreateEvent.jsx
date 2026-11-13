@@ -992,10 +992,31 @@ const CreateEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.title.trim() || !form.date) {
-      setError("Event title and date are required.");
+    setError("");
+
+    if (!form.title.trim() || form.title.trim().length < 3) {
+      setError("Event title must be at least 3 characters long.");
       return;
     }
+
+    if (!form.date) {
+      setError("Please select an event date.");
+      return;
+    }
+
+    const eventDate = new Date(form.date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (eventDate < today) {
+      setError("Event date cannot be in the past. Please select today or a future date.");
+      return;
+    }
+
+    if (form.guestCount && (isNaN(Number(form.guestCount)) || Number(form.guestCount) <= 0)) {
+      setError("Guest count must be a positive number greater than 0.");
+      return;
+    }
+
     if (!selectedFeatures || selectedFeatures.length === 0) {
       setError("Please select at least one required service for your celebration.");
       return;

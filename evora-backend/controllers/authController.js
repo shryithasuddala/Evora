@@ -5,78 +5,21 @@ const nodemailer = require("nodemailer");
 const { formatDisplayPhone, isValidWhatsAppPhone } = require("../services/whatsappService");
 const { emitNotification } = require("../services/notificationService");
 const { generateVolunteerId } = require("../services/volunteerIdService");
+const { validateIndianPhone, validateEmail, validatePassword } = require("../utils/validators");
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
-// Validate 10-digit mobile phone number (must start with 9, 8, 7, or 6)
-const validate10DigitPhone = (rawPhone) => {
-  if (!rawPhone || typeof rawPhone !== "string") return false;
-  let digits = rawPhone.replace(/\D/g, "");
-  if (digits.length === 12 && digits.startsWith("91")) {
-    digits = digits.slice(2);
-  } else if (digits.length === 11 && digits.startsWith("0")) {
-    digits = digits.slice(1);
-  }
-  return /^[6-9]\d{9}$/.test(digits);
-};
+// Backward compatibility alias for 10-digit mobile check
+const validate10DigitPhone = (rawPhone) => validateIndianPhone(rawPhone, { allowLandline: false }).isValid;
 
-// Check for strong password & block weak passwords like "123456"
+// Backward compatibility alias for strong password
 const validateStrongPassword = (pwd) => {
-  if (!pwd || typeof pwd !== "string") {
-    return { valid: false, message: "Password is required." };
-  }
-  const commonWeak = ["123456", "12345678", "123456789", "password", "password123", "admin123", "qwerty", "111111", "000000"];
-  if (commonWeak.includes(pwd.toLowerCase().trim())) {
-    return {
-      valid: false,
-      message: `"${pwd}" is too weak and easily guessed. Please use a strong password.`,
-    };
-  }
-  if (pwd.length < 8) {
-    return {
-      valid: false,
-      message: "Password must be at least 8 characters long.",
-    };
-  }
-  if (!/[A-Z]/.test(pwd)) {
-    return {
-      valid: false,
-      message: "Password must contain at least one uppercase letter (A-Z).",
-    };
-  }
-  if (!/[a-z]/.test(pwd)) {
-    return {
-      valid: false,
-      message: "Password must contain at least one lowercase letter (a-z).",
-    };
-  }
-  if (!/[0-9]/.test(pwd)) {
-    return {
-      valid: false,
-      message: "Password must contain at least one number (0-9).",
-    };
-  }
-  if (!/[^A-Za-z0-9]/.test(pwd)) {
-    return {
-      valid: false,
-      message: "Password must contain at least one special character (!@#$%^&*).",
-    };
-  }
-  return { valid: true };
+  const res = validatePassword(pwd);
+  return { valid: res.isValid, message: res.error };
 };
 
-const isWeakPasswordCheck = (pwd) => {
-  if (!pwd || typeof pwd !== "string") return true;
-  const commonWeak = ["123456", "12345678", "123456789", "password", "password123", "admin123", "qwerty", "111111", "000000"];
-  return (
-    commonWeak.includes(pwd.toLowerCase().trim()) ||
-    pwd.length < 8 ||
-    !/[A-Z]/.test(pwd) ||
-    !/[0-9]/.test(pwd) ||
-    !/[^A-Za-z0-9]/.test(pwd)
-  );
-};
+const isWeakPasswordCheck = (pwd) => !validatePassword(pwd).isValid;
 
 const sendToken = (user, statusCode, res, extra = {}) => {
   const token = signToken(user._id);
@@ -163,6 +106,12 @@ exports.requestRegisterOtp = async (req, res, next) => {
 
     if (!fullName || !email || !password || !role) {
       return res.status(400).json({ success: false, message: "Please provide fullName, email, password, and role." });
+    }
+
+    // Enforce email format
+    const emailCheck = validateEmail(email);
+    if (!emailCheck.isValid) {
+      return res.status(400).json({ success: false, message: emailCheck.error });
     }
 
     // Enforce security rule: Admin accounts cannot be created through public registration
@@ -318,6 +267,12 @@ exports.register = async (req, res, next) => {
 
     if (!fullName || !email || !password || !role) {
       return res.status(400).json({ success: false, message: "Please provide fullName, email, password, and role." });
+    }
+
+    // Enforce email format
+    const emailCheck = validateEmail(email);
+    if (!emailCheck.isValid) {
+      return res.status(400).json({ success: false, message: emailCheck.error });
     }
 
     // Enforce security rule: Admin accounts cannot be created through public registration

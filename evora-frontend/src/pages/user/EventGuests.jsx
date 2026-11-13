@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { guestsAPI, eventsAPI } from "../../services/api";
 import { useToast } from "../../context/ToastContext";
+import { validateIndianPhone, validateEmail } from "../../utils/validators";
 
 const EventGuests = () => {
   const { id } = useParams();
@@ -71,7 +72,27 @@ const EventGuests = () => {
 
   const handleAddGuest = async (e) => {
     e.preventDefault();
-    if (!newGuest.name.trim()) return;
+    if (!newGuest.name.trim() || newGuest.name.trim().length < 2) {
+      toast.error("Invalid Name", "Guest name must be at least 2 characters.");
+      return;
+    }
+
+    if (newGuest.phone) {
+      const phoneCheck = validateIndianPhone(newGuest.phone, { allowLandline: false });
+      if (!phoneCheck.isValid) {
+        toast.error("Invalid Mobile Number", phoneCheck.error);
+        return;
+      }
+    }
+
+    if (newGuest.email) {
+      const emailCheck = validateEmail(newGuest.email);
+      if (!emailCheck.isValid) {
+        toast.error("Invalid Email", emailCheck.error);
+        return;
+      }
+    }
+
     try {
       await guestsAPI.addGuest(id, newGuest);
       toast.success("Guest Added", `${newGuest.name} has been added to your guest list.`);

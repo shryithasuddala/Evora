@@ -2,6 +2,7 @@ const Event = require("../models/Event");
 const Service = require("../models/Service");
 const { sendEventApprovalWhatsApp } = require("../services/whatsappService");
 const { emitNotification, notifyAdmins } = require("../services/notificationService");
+const { validateEventInput } = require("../utils/validators");
 
 const getDefaultChecklist = (category = "") => [
   { title: "Finalize & Secure Venue Booking", category: "Venue & Halls", status: "In Progress", owner: "Organizer" },
@@ -43,6 +44,11 @@ exports.createEvent = async (req, res, next) => {
 
     if (!title || !category || !date) {
       return res.status(400).json({ success: false, message: "title, category, and date are required." });
+    }
+
+    const eventValidation = validateEventInput({ title, category, date, guestCount, totalBudget });
+    if (!eventValidation.isValid) {
+      return res.status(400).json({ success: false, message: eventValidation.errors.join(" ") });
     }
 
     // Parse and normalize structured requestedServices

@@ -2,6 +2,7 @@ const Guest = require("../models/Guest");
 const Event = require("../models/Event");
 const { emitNotification } = require("../services/notificationService");
 const { sendWhatsAppNotification, cleanPhoneNumber, buildWhatsAppLink } = require("../services/whatsappService");
+const { validateIndianPhone, validateEmail } = require("../utils/validators");
 
 // @desc    Get guests for an event + summary
 // @route   GET /api/events/:id/guests
@@ -60,17 +61,31 @@ exports.addGuest = async (req, res, next) => {
     }
 
     const { name, email, phone, group, plusOnes, dietaryNotes } = req.body;
-    if (!name || !name.trim()) {
-      return res.status(400).json({ success: false, message: "Guest name is required" });
+    if (!name || name.trim().length < 2) {
+      return res.status(400).json({ success: false, message: "Guest name must be at least 2 characters." });
+    }
+
+    if (phone) {
+      const phoneValidation = validateIndianPhone(phone, { allowLandline: false });
+      if (!phoneValidation.isValid) {
+        return res.status(400).json({ success: false, message: phoneValidation.error });
+      }
+    }
+
+    if (email) {
+      const emailValidation = validateEmail(email);
+      if (!emailValidation.isValid) {
+        return res.status(400).json({ success: false, message: emailValidation.error });
+      }
     }
 
     const guest = await Guest.create({
       eventId: event._id,
       name: name.trim(),
-      email: email ? email.trim() : "",
-      phone: phone ? phone.trim() : "",
+      email: email ? email.trim().toLowerCase() : "",
+      phone: phone ? validateIndianPhone(phone).digits : "",
       group: group || "General Guests",
-      plusOnes: Number(plusOnes) || 0,
+      plusOnes: Math.max(0, Number(plusOnes) || 0),
       dietaryNotes: dietaryNotes || "",
     });
 
