@@ -63,8 +63,8 @@ app.use("/api/volunteers",      volunteerRoutes);
 app.use("/api/guests",          guestRoutes);
 app.use("/api/change-requests", changeRequestRoutes);
 
-// ── Health check ────────────────────────────────────────────────────────────
-app.get("/api/health", (req, res) => {
+// ── Health check (Supports both /api/health and Render default /healthz) ───
+app.get(["/api/health", "/healthz"], (req, res) => {
   res.json({ success: true, message: "EVORA API is running 🎉", env: process.env.NODE_ENV });
 });
 
