@@ -73,6 +73,16 @@ const VendorProfile = () => {
   };
 
   const handleSave = async () => {
+    const phoneVal = profile.whatsappNumber || profile.phone;
+    if (phoneVal) {
+      let digits = String(phoneVal).replace(/\D/g, "");
+      if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
+      else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
+      if (digits.length !== 10) {
+        alert(`Phone number must be exactly 10 digits (currently ${digits.length} digits).`);
+        return;
+      }
+    }
     setSaving(true);
     try {
       await updateProfile({

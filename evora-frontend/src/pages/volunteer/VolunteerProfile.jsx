@@ -65,6 +65,16 @@ const VolunteerProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const phoneVal = formData.whatsappNumber || formData.phone;
+    if (phoneVal) {
+      let digits = String(phoneVal).replace(/\D/g, "");
+      if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
+      else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
+      if (digits.length !== 10) {
+        alert(`Phone number must be exactly 10 digits (currently ${digits.length} digits).`);
+        return;
+      }
+    }
     try {
       await updateProfile({
         ...formData,

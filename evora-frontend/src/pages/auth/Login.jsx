@@ -12,6 +12,7 @@ import {
   HandHeart,
   KeyRound,
   CheckCircle2,
+  AlertTriangle,
   X,
 } from "lucide-react";
 import { useAuth } from "../../context/useAuth";
@@ -71,6 +72,18 @@ const Login = () => {
   const [resetError, setResetError] = useState("");
   const [resetSuccess, setResetSuccess] = useState("");
 
+  // Weak password detector for warning alerts
+  const isCommonOrWeakPassword = (pwd) => {
+    if (!pwd) return false;
+    const commonWeak = ["123456", "12345678", "123456789", "password", "password123", "admin123", "qwerty", "111111", "000000"];
+    return (
+      commonWeak.includes(pwd.toLowerCase().trim()) ||
+      pwd.length < 8 ||
+      !/[A-Z]/.test(pwd) ||
+      !/[0-9]/.test(pwd)
+    );
+  };
+
   const handleCredentialsSubmit = async (event) => {
     event.preventDefault();
     setError("");
@@ -98,6 +111,14 @@ const Login = () => {
         localStorage.setItem("evoraRememberMe", "true");
       }
 
+      if (isCommonOrWeakPassword(password)) {
+        toast.warning(
+          "Weak Password Warning ⚠️",
+          "You are using a weak password ('123456' or similar). Please change this to a strong password in your profile settings to protect your account.",
+          9000
+        );
+      }
+
       const routes = {
         user: "/user",
         vendor: "/vendor",
@@ -120,8 +141,12 @@ const Login = () => {
       return;
     }
 
-    if (resetNewPassword.length < 6) {
-      setResetError("New password must be at least 6 characters.");
+    if (
+      isCommonOrWeakPassword(resetNewPassword) ||
+      !/[a-z]/.test(resetNewPassword) ||
+      !/[^A-Za-z0-9]/.test(resetNewPassword)
+    ) {
+      setResetError("Please choose a strong password: minimum 8 characters with uppercase, lowercase, numbers, and special symbols (!@#$).");
       return;
     }
 
@@ -296,6 +321,27 @@ const Login = () => {
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
+            {password.length > 0 && isCommonOrWeakPassword(password) && (
+              <div
+                style={{
+                  marginTop: "6px",
+                  fontSize: "12px",
+                  color: "#B45309",
+                  background: "#FFFBEB",
+                  border: "1px solid #FCD34D",
+                  borderRadius: "8px",
+                  padding: "6px 10px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
+                <AlertTriangle size={14} color="#D97706" style={{ flexShrink: 0 }} />
+                <span>
+                  <strong>Weak password warning:</strong> {password === "123456" ? "123456" : "this password"} is easily guessed. Please change this to a strong password.
+                </span>
+              </div>
+            )}
           </div>
 
           <div

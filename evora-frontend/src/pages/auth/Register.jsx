@@ -91,20 +91,70 @@ const Register = () => {
     }));
   };
 
-  // Password strength calculator
-  const passwordStrength = useMemo(() => {
-    const p = formData.password;
-    if (!p) return 0;
-    let s = 0;
-    if (p.length >= 6) s++;
-    if (p.length >= 10) s++;
-    if (/[0-9]/.test(p)) s++;
-    if (/[^A-Za-z0-9]/.test(p)) s++;
-    return s;
+  // Dedicated phone handler enforcing up to 10 digits
+  const handlePhoneChange = (e) => {
+    let raw = e.target.value.replace(/\D/g, "");
+    if (raw.length === 12 && raw.startsWith("91")) {
+      raw = raw.slice(2);
+    } else if (raw.length === 11 && raw.startsWith("0")) {
+      raw = raw.slice(1);
+    }
+    raw = raw.slice(0, 10);
+    setFormData((prev) => ({
+      ...prev,
+      phone: raw,
+    }));
+  };
+
+  // Detailed password security criteria analysis & weak password detection
+  const passwordCriteria = useMemo(() => {
+    const p = formData.password || "";
+    if (!p) {
+      return {
+        score: 0,
+        hasMinLen: false,
+        hasUpper: false,
+        hasLower: false,
+        hasNum: false,
+        hasSpecial: false,
+        isCommonWeak: false,
+        isStrong: false,
+        isWeak: false,
+      };
+    }
+    const commonWeak = ["123456", "12345678", "123456789", "password", "password123", "admin123", "qwerty", "111111", "000000"];
+    const isCommonWeak = commonWeak.includes(p.toLowerCase().trim());
+    const hasMinLen = p.length >= 8;
+    const hasUpper = /[A-Z]/.test(p);
+    const hasLower = /[a-z]/.test(p);
+    const hasNum = /[0-9]/.test(p);
+    const hasSpecial = /[^A-Za-z0-9]/.test(p);
+
+    let score = 0;
+    if (hasMinLen) score++;
+    if (hasUpper && hasLower) score++;
+    if (hasNum) score++;
+    if (hasSpecial) score++;
+    if (isCommonWeak) score = 0;
+
+    const isStrong = !isCommonWeak && hasMinLen && hasUpper && hasLower && hasNum && hasSpecial;
+    const isWeak = isCommonWeak || (p.length > 0 && score < 3);
+
+    return {
+      score,
+      hasMinLen,
+      hasUpper,
+      hasLower,
+      hasNum,
+      hasSpecial,
+      isCommonWeak,
+      isStrong,
+      isWeak,
+    };
   }, [formData.password]);
 
-  const strengthLabels = ["Weak", "Fair", "Good", "Strong"];
-  const strengthColors = ["#EF4444", "#F59E0B", "#10B981", "#059669"];
+  const strengthLabels = ["Very Weak", "Weak", "Fair", "Strong"];
+  const strengthColors = ["#EF4444", "#F59E0B", "#3B82F6", "#10B981"];
 
   const passwordsMatch = Boolean(
     formData.password &&
@@ -131,8 +181,21 @@ const Register = () => {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters.");
+    // Strict 10-digit phone verification
+    const cleanPhone = formData.phone.replace(/\D/g, "");
+    if (cleanPhone.length !== 10) {
+      setError(`Phone number must be exactly 10 digits. You currently entered ${cleanPhone.length} ${cleanPhone.length === 1 ? "digit" : "digits"}.`);
+      return;
+    }
+
+    // Strict strong password verification
+    if (passwordCriteria.isCommonWeak) {
+      setError(`"${formData.password}" is too weak and easily guessed. Please change this to a strong password.`);
+      return;
+    }
+
+    if (!passwordCriteria.isStrong) {
+      setError("Password is too weak. Please use a strong password with at least 8 characters, including uppercase, lowercase, numbers, and special characters (!@#$).");
       return;
     }
 
@@ -441,45 +504,95 @@ const Register = () => {
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
               <label htmlFor="phone" style={{ fontSize: "12px", fontWeight: 600, color: "#3B2F27" }}>
-                Phone Number *
+                Phone Number (10 digits) *
               </label>
-              <span
-                style={{
-                  fontSize: "11px",
-                  color: "#166534",
-                  fontWeight: 700,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "3px",
-                  background: "#DCFCE7",
-                  padding: "2px 8px",
-                  borderRadius: "12px",
-                  border: "1px solid #86EFAC",
-                }}
-              >
-                <MessageCircle size={11} /> WhatsApp Ready
-              </span>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                {formData.phone ? (
+                  formData.phone.length === 10 ? (
+                    <span
+                      style={{
+                        fontSize: "11px",
+                        color: "#166534",
+                        fontWeight: 700,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "3px",
+                        background: "#DCFCE7",
+                        padding: "2px 8px",
+                        borderRadius: "12px",
+                        border: "1px solid #86EFAC",
+                      }}
+                    >
+                      <Check size={11} /> 10 Digits Valid
+                    </span>
+                  ) : (
+                    <span
+                      style={{
+                        fontSize: "11px",
+                        color: "#DC2626",
+                        fontWeight: 700,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "3px",
+                        background: "#FEE2E2",
+                        padding: "2px 8px",
+                        borderRadius: "12px",
+                        border: "1px solid #FCA5A5",
+                      }}
+                    >
+                      <AlertCircle size={11} /> {formData.phone.length}/10 digits (Need 10 digits)
+                    </span>
+                  )
+                ) : (
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      color: "#166534",
+                      fontWeight: 700,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "3px",
+                      background: "#DCFCE7",
+                      padding: "2px 8px",
+                      borderRadius: "12px",
+                      border: "1px solid #86EFAC",
+                    }}
+                  >
+                    <MessageCircle size={11} /> WhatsApp Ready
+                  </span>
+                )}
+              </div>
             </div>
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "10px",
+                gap: "8px",
                 background: "#FAF7F2",
-                border: "1.5px solid #D5C2A5",
+                border: `1.5px solid ${
+                  formData.phone && formData.phone.length !== 10
+                    ? "#F87171"
+                    : formData.phone && formData.phone.length === 10
+                    ? "#86EFAC"
+                    : "#D5C2A5"
+                }`,
                 borderRadius: "10px",
                 padding: "0 14px",
                 height: "44px",
               }}
             >
               <Phone size={17} color="#8C6435" />
+              <span style={{ fontSize: "13px", fontWeight: 700, color: "#8C6435", borderRight: "1px solid #D5C2A5", paddingRight: "8px" }}>
+                +91
+              </span>
               <input
                 id="phone"
                 name="phone"
                 type="tel"
-                placeholder="+91 98765 43210"
+                placeholder="10-digit mobile number (e.g. 9876543210)"
                 value={formData.phone}
-                onChange={handleChange}
+                onChange={handlePhoneChange}
+                maxLength={10}
                 required
                 style={{
                   width: "100%",
@@ -488,9 +601,16 @@ const Register = () => {
                   background: "transparent",
                   fontSize: "13.5px",
                   color: "#2B1D12",
+                  letterSpacing: "1px",
+                  fontWeight: 500,
                 }}
               />
             </div>
+            {formData.phone && formData.phone.length > 0 && formData.phone.length < 10 && (
+              <p style={{ margin: "4px 0 0", fontSize: "11px", color: "#DC2626", fontWeight: 600 }}>
+                ⚠️ You entered {formData.phone.length} {formData.phone.length === 1 ? "digit" : "digits"}. A valid 10-digit mobile number is required.
+              </p>
+            )}
           </div>
 
           {/* ROLE-SPECIFIC FIELDS: VENDOR */}
@@ -652,7 +772,7 @@ const Register = () => {
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Min. 6 chars"
+                  placeholder="Min. 8 chars (Strong)"
                   value={formData.password}
                   onChange={handleChange}
                   required
@@ -734,7 +854,7 @@ const Register = () => {
             </div>
           </div>
 
-          {/* PASSWORD STRENGTH INDICATOR */}
+          {/* PASSWORD STRENGTH & WARNING INDICATOR */}
           {formData.password && (
             <div style={{ marginTop: "-6px" }}>
               <div style={{ display: "flex", gap: "5px", height: "4px", marginBottom: "4px" }}>
@@ -745,19 +865,72 @@ const Register = () => {
                       flex: 1,
                       borderRadius: "2px",
                       background:
-                        passwordStrength >= step
-                          ? strengthColors[passwordStrength - 1]
+                        passwordCriteria.score >= step
+                          ? strengthColors[passwordCriteria.score - 1]
                           : "#E5E0D8",
                       transition: "background 0.2s ease",
                     }}
                   />
                 ))}
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#766C67" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", color: "#766C67" }}>
                 <span>Security Level:</span>
-                <strong style={{ color: strengthColors[passwordStrength - 1] || "#766C67" }}>
-                  {strengthLabels[passwordStrength - 1] || "Very Weak"}
+                <strong style={{ color: passwordCriteria.isCommonWeak ? "#EF4444" : strengthColors[passwordCriteria.score - 1] || "#EF4444" }}>
+                  {passwordCriteria.isCommonWeak ? "Very Weak (Easily Guessed)" : strengthLabels[passwordCriteria.score - 1] || "Very Weak"}
                 </strong>
+              </div>
+
+              {/* WARNING BOX IF PASSWORD IS WEAK (LIKE 123456) */}
+              {(passwordCriteria.isCommonWeak || passwordCriteria.isWeak) && (
+                <div
+                  style={{
+                    marginTop: "8px",
+                    padding: "8px 12px",
+                    background: "#FEF2F2",
+                    border: "1px solid #FCA5A5",
+                    borderRadius: "8px",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: "8px",
+                  }}
+                >
+                  <AlertCircle size={15} color="#DC2626" style={{ marginTop: "2px", flexShrink: 0 }} />
+                  <div style={{ fontSize: "11.5px", color: "#991B1B", lineHeight: 1.4 }}>
+                    <strong>Weak password warning:</strong>{" "}
+                    {passwordCriteria.isCommonWeak
+                      ? `"${formData.password}" is too weak and easily guessed. Please change this to a strong password.`
+                      : "Use a strong password: minimum 8 characters with uppercase, lowercase, numbers, and special symbols (!@#$)."}
+                  </div>
+                </div>
+              )}
+
+              {/* CRITERIA CHECKLIST */}
+              <div
+                style={{
+                  marginTop: "8px",
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "4px 8px",
+                  fontSize: "11px",
+                  color: "#6B5240",
+                  background: "#FAF7F2",
+                  padding: "8px 12px",
+                  borderRadius: "8px",
+                  border: "1px solid #E5E0D8",
+                }}
+              >
+                <span style={{ color: passwordCriteria.hasMinLen ? "#166534" : "#9CA3AF", display: "flex", alignItems: "center", gap: "4px" }}>
+                  {passwordCriteria.hasMinLen ? "✓" : "○"} At least 8 characters
+                </span>
+                <span style={{ color: passwordCriteria.hasUpper && passwordCriteria.hasLower ? "#166534" : "#9CA3AF", display: "flex", alignItems: "center", gap: "4px" }}>
+                  {passwordCriteria.hasUpper && passwordCriteria.hasLower ? "✓" : "○"} Upper & lowercase (Aa)
+                </span>
+                <span style={{ color: passwordCriteria.hasNum ? "#166534" : "#9CA3AF", display: "flex", alignItems: "center", gap: "4px" }}>
+                  {passwordCriteria.hasNum ? "✓" : "○"} At least one number (0-9)
+                </span>
+                <span style={{ color: passwordCriteria.hasSpecial ? "#166534" : "#9CA3AF", display: "flex", alignItems: "center", gap: "4px" }}>
+                  {passwordCriteria.hasSpecial ? "✓" : "○"} Special symbol (!@#$)
+                </span>
               </div>
             </div>
           )}

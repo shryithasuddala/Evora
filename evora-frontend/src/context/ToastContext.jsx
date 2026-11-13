@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useCallback } from "react";
-import { CheckCircle2, XCircle, Info, MessageCircle, X } from "lucide-react";
+import { CheckCircle2, XCircle, Info, MessageCircle, AlertTriangle, X } from "lucide-react";
 
 const ToastContext = createContext(null);
 
@@ -27,6 +27,8 @@ export const ToastProvider = ({ children }) => {
       addToast({ title, message, type: "success" }),
     error: (title, message = "") =>
       addToast({ title, message, type: "error" }),
+    warning: (title, message = "", duration = 6000) =>
+      addToast({ title, message, type: "warning", duration }),
     info: (title, message = "") =>
       addToast({ title, message, type: "info" }),
     whatsapp: (title, message = "") =>
@@ -55,6 +57,7 @@ export const ToastProvider = ({ children }) => {
           const isWhatsApp = t.type === "whatsapp";
           const isError = t.type === "error";
           const isSuccess = t.type === "success";
+          const isWarning = t.type === "warning";
 
           let accentColor = "#C9A13A";
           let bgGradient = "linear-gradient(135deg, #2B1D12, #3D2B1C)";
@@ -72,6 +75,10 @@ export const ToastProvider = ({ children }) => {
             accentColor = "#D9534F";
             bgGradient = "linear-gradient(135deg, #3A1B1A, #281110)";
             Icon = XCircle;
+          } else if (isWarning) {
+            accentColor = "#F59E0B";
+            bgGradient = "linear-gradient(135deg, #3A2E12, #241A08)";
+            Icon = AlertTriangle;
           }
 
           return (

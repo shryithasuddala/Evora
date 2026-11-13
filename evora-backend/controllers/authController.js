@@ -9,6 +9,75 @@ const { generateVolunteerId } = require("../services/volunteerIdService");
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
+// Validate 10-digit mobile phone number
+const validate10DigitPhone = (rawPhone) => {
+  if (!rawPhone || typeof rawPhone !== "string") return false;
+  let digits = rawPhone.replace(/\D/g, "");
+  if (digits.length === 12 && digits.startsWith("91")) {
+    digits = digits.slice(2);
+  } else if (digits.length === 11 && digits.startsWith("0")) {
+    digits = digits.slice(1);
+  }
+  return digits.length === 10;
+};
+
+// Check for strong password & block weak passwords like "123456"
+const validateStrongPassword = (pwd) => {
+  if (!pwd || typeof pwd !== "string") {
+    return { valid: false, message: "Password is required." };
+  }
+  const commonWeak = ["123456", "12345678", "123456789", "password", "password123", "admin123", "qwerty", "111111", "000000"];
+  if (commonWeak.includes(pwd.toLowerCase().trim())) {
+    return {
+      valid: false,
+      message: `"${pwd}" is too weak and easily guessed. Please use a strong password.`,
+    };
+  }
+  if (pwd.length < 8) {
+    return {
+      valid: false,
+      message: "Password must be at least 8 characters long.",
+    };
+  }
+  if (!/[A-Z]/.test(pwd)) {
+    return {
+      valid: false,
+      message: "Password must contain at least one uppercase letter (A-Z).",
+    };
+  }
+  if (!/[a-z]/.test(pwd)) {
+    return {
+      valid: false,
+      message: "Password must contain at least one lowercase letter (a-z).",
+    };
+  }
+  if (!/[0-9]/.test(pwd)) {
+    return {
+      valid: false,
+      message: "Password must contain at least one number (0-9).",
+    };
+  }
+  if (!/[^A-Za-z0-9]/.test(pwd)) {
+    return {
+      valid: false,
+      message: "Password must contain at least one special character (!@#$%^&*).",
+    };
+  }
+  return { valid: true };
+};
+
+const isWeakPasswordCheck = (pwd) => {
+  if (!pwd || typeof pwd !== "string") return true;
+  const commonWeak = ["123456", "12345678", "123456789", "password", "password123", "admin123", "qwerty", "111111", "000000"];
+  return (
+    commonWeak.includes(pwd.toLowerCase().trim()) ||
+    pwd.length < 8 ||
+    !/[A-Z]/.test(pwd) ||
+    !/[0-9]/.test(pwd) ||
+    !/[^A-Za-z0-9]/.test(pwd)
+  );
+};
+
 const sendToken = (user, statusCode, res, extra = {}) => {
   const token = signToken(user._id);
   res.status(statusCode).json({ success: true, token, user, ...extra });
@@ -102,8 +171,18 @@ exports.requestRegisterOtp = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Invalid role specified. Admin accounts cannot be registered publicly." });
     }
 
-    if (password.length < 6) {
-      return res.status(400).json({ success: false, message: "Password must be at least 6 characters." });
+    // Enforce 10-digit phone requirement
+    if (!validate10DigitPhone(phone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Phone number must be a valid 10-digit mobile number.",
+      });
+    }
+
+    // Enforce strong password requirement
+    const pwdCheck = validateStrongPassword(password);
+    if (!pwdCheck.valid) {
+      return res.status(400).json({ success: false, message: pwdCheck.message });
     }
 
     const existing = await User.findOne({ email: email.toLowerCase().trim() });
@@ -247,6 +326,20 @@ exports.register = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Invalid role specified. Admin accounts cannot be registered publicly." });
     }
 
+    // Enforce 10-digit phone requirement
+    if (!validate10DigitPhone(phone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Phone number must be a valid 10-digit mobile number.",
+      });
+    }
+
+    // Enforce strong password requirement
+    const pwdCheck = validateStrongPassword(password);
+    if (!pwdCheck.valid) {
+      return res.status(400).json({ success: false, message: pwdCheck.message });
+    }
+
     const existing = await User.findOne({ email: email.toLowerCase() });
     if (existing) {
       return res.status(400).json({ success: false, message: "An account with this email already exists." });
@@ -307,8 +400,9 @@ exports.resetPassword = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Email and new password are required." });
     }
 
-    if (newPassword.length < 6) {
-      return res.status(400).json({ success: false, message: "Password must be at least 6 characters." });
+    const pwdCheck = validateStrongPassword(newPassword);
+    if (!pwdCheck.valid) {
+      return res.status(400).json({ success: false, message: pwdCheck.message });
     }
 
     const query = { email: email.toLowerCase().trim() };
@@ -360,8 +454,15 @@ exports.login = async (req, res, next) => {
       return res.status(403).json({ success: false, message: "Your account has been suspended. Contact support." });
     }
 
+    const isWeakPassword = isWeakPasswordCheck(password);
+
     // Direct Login without requiring Email OTP
-    return sendToken(user, 200, res);
+    return sendToken(user, 200, res, {
+      isWeakPassword,
+      weakPasswordWarning: isWeakPassword
+        ? "Warning: You logged in with a weak password. Please change this to a strong password to protect your account."
+        : undefined,
+    });
   } catch (err) {
     next(err);
   }
@@ -481,17 +582,24 @@ exports.updateMe = async (req, res, next) => {
 
     if (updates.whatsappNumber !== undefined) {
       const trimmed = String(updates.whatsappNumber).trim();
-      if (trimmed && !isValidWhatsAppPhone(trimmed)) {
+      if (trimmed && !validate10DigitPhone(trimmed)) {
         return res.status(400).json({
           success: false,
-          message: "Please provide a valid WhatsApp phone number (10 to 15 digits with country code).",
+          message: "Please provide a valid 10-digit mobile phone number.",
         });
       }
       updates.whatsappNumber = trimmed ? formatDisplayPhone(trimmed) : "";
     }
 
     if (updates.phone) {
-      updates.phone = formatDisplayPhone(updates.phone) || updates.phone;
+      const trimmedPhone = String(updates.phone).trim();
+      if (trimmedPhone && !validate10DigitPhone(trimmedPhone)) {
+        return res.status(400).json({
+          success: false,
+          message: "Please provide a valid 10-digit mobile phone number.",
+        });
+      }
+      updates.phone = formatDisplayPhone(trimmedPhone) || updates.phone;
       if (updates.whatsappNumber === undefined && !req.user.whatsappNumber) {
         updates.whatsappNumber = updates.phone;
       }
