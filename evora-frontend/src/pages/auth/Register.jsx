@@ -181,10 +181,15 @@ const Register = () => {
       return;
     }
 
-    // Strict 10-digit phone verification
+    // Strict 10-digit phone verification starting with 9, 8, 7, or 6
     const cleanPhone = formData.phone.replace(/\D/g, "");
     if (cleanPhone.length !== 10) {
       setError(`Phone number must be exactly 10 digits. You currently entered ${cleanPhone.length} ${cleanPhone.length === 1 ? "digit" : "digits"}.`);
+      return;
+    }
+
+    if (!/^[6-9]/.test(cleanPhone)) {
+      setError(`Mobile number must start with 9, 8, 7, or 6. Numbers starting with "${cleanPhone.charAt(0)}" (like ${cleanPhone}) are not valid mobile numbers.`);
       return;
     }
 
@@ -508,7 +513,24 @@ const Register = () => {
               </label>
               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 {formData.phone ? (
-                  formData.phone.length === 10 ? (
+                  !/^[6-9]/.test(formData.phone) ? (
+                    <span
+                      style={{
+                        fontSize: "11px",
+                        color: "#DC2626",
+                        fontWeight: 700,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "3px",
+                        background: "#FEE2E2",
+                        padding: "2px 8px",
+                        borderRadius: "12px",
+                        border: "1px solid #FCA5A5",
+                      }}
+                    >
+                      <AlertCircle size={11} /> Must start with 9, 8, 7, or 6
+                    </span>
+                  ) : formData.phone.length === 10 ? (
                     <span
                       style={{
                         fontSize: "11px",
@@ -523,7 +545,7 @@ const Register = () => {
                         border: "1px solid #86EFAC",
                       }}
                     >
-                      <Check size={11} /> 10 Digits Valid
+                      <Check size={11} /> Valid 10-Digit Number
                     </span>
                   ) : (
                     <span
@@ -540,7 +562,7 @@ const Register = () => {
                         border: "1px solid #FCA5A5",
                       }}
                     >
-                      <AlertCircle size={11} /> {formData.phone.length}/10 digits (Need 10 digits)
+                      <AlertCircle size={11} /> {formData.phone.length}/10 digits (Need 10)
                     </span>
                   )
                 ) : (
@@ -570,7 +592,7 @@ const Register = () => {
                 gap: "8px",
                 background: "#FAF7F2",
                 border: `1.5px solid ${
-                  formData.phone && formData.phone.length !== 10
+                  formData.phone && (!/^[6-9]/.test(formData.phone) || formData.phone.length !== 10)
                     ? "#F87171"
                     : formData.phone && formData.phone.length === 10
                     ? "#86EFAC"
@@ -589,7 +611,7 @@ const Register = () => {
                 id="phone"
                 name="phone"
                 type="tel"
-                placeholder="10-digit mobile number (e.g. 9876543210)"
+                placeholder="10-digit mobile number (starts with 9, 8, 7, 6)"
                 value={formData.phone}
                 onChange={handlePhoneChange}
                 maxLength={10}
@@ -606,9 +628,14 @@ const Register = () => {
                 }}
               />
             </div>
-            {formData.phone && formData.phone.length > 0 && formData.phone.length < 10 && (
+            {formData.phone && !/^[6-9]/.test(formData.phone) && (
               <p style={{ margin: "4px 0 0", fontSize: "11px", color: "#DC2626", fontWeight: 600 }}>
-                ⚠️ You entered {formData.phone.length} {formData.phone.length === 1 ? "digit" : "digits"}. A valid 10-digit mobile number is required.
+                ⚠️ Invalid number: Mobile numbers cannot start with '{formData.phone.charAt(0)}'. They must start with 9, 8, 7, or 6.
+              </p>
+            )}
+            {formData.phone && /^[6-9]/.test(formData.phone) && formData.phone.length < 10 && (
+              <p style={{ margin: "4px 0 0", fontSize: "11px", color: "#DC2626", fontWeight: 600 }}>
+                ⚠️ You entered {formData.phone.length} digits. Exactly 10 digits are required.
               </p>
             )}
           </div>

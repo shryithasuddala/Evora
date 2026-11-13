@@ -70,8 +70,8 @@ const VolunteerProfile = () => {
       let digits = String(phoneVal).replace(/\D/g, "");
       if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
       else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
-      if (digits.length !== 10) {
-        alert(`Phone number must be exactly 10 digits (currently ${digits.length} digits).`);
+      if (digits.length !== 10 || !/^[6-9]/.test(digits)) {
+        alert(`Phone number must be a valid 10-digit mobile number starting with 9, 8, 7, or 6 (you entered: ${digits}).`);
         return;
       }
     }

@@ -9,7 +9,7 @@ const { generateVolunteerId } = require("../services/volunteerIdService");
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
-// Validate 10-digit mobile phone number
+// Validate 10-digit mobile phone number (must start with 9, 8, 7, or 6)
 const validate10DigitPhone = (rawPhone) => {
   if (!rawPhone || typeof rawPhone !== "string") return false;
   let digits = rawPhone.replace(/\D/g, "");
@@ -18,7 +18,7 @@ const validate10DigitPhone = (rawPhone) => {
   } else if (digits.length === 11 && digits.startsWith("0")) {
     digits = digits.slice(1);
   }
-  return digits.length === 10;
+  return /^[6-9]\d{9}$/.test(digits);
 };
 
 // Check for strong password & block weak passwords like "123456"
@@ -171,11 +171,11 @@ exports.requestRegisterOtp = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Invalid role specified. Admin accounts cannot be registered publicly." });
     }
 
-    // Enforce 10-digit phone requirement
+    // Enforce 10-digit phone requirement (must start with 9, 8, 7, or 6)
     if (!validate10DigitPhone(phone)) {
       return res.status(400).json({
         success: false,
-        message: "Phone number must be a valid 10-digit mobile number.",
+        message: "Phone number must be a valid 10-digit mobile number starting with 9, 8, 7, or 6.",
       });
     }
 
@@ -326,11 +326,11 @@ exports.register = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Invalid role specified. Admin accounts cannot be registered publicly." });
     }
 
-    // Enforce 10-digit phone requirement
+    // Enforce 10-digit phone requirement (must start with 9, 8, 7, or 6)
     if (!validate10DigitPhone(phone)) {
       return res.status(400).json({
         success: false,
-        message: "Phone number must be a valid 10-digit mobile number.",
+        message: "Phone number must be a valid 10-digit mobile number starting with 9, 8, 7, or 6.",
       });
     }
 
@@ -585,7 +585,7 @@ exports.updateMe = async (req, res, next) => {
       if (trimmed && !validate10DigitPhone(trimmed)) {
         return res.status(400).json({
           success: false,
-          message: "Please provide a valid 10-digit mobile phone number.",
+          message: "Please provide a valid 10-digit mobile phone number starting with 9, 8, 7, or 6.",
         });
       }
       updates.whatsappNumber = trimmed ? formatDisplayPhone(trimmed) : "";
@@ -596,7 +596,7 @@ exports.updateMe = async (req, res, next) => {
       if (trimmedPhone && !validate10DigitPhone(trimmedPhone)) {
         return res.status(400).json({
           success: false,
-          message: "Please provide a valid 10-digit mobile phone number.",
+          message: "Please provide a valid 10-digit mobile phone number starting with 9, 8, 7, or 6.",
         });
       }
       updates.phone = formatDisplayPhone(trimmedPhone) || updates.phone;
