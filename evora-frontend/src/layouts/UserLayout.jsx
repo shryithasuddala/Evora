@@ -13,6 +13,7 @@ import {
   X,
   Sparkles,
   Bell,
+  HeartHandshake,
 } from "lucide-react";
 import { useAuth } from "../context/useAuth";
 import Logo from "../components/common/Logo";
@@ -52,6 +53,7 @@ const UserLayout = () => {
     { name: "Services & Bookings", path: "/user/bookings", icon: Ticket },
     { name: "Budget & Expenses", path: "/user/budget", icon: Wallet },
     { name: "AI Planning Suite", path: "/user/ai", icon: Sparkles },
+    { name: "Charity AI (Food Rescue)", path: "/user/charity-ai", icon: HeartHandshake },
     { name: "Notifications", path: "/user/notifications", icon: Bell },
   ];
 

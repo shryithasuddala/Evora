@@ -24,6 +24,7 @@ import BookingsTracker from "../pages/user/BookingsTracker";
 import BudgetTracker from "../pages/user/BudgetTracker";
 import UserProfile from "../pages/user/UserProfile";
 import AIFeaturesHub from "../pages/user/AIFeaturesHub";
+import CharityAI from "../pages/user/CharityAI";
 
 // VENDOR
 import VendorLayout from "../layouts/VendorLayout";
@@ -46,6 +47,7 @@ import VolunteerDashboard from "../pages/volunteer/VolunteerDashboard";
 import AssignedTasks from "../pages/volunteer/AssignedTasks";
 import MySchedule from "../pages/volunteer/MySchedule";
 import VolunteerProfile from "../pages/volunteer/VolunteerProfile";
+import IncomingDonations from "../pages/volunteer/IncomingDonations";
 
 // ADMIN
 import AdminLayout from "../layouts/AdminLayout";
@@ -57,6 +59,7 @@ import ManageBookings from "../pages/admin/ManageBookings";
 import ManageVolunteers from "../pages/admin/ManageVolunteers";
 import ManagePayments from "../pages/admin/ManagePayments";
 import PlatformReports from "../pages/admin/PlatformReports";
+import ManageCharities from "../pages/admin/ManageCharities";
 
 const AppRoutes = () => {
   return (
@@ -88,6 +91,8 @@ const AppRoutes = () => {
           <Route path="bookings" element={<BookingsTracker />} />
           <Route path="budget" element={<BudgetTracker />} />
           <Route path="ai" element={<AIFeaturesHub />} />
+          <Route path="charity-ai" element={<CharityAI />} />
+          <Route path="events/:id/charity-ai" element={<CharityAI />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="profile" element={<UserProfile />} />
         </Route>
@@ -126,6 +131,7 @@ const AppRoutes = () => {
         >
           <Route index element={<VolunteerDashboard />} />
           <Route path="tasks" element={<AssignedTasks />} />
+          <Route path="donations" element={<IncomingDonations />} />
           <Route path="schedule" element={<MySchedule />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="profile" element={<VolunteerProfile />} />
@@ -147,6 +153,7 @@ const AppRoutes = () => {
           <Route path="bookings" element={<ManageBookings />} />
           <Route path="volunteers" element={<ManageVolunteers />} />
           <Route path="payments" element={<ManagePayments />} />
+          <Route path="charities" element={<ManageCharities />} />
           <Route path="reports" element={<PlatformReports />} />
           <Route path="notifications" element={<Notifications />} />
         </Route>

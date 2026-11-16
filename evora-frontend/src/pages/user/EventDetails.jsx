@@ -13,6 +13,7 @@ import {
   Tag,
   Sparkles,
   FileText,
+  HeartHandshake,
 } from "lucide-react";
 import { eventsAPI, bookingsAPI, tasksAPI, expensesAPI } from "../../services/api";
 import { useToast } from "../../context/ToastContext";
@@ -237,8 +238,29 @@ const EventDetails = () => {
             })()}
           </div>
 
-          {/* Action Buttons: Edit & Cancel */}
+          {/* Action Buttons: Edit & Cancel & Charity AI */}
           <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
+            <Link
+              to={`/user/events/${event._id}/charity-ai`}
+              style={{
+                background: "linear-gradient(135deg, #4A154B, #6B21A8)",
+                color: "#FAF5EA",
+                border: "1px solid #C9A13A",
+                borderRadius: "8px",
+                padding: "8px 16px",
+                fontSize: "13px",
+                fontWeight: 700,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                textDecoration: "none",
+                boxShadow: "0 2px 8px rgba(74,21,75,0.4)",
+              }}
+              title="Donate Surplus Food with Charity AI"
+            >
+              <HeartHandshake size={15} style={{ color: "#C9A13A" }} /> Charity AI / Donate Food
+            </Link>
+
             <button
               type="button"
               onClick={openEditModal}

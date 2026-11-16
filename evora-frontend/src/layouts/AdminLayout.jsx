@@ -50,6 +50,7 @@ const AdminLayout = () => {
     { name: "All Events", path: "/admin/events", icon: CalendarDays },
     { name: "Booking Audits", path: "/admin/bookings", icon: Ticket },
     { name: "Platform Payments", path: "/admin/payments", icon: Ticket },
+    { name: "Charity Registry", path: "/admin/charities", icon: ShieldCheck },
     { name: "Volunteer Dispatch", path: "/admin/volunteers", icon: HeartHandshake },
     { name: "Notifications", path: "/admin/notifications", icon: Bell },
     { name: "Platform Analytics", path: "/admin/reports", icon: FileBarChart },

@@ -96,3 +96,51 @@ npm run dev      # Starts Vite dev server on http://localhost:5173
 | `POST` | `/api/ai/checklist` | Private | 6. AI Preparation Checklist & Milestone Tracker |
 | `POST` | `/api/charity/donations` | Organizer | Surplus celebration food listing for volunteer pickup |
 | `GET` | `/api/charity/donations` | Multi-role | Audit community meals & dispatch volunteer pickups |
+
+---
+
+## 🍲 7. Charity AI (Surplus Food Donation & Rescue Engine)
+
+### Overview
+When an event concludes with surplus food (e.g. 500 meals leftover from a 1000-guest wedding in Hyderabad), **Charity AI** empowers organizers to rescue and redirect hot, fresh food to verified nearby NGOs, orphanages, old-age homes, and community shelters before it spoils.
+
+### User Flow
+1. **Organizer Launch**: From the Event Dashboard, click **"Charity AI / Donate Food"** (or open the **AI Planning Suite**).
+2. **Surplus Specification (Stepper Step 1)**: Enter event celebration details, venue address, food items with vegetarian / non-vegetarian designations, total quantity, safe-until expiration time, packaging readiness, and coordinator phone.
+3. **Geospatial Discovery & Deterministic AI Ranking (Stepper Step 2)**:
+   - Evaluates nearby charities using a MongoDB `$geoNear` 2dsphere spatial index.
+   - Computes a deterministic multi-factor match score (0–100%) incorporating:
+     - **Transit Distance**: Scaled proximity score and urban traffic transit turnaround calculation (~3 min/km + 25 min turnaround).
+     - **Cooked Food Compatibility**: Prioritizes shelters equipped to accept hot meals vs packaged goods.
+     - **Capacity Matching**: Evaluates shelter's daily capacity against donation volume.
+     - **Food Safety Margin**: Flags critical time alerts if safe consumption limits approach transit turnaround thresholds.
+   - LLM Layer generates a concise, contextual justification for why the top matches are recommended.
+4. **Interactive Leaflet / OpenStreetMap**: Visualizes the venue pin, nearby orphanages/shelters, distance radii, and top recommendations with interactive selection popups.
+5. **Dispatch & Multi-Charity Request (Stepper Step 3)**: Dispatches donation requests to selected shelters with automated in-app alerts sent to charity coordinators and volunteers.
+6. **Volunteer & Charity Portal (`/volunteer/donations`)**: On-ground drivers and shelters review incoming requests, specify estimated arrival time, and click **Accept Pickup** or **Decline**.
+7. **Delivery Impact Tracking & Zero-Waste Receipt**: Status updates from `pending` → `accepted` → `picked_up` → `delivered`. Once marked delivered, organizers receive an impact summary highlighting the charity partner, timestamp, and estimated number of people nourished.
+8. **Admin Governance (`/admin/charities`)**: Administrators can add verified shelters or audit and revoke charity listings.
+
+### Charity AI REST Endpoints
+
+| Method | Endpoint | Access | Purpose |
+|---|---|---|---|
+| `POST` | `/api/charity-ai/surplus` | Organizer / Admin | Validates surplus food details, geocodes venue address, and evaluates safety window |
+| `GET` | `/api/charity-ai/nearby` | Authenticated | Geospatial 2dsphere query returning nearby shelters (`lat`, `lng`, `radius`, `type`) |
+| `POST` | `/api/charity-ai/recommend` | Authenticated | Deterministic scoring + AI rationale generation for top matched shelters |
+| `POST` | `/api/charity-ai/request` | Organizer / Admin | Submits surplus donation requests to one or multiple charities |
+| `PATCH` | `/api/charity-ai/request/:id/status` | Volunteer / Admin / User | Updates status (`accepted`, `declined`, `picked_up`, `delivered`) with impact calculation |
+| `GET` | `/api/charity-ai/history/:eventId` | Authenticated | Retrieves donation history and cumulative people-served metrics |
+| `GET` | `/api/charity-ai/incoming` | Volunteer / Admin | Lists incoming requests for charity and volunteer coordination |
+| `GET` | `/api/charity-ai/request/:id` | Authenticated | Retrieves single donation request record with complete status timeline |
+| `GET` | `/api/charity-ai/charities` | Authenticated | Lists registered charities with category and verification filters |
+| `POST` | `/api/charity-ai/charities` | Admin | Registers a new verified charity or shelter |
+| `PATCH` | `/api/charity-ai/charities/:id` | Admin | Updates charity details or toggles verification status |
+
+### Seeding Sample Charities
+To populate the database with 14 sample Hyderabad charities (clearly marked as dummy data across Banjara Hills, Hitec City, Begumpet, Secunderabad, Charminar, etc.):
+```bash
+cd evora-backend
+npm run seed:charities
+```
+

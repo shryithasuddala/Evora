@@ -9,6 +9,7 @@ import {
   LogOut,
   Menu,
   X,
+  HeartHandshake,
 } from "lucide-react";
 import { useAuth } from "../context/useAuth";
 import Logo from "../components/common/Logo";
@@ -23,6 +24,7 @@ const VolunteerLayout = () => {
 
   const navLinks = [
     { name: "Duty Dashboard", path: "/volunteer", icon: LayoutDashboard, end: true },
+    { name: "Food Rescue Donations", path: "/volunteer/donations", icon: HeartHandshake },
     { name: "Assigned Tasks", path: "/volunteer/tasks", icon: ClipboardCheck },
     { name: "Shifts & Schedule", path: "/volunteer/schedule", icon: CalendarDays },
     { name: "Digital ID & Profile", path: "/volunteer/profile", icon: ShieldCheck },

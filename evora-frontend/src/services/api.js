@@ -568,3 +568,54 @@ export const charityAPI = {
     return data.donation;
   },
 };
+
+// ─────────────────────────────────────────────────────────
+// CHARITY AI & SURPLUS FOOD RESCUE ENGINE
+// ─────────────────────────────────────────────────────────
+
+export const charityAIAPI = {
+  submitSurplus: async (surplusData) => {
+    const { data } = await apiClient.post("/charity-ai/surplus", surplusData);
+    return data.data;
+  },
+  getNearby: async (params) => {
+    const { data } = await apiClient.get("/charity-ai/nearby", { params });
+    return data;
+  },
+  getRecommendations: async (payload) => {
+    const { data } = await apiClient.post("/charity-ai/recommend", payload);
+    return data;
+  },
+  sendRequest: async (payload) => {
+    const { data } = await apiClient.post("/charity-ai/request", payload);
+    return data;
+  },
+  updateStatus: async (id, payload) => {
+    const { data } = await apiClient.patch(`/charity-ai/request/${id}/status`, payload);
+    return data;
+  },
+  getHistory: async (eventId = "all") => {
+    const { data } = await apiClient.get(`/charity-ai/history/${eventId}`);
+    return data;
+  },
+  getIncoming: async (params = {}) => {
+    const { data } = await apiClient.get("/charity-ai/incoming", { params });
+    return data;
+  },
+  getRequestById: async (id) => {
+    const { data } = await apiClient.get(`/charity-ai/request/${id}`);
+    return data.request;
+  },
+  getCharities: async (params = {}) => {
+    const { data } = await apiClient.get("/charity-ai/charities", { params });
+    return data.charities || [];
+  },
+  createCharity: async (payload) => {
+    const { data } = await apiClient.post("/charity-ai/charities", payload);
+    return data.charity;
+  },
+  updateCharity: async (id, payload) => {
+    const { data } = await apiClient.patch(`/charity-ai/charities/${id}`, payload);
+    return data.charity;
+  },
+};

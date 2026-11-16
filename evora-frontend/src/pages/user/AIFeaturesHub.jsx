@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import {
   MessageSquare,
   Wallet,
@@ -10,6 +10,7 @@ import {
   ChevronUp,
   ArrowRight,
   Lock,
+  HeartHandshake,
 } from "lucide-react";
 import ChatbotFeature from "../../components/ai/ChatbotFeature";
 import BudgetAssistantFeature from "../../components/ai/BudgetAssistantFeature";
@@ -73,9 +74,20 @@ const AI_FEATURES = [
     status: "active",
     ctaLabel: "Open Planning Assistant",
   },
+  {
+    id: "charity-ai",
+    name: "Charity AI (Food Rescue)",
+    description:
+      "Prevent food waste from your celebrations by connecting directly with nearby verified orphanages, shelters, and NGOs across Hyderabad with intelligent transit and food safety matching.",
+    icon: HeartHandshake,
+    status: "active",
+    ctaLabel: "Open Charity AI",
+    externalPath: "/user/charity-ai",
+  },
 ];
 
 const AIFeaturesHub = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialFeature = searchParams.get("feature");
   const [openFeatureId, setOpenFeatureId] = useState(
@@ -94,6 +106,10 @@ const AIFeaturesHub = () => {
 
   const handleToggleCard = (feature) => {
     if (feature.status !== "active") return;
+    if (feature.externalPath) {
+      navigate(feature.externalPath);
+      return;
+    }
     const next = openFeatureId === feature.id ? null : feature.id;
     setOpenFeatureId(next);
     if (next) {
