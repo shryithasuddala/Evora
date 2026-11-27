@@ -8,12 +8,26 @@ import {
   Plus,
   Leaf,
   CheckCircle2,
+  MapPin,
 } from "lucide-react";
 import { aiAPI } from "../../services/api";
 
 const EVENT_TYPES = ["Wedding", "Birthday", "Corporate", "Anniversary", "Engagement", "Festival", "Private Party"];
 const FOOD_PREFERENCES = ["Vegetarian", "Non-Vegetarian", "Mixed (Veg & Non-Veg)", "Vegan", "Jain"];
 const MEAL_TYPES = ["Breakfast", "Lunch", "High Tea & Snacks", "Dinner", "Full Day"];
+
+const POPULAR_REGIONS = [
+  "Hyderabad",
+  "Chennai",
+  "Bangalore",
+  "Punjab / Delhi",
+  "Kerala",
+  "Kolkata",
+  "Rajasthan",
+  "Gujarat",
+  "Mumbai",
+  "Goa",
+];
 
 const COURSE_LABELS = [
   { key: "welcomeDrinks", label: "Welcome Drinks" },
@@ -148,6 +162,13 @@ const FoodRecommendationFeature = () => {
   const handleLoadSaved = (saved) => {
     setMenu(saved);
     setEditingId(saved._id);
+    if (saved.eventType) setEventType(saved.eventType);
+    if (saved.guestCount) setGuestCount(String(saved.guestCount));
+    if (saved.budget !== undefined) setBudget(String(saved.budget));
+    if (saved.foodPreference) setFoodPreference(saved.foodPreference);
+    if (saved.mealType) setMealType(saved.mealType);
+    if (saved.dietaryRestrictions !== undefined) setDietaryRestrictions(saved.dietaryRestrictions);
+    if (saved.location) setLocation(saved.location);
     setSaveMessage("");
     setError("");
   };
@@ -232,8 +253,45 @@ const FoodRecommendationFeature = () => {
             </select>
           </div>
           <div>
-            <label style={labelStyle}>City / Cuisine Region</label>
-            <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="e.g. Hyderabad" style={inputStyle} />
+            <label style={labelStyle}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                <MapPin size={11} color="#304B35" /> City / Cuisine Region (Place)
+              </span>
+            </label>
+            <input
+              type="text"
+              list="popular-regions-list"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="e.g. Hyderabad, Chennai, Punjab, Kerala..."
+              style={inputStyle}
+            />
+            <datalist id="popular-regions-list">
+              {POPULAR_REGIONS.map((r) => (
+                <option key={r} value={r} />
+              ))}
+            </datalist>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 6 }}>
+              {POPULAR_REGIONS.slice(0, 6).map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setLocation(r)}
+                  style={{
+                    background: location === r ? "#304B35" : "#FFFFFF",
+                    color: location === r ? "#F8F4E9" : "#304B35",
+                    border: "1px solid #718365",
+                    borderRadius: 10,
+                    padding: "2px 7px",
+                    fontSize: 10,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -330,12 +388,30 @@ const FoodRecommendationFeature = () => {
                   boxSizing: "border-box",
                 }}
               />
-              <div style={{ fontSize: 12, color: "#EEE7D7", marginTop: 6 }}>
-                {menu.guestCount} Guests · {menu.foodPreference} · {menu.mealType} · Est. Budget:{" "}
-                <strong style={{ color: "#C9A13A" }}>
-                  ₹{Number(menu.estimatedTotalCost || 0).toLocaleString("en-IN")}
-                </strong>{" "}
-                (₹{Number(menu.costPerGuest || 0).toLocaleString("en-IN")}/guest)
+              <div style={{ fontSize: 12, color: "#EEE7D7", marginTop: 6, display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+                <span>
+                  {menu.guestCount} Guests · {menu.foodPreference} · {menu.mealType} · Est. Budget:{" "}
+                  <strong style={{ color: "#C9A13A" }}>
+                    ₹{Number(menu.estimatedTotalCost || 0).toLocaleString("en-IN")}
+                  </strong>{" "}
+                  (₹{Number(menu.costPerGuest || 0).toLocaleString("en-IN")}/guest)
+                </span>
+                <span
+                  style={{
+                    background: "rgba(201, 161, 58, 0.25)",
+                    border: "1px solid #C9A13A",
+                    color: "#F8F4E9",
+                    padding: "2px 8px",
+                    borderRadius: 12,
+                    fontSize: 11,
+                    fontWeight: 600,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 4,
+                  }}
+                >
+                  <MapPin size={11} color="#C9A13A" /> Place: {menu.location || location || "Regional Selection"}
+                </span>
               </div>
             </div>
             <button
@@ -550,6 +626,7 @@ const FoodRecommendationFeature = () => {
                   <strong>{sm.title}</strong>
                   <span style={{ display: "block", fontSize: 11, color: "#718365" }}>
                     {sm.guestCount} guests · {sm.foodPreference}
+                    {sm.location ? ` · 📍 ${sm.location}` : ""}
                   </span>
                 </button>
                 <button

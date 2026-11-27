@@ -1,6 +1,6 @@
 const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
-const DEFAULT_GEMINI_MODEL = "gemini-3.5-flash";
-const FALLBACK_MODELS = ["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-flash-latest"];
+const DEFAULT_GEMINI_MODEL = "gemini-3.1-flash-lite";
+const FALLBACK_MODELS = ["gemini-3.1-flash-lite", "gemini-3.8-flash"];
 
 class AIServiceError extends Error {
   constructor(message, statusCode = 502) {
@@ -29,7 +29,7 @@ const callSingleModel = async ({
   contents,
   responseMimeType,
   temperature = 0.7,
-  timeoutMs = 18000,
+  timeoutMs = 15000,
 }) => {
   const url = `${GEMINI_BASE_URL}/${encodeURIComponent(model)}:generateContent`;
 
@@ -125,7 +125,7 @@ const callGemini = async ({
   contents,
   responseMimeType,
   temperature = 0.7,
-  timeoutMs = 18000,
+  timeoutMs = 15000,
 }) => {
   const { apiKey, model: configuredModel } = getGeminiConfig();
 
@@ -361,33 +361,365 @@ function generateOfflineStructuredFallback(userPrompt = "", systemPrompt = "") {
     };
   }
 
-  // 2. Food Recommendation
+  // 2. Food Recommendation (Region & Place-Aware)
   if (combined.includes("welcomedrinks") || combined.includes("maincourse") || combined.includes("dietaryalternatives")) {
     const guestMatch = userPrompt.match(/Guest Count:\s*(\d+)/i);
     const guests = guestMatch ? parseInt(guestMatch[1], 10) : 100;
 
+    const placeMatch = userPrompt.match(/(?:City \/ Region|Target Place \/ City \/ Cuisine Region|City \/ Cuisine Region|location):\s*([^\n\r]+)/i);
+    const place = (placeMatch ? placeMatch[1].trim() : "Hyderabad").toLowerCase();
+
+    // 1. Chennai / Tamil Nadu
+    if (place.includes("chennai") || place.includes("tamil")) {
+      return {
+        title: `Authentic Chennai & Tamil Feast Menu for ${guests} Guests`,
+        welcomeDrinks: [
+          { item: "Chilled Nannari Sharbat", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Traditional herbal root cooler with basil seeds" },
+          { item: "Madras Filter Kaapi Cooler / Panakam", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Traditional jaggery-dry ginger thirst quencher" },
+        ],
+        starters: [
+          { item: "Crispy Medu Vada with Chutney Trio", servings: Math.round(guests * 1.5), quantityEstimate: `${Math.round(guests * 1.5)} pieces`, notes: "Golden lentil donuts served with coconut, tomato & mint chutneys" },
+          { item: "Chettinad Paneer 65 & Babycorn Roast", servings: guests, quantityEstimate: `${Math.round(guests * 0.12)} kg`, notes: "Tossed in fiery curry leaves and Chettinad masala" },
+        ],
+        mainCourse: [
+          { item: "Chettinad Style Vegetable Dum Biryani", servings: guests, quantityEstimate: `${Math.round(guests * 0.35)} kg`, notes: "Seeraga samba rice cooked with stone-ground spices" },
+          { item: "Traditional Ennai Kathirikai (Baby Brinjal Curry)", servings: guests, quantityEstimate: `${Math.round(guests * 0.18)} kg`, notes: "Rich sesame-peanut tamarind gravy, Chennai wedding staple" },
+          { item: "Authentic Madras Drumstick Sambhar & Mysore Rasam", servings: guests, quantityEstimate: `${Math.round(guests * 0.22)} Liters`, notes: "Simmered with shallots, drumsticks and freshly roasted spices" },
+        ],
+        sideDishes: [
+          { item: "Appam with Coconut Milk & Malabar Parotta", servings: Math.round(guests * 2.5), quantityEstimate: `${Math.round(guests * 2.5)} pieces`, notes: "Freshly made on live counters" },
+          { item: "Urulai Roast & Cabbage Poriyal", servings: guests, quantityEstimate: `${Math.round(guests * 0.10)} kg`, notes: "Crispy potato roast and coconut-tempered greens" },
+        ],
+        desserts: [
+          { item: "Elaneer Payasam (Tender Coconut Pudding)", servings: guests, quantityEstimate: `${Math.round(guests * 0.15)} Liters`, notes: "Delicate tender coconut pulp in thickened cardamon-infused milk" },
+          { item: "Warm Ghee Mysore Pak", servings: guests, quantityEstimate: `${guests} pieces`, notes: "Melt-in-mouth artisanal pure ghee delicacy" },
+        ],
+        dietaryAlternatives: [
+          { restrictionOrAllergy: "Lactose Intolerant / Vegan", substituteItem: "Coconut Milk Poriyal & Steamed Idiyappam", notes: "100% dairy-free South Indian specialty" },
+          { restrictionOrAllergy: "Gluten Free", substituteItem: "Steamed Ponni Rice, Rasam & Appam", notes: "Naturally gluten-free grain preparation" },
+        ],
+        estimatedTotalCost: guests * 420,
+        costAssumptions: [
+          "Curated based on authentic Chennai and Tamil Nadu wedding catering benchmarks (₹400 - ₹500/plate).",
+          "Includes banana leaf or premium porcelain dinnerware, live Appam counter, and service staff.",
+        ],
+        wasteReductionTips: [
+          "Live Appam and Parotta counters made-to-order to eliminate over-production.",
+          "Coordinate untouched cooked feast portions with Chennai food bank networks.",
+        ],
+      };
+    }
+
+    // 2. Kerala
+    if (place.includes("kerala") || place.includes("kochi") || place.includes("malabar")) {
+      return {
+        title: `Authentic Kerala Traditional Feast (Sadya Inspired) for ${guests} Guests`,
+        welcomeDrinks: [
+          { item: "Fresh Kulukki Sarbath", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Shaken iced lemon cooler with green chilli and basil seeds" },
+          { item: "Tender Coconut & Mint Cooler", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Pure Elaneer water with mint essence" },
+        ],
+        starters: [
+          { item: "Nendran Banana Chips & Jackfruit Crisps", servings: guests, quantityEstimate: `${Math.round(guests * 0.08)} kg`, notes: "Fried in pure coconut oil with sea salt" },
+          { item: "Vazhaipoo (Banana Blossom) Cutlets & Parippu Vada", servings: guests, quantityEstimate: `${Math.round(guests * 1.5)} pieces`, notes: "Crunchy tea-time savory bites" },
+        ],
+        mainCourse: [
+          { item: "Malabar Ghee Rice with Vegetable Kurma", servings: guests, quantityEstimate: `${Math.round(guests * 0.30)} kg`, notes: "Fragrant Kaima rice flavored with ghee and whole spices" },
+          { item: "Traditional Avial & Beetroot Pachadi", servings: guests, quantityEstimate: `${Math.round(guests * 0.20)} kg`, notes: "Mixed garden vegetables in curd and coconut paste" },
+          { item: "Kerala Varutharacha Sambar & Moru Curry", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Slow roasted coconut spice blend gravy" },
+        ],
+        sideDishes: [
+          { item: "Fluffy Malabar Parotta & Idiyappam", servings: Math.round(guests * 2.5), quantityEstimate: `${Math.round(guests * 2.5)} pieces`, notes: "Flaky layered parottas and delicate rice string hoppers" },
+          { item: "Cabbage Thoran & Inji Puli Pickle", servings: guests, quantityEstimate: `${Math.round(guests * 0.10)} kg`, notes: "Stir-fried coconut greens with tangy sweet-sour ginger dip" },
+        ],
+        desserts: [
+          { item: "Traditional Ada Pradhaman", servings: guests, quantityEstimate: `${Math.round(guests * 0.15)} Liters`, notes: "Rice flakes slow-cooked in thick jaggery syrup and coconut milk" },
+          { item: "Palada Payasam", servings: guests, quantityEstimate: `${Math.round(guests * 0.15)} Liters`, notes: "Pink sweet condensed milk payasam" },
+        ],
+        dietaryAlternatives: [
+          { restrictionOrAllergy: "Vegan", substituteItem: "Coconut Milk Avial & Red Matta Rice", notes: "Zero dairy traditional preparation" },
+          { restrictionOrAllergy: "Gluten Free", substituteItem: "Kerala Idiyappam & Stew", notes: "100% steamed rice flour base" },
+        ],
+        estimatedTotalCost: guests * 440,
+        costAssumptions: [
+          "Estimated at ₹400 - ₹500 per plate following standard Kerala celebration catering tariffs.",
+          "Includes traditional plantain leaf presentation and trained service staff.",
+        ],
+        wasteReductionTips: [
+          "Stage replenishment in 2 cycles to keep rice hot and avoid cold surplus.",
+          "Leftover cooked Sadya staples safely donated through local volunteer networks.",
+        ],
+      };
+    }
+
+    // 3. Bangalore / Karnataka
+    if (place.includes("bangalore") || place.includes("bengaluru") || place.includes("karnataka") || place.includes("mysore")) {
+      return {
+        title: `Royal Karnataka & Mysore Celebration Feast for ${guests} Guests`,
+        welcomeDrinks: [
+          { item: "Chilled Badam Milk with Saffron & Pistachio", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Rich almond cooler flavored with cardamom" },
+          { item: "Belagavi Kokum & Jeera Punch", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Digestive tangy cooler" },
+        ],
+        starters: [
+          { item: "Crispy Maddur Vada", servings: Math.round(guests * 1.5), quantityEstimate: `${Math.round(guests * 1.5)} pieces`, notes: "Karnataka's famous crunchy onion-semolina specialty" },
+          { item: "Udupi Paneer Ghee Roast", servings: guests, quantityEstimate: `${Math.round(guests * 0.12)} kg`, notes: "Fiery red Byadagi chilli paste roasted in pure desi ghee" },
+        ],
+        mainCourse: [
+          { item: "Authentic Karnataka Bisi Bele Bath", servings: guests, quantityEstimate: `${Math.round(guests * 0.35)} kg`, notes: "Served with spiced Kara Boondi and Potato Chips" },
+          { item: "Badanekayi Yennegayi (Stuffed Brinjal)", servings: guests, quantityEstimate: `${Math.round(guests * 0.18)} kg`, notes: "North Karnataka specialty with peanut-sesame masala" },
+          { item: "Udupi Pineapple Menaskai & Tovve Dal", servings: guests, quantityEstimate: `${Math.round(guests * 0.20)} Liters`, notes: "Sweet, tangy and spicy pineapple stew" },
+        ],
+        sideDishes: [
+          { item: "Akki Roti & Poori with Mixed Vegetable Sagu", servings: Math.round(guests * 2.5), quantityEstimate: `${Math.round(guests * 2.5)} pieces`, notes: "Rice flour flatbread prepared on tawa" },
+          { item: "Hesaru Bele Kosambari & Happala", servings: guests, quantityEstimate: `${Math.round(guests * 0.10)} kg`, notes: "Tempered split moong dal salad with grated carrot and cucumber" },
+        ],
+        desserts: [
+          { item: "Authentic Soft Ghee Mysore Pak", servings: guests, quantityEstimate: `${guests} pieces`, notes: "Classic royal recipe with pure desi ghee" },
+          { item: "Dharwad Peda & Chiroti with Badam Milk", servings: guests, quantityEstimate: `${guests} pieces`, notes: "Rich caramelized milk confection and layered pastry" },
+        ],
+        dietaryAlternatives: [
+          { restrictionOrAllergy: "Gluten Free", substituteItem: "Akki Roti with Sagu & Bisi Bele Bath", notes: "Dedicated wheat-free preparation" },
+          { restrictionOrAllergy: "Lactose Intolerant", substituteItem: "Vegetable Pulao & Yennegayi without Ghee", notes: "Prepared in cold-pressed sesame oil" },
+        ],
+        estimatedTotalCost: guests * 430,
+        costAssumptions: [
+          "Based on Bangalore / Karnataka caterer benchmarks at ₹400 - ₹500 per plate.",
+          "Includes live counter tawa equipment, chaffing sets, and service staff.",
+        ],
+        wasteReductionTips: [
+          "Fresh Akki Roti pressed on demand to avoid drying and excess waste.",
+          "Surplus Bisi Bele Bath portions dispatched to food distribution charities within 2 hours.",
+        ],
+      };
+    }
+
+    // 4. North India / Punjab / Delhi
+    if (place.includes("punjab") || place.includes("delhi") || place.includes("amritsar") || place.includes("north")) {
+      return {
+        title: `Royal North Indian & Punjabi Celebration Feast for ${guests} Guests`,
+        welcomeDrinks: [
+          { item: "Thick Amritsari Sweet Masala Lassi", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Served in earthen Kulhads with malai and crushed pistachio" },
+          { item: "Rooh Afza Rose & Lemon Shikanji", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Refreshing summer rose cooler with mint" },
+        ],
+        starters: [
+          { item: "Amritsari Paneer Tikka & Dahi Ke Sholay", servings: guests, quantityEstimate: `${Math.round(guests * 0.12)} kg`, notes: "Tandoori char-grilled cottage cheese and crispy hung-curd rolls" },
+          { item: "Tandoori Soya Chaap & Corn Seekh Kebab", servings: guests, quantityEstimate: `${Math.round(guests * 0.12)} kg`, notes: "Served with mint chutney and laccha onion" },
+        ],
+        mainCourse: [
+          { item: "Dal Makhani (Slow-Cooked 12 Hours)", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} kg`, notes: "Finished with white butter and aromatic kasuri methi" },
+          { item: "Paneer Lababdar & Dum Aloo Kashmiri", servings: guests, quantityEstimate: `${Math.round(guests * 0.22)} kg`, notes: "Rich onion-tomato gravy with grated paneer garnish" },
+          { item: "Shahi Jeera Pulao & Pindi Chole", servings: guests, quantityEstimate: `${Math.round(guests * 0.30)} kg`, notes: "Dark spiced chickpeas cooked with anardana" },
+        ],
+        sideDishes: [
+          { item: "Amritsari Stuffed Kulcha & Garlic Butter Naan", servings: Math.round(guests * 2.5), quantityEstimate: `${Math.round(guests * 2.5)} pieces`, notes: "Crisp from live tandoor oven" },
+          { item: "Boondi Raita & Sirka Pyaaz Platter", servings: guests, quantityEstimate: "Platter array", notes: "Pickled baby onions and roasted cumin curd" },
+        ],
+        desserts: [
+          { item: "Hot Gulab Jamun with Rabdi", servings: guests, quantityEstimate: `${Math.round(guests * 1.5)} pieces`, notes: "Served steaming hot alongside creamy reduced milk" },
+          { item: "Kesar Pista Matka Kulfi Falooda", servings: guests, quantityEstimate: `${guests} matkas`, notes: "Hand-churned saffron dry fruit kulfi" },
+        ],
+        dietaryAlternatives: [
+          { restrictionOrAllergy: "Vegan", substituteItem: "Tofu Lababdar with Tandoori Roti without butter", notes: "Prepared with cashew-tomato base" },
+          { restrictionOrAllergy: "Gluten Free", substituteItem: "Makki Di Roti & Steamed Rice", notes: "Cornmeal bread prepared separately" },
+        ],
+        estimatedTotalCost: guests * 460,
+        costAssumptions: [
+          "Standard North Indian premium catering range of ₹450 - ₹550 per plate.",
+          "Covers live tandoor counters, copper chaffing dishes, and uniformed servers.",
+        ],
+        wasteReductionTips: [
+          "Breads baked strictly in response to live buffet flow.",
+          "EVORA surplus donation coordinated at end of feast.",
+        ],
+      };
+    }
+
+    // 5. Kolkata / Bengal
+    if (place.includes("kolkata") || place.includes("bengal") || place.includes("calcutta")) {
+      return {
+        title: `Authentic Bengali Royal Celebration Feast for ${guests} Guests`,
+        welcomeDrinks: [
+          { item: "Gondhoraj Lebu Sharbat", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Scented with the famous royal Gondhoraj lime" },
+          { item: "Aam Pora Shorbat", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Char-roasted green mango cooler with black salt" },
+        ],
+        starters: [
+          { item: "Crispy Mochar Chop (Banana Blossom Cutlets)", servings: Math.round(guests * 1.5), quantityEstimate: `${Math.round(guests * 1.5)} pieces`, notes: "Crusted with breadcrumbs, served with Kasundi mustard" },
+          { item: "Posto Boda & Paneer Kabiraji", servings: guests, quantityEstimate: `${Math.round(guests * 0.12)} kg`, notes: "Poppy seed patties and lace-fried cottage cheese" },
+        ],
+        mainCourse: [
+          { item: "Kolkata Special Aromatic Vegetable Biryani", servings: guests, quantityEstimate: `${Math.round(guests * 0.35)} kg`, notes: "Cooked with ghee-roasted potatoes and saffron" },
+          { item: "Chanar Dalna (Cottage Cheese Kofta Curry)", servings: guests, quantityEstimate: `${Math.round(guests * 0.20)} kg`, notes: "Soft handmade chhena cubes in a mild ginger-cumin gravy" },
+          { item: "Dhokar Dalna & Narkel Diye Chholar Dal", servings: guests, quantityEstimate: `${Math.round(guests * 0.22)} kg`, notes: "Lentil cakes and Bengal gram simmered with coconut slices" },
+        ],
+        sideDishes: [
+          { item: "Golden Luchi & Koraishutir Kochuri", servings: Math.round(guests * 3), quantityEstimate: `${Math.round(guests * 3)} pieces`, notes: "Puffed deep-fried bread and green pea stuffed pastries" },
+          { item: "Plastic Chutney (Raw Papaya) & Papad", servings: guests, quantityEstimate: `${Math.round(guests * 0.10)} kg`, notes: "Sweet translucent winter chutney" },
+        ],
+        desserts: [
+          { item: "Authentic Nolen Gur Mishti Doi", servings: guests, quantityEstimate: `${guests} earthen pots`, notes: "Clay pot cultured yogurt sweetened with date palm jaggery" },
+          { item: "Warm Spongy Rosogolla & Kanchagolla Sandesh", servings: guests, quantityEstimate: `${Math.round(guests * 1.5)} pieces`, notes: "Classic Bengal chhena confections" },
+        ],
+        dietaryAlternatives: [
+          { restrictionOrAllergy: "Gluten Free", substituteItem: "Steamed Gobindobhog Rice with Chholar Dal", notes: "Gluten-free traditional rice specialty" },
+          { restrictionOrAllergy: "Vegan", substituteItem: "Aloo Posto with Steamed Rice", notes: "Dairy-free poppy seed potato dish" },
+        ],
+        estimatedTotalCost: guests * 450,
+        costAssumptions: [
+          "Based on Kolkata wedding caterer rates (₹420 - ₹520 per plate).",
+          "Includes traditional clay handis, Kasundi dips, and buffet service staff.",
+        ],
+        wasteReductionTips: [
+          "Luchis fried in rolling batches directly at the counter.",
+          "Surplus desserts securely packed for local distribution.",
+        ],
+      };
+    }
+
+    // 6. Rajasthan
+    if (place.includes("rajasthan") || place.includes("jaipur") || place.includes("udaipur") || place.includes("marwar")) {
+      return {
+        title: `Royal Marwari & Rajasthani Celebration Feast for ${guests} Guests`,
+        welcomeDrinks: [
+          { item: "Bikaneri Jaljeera Cooler with Boondi", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Tangy mint-cumin cooler" },
+          { item: "Royal Masala Chaas with Roasted Cumin", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Tempered churned buttermilk" },
+        ],
+        starters: [
+          { item: "Mini Jodhpuri Pyaaz Ki Kachori", servings: Math.round(guests * 1.5), quantityEstimate: `${Math.round(guests * 1.5)} pieces`, notes: "Flaky pastry stuffed with spiced onion filling and tamarind chutney" },
+          { item: "Rajasthani Mirchi Vada Bites & Sangri Tikki", servings: guests, quantityEstimate: `${Math.round(guests * 0.12)} kg`, notes: "Mild Bhavnagri peppers stuffed with spiced potato" },
+        ],
+        mainCourse: [
+          { item: "Traditional Dal Baati Churma", servings: guests, quantityEstimate: `${Math.round(guests * 0.35)} kg`, notes: "Panchmel dal, oven-baked wheat baatis with pure ghee, and sweet churma" },
+          { item: "Authentic Ker Sangri & Gatte Ki Sabzi", servings: guests, quantityEstimate: `${Math.round(guests * 0.20)} kg`, notes: "Desert beans-berries and gram flour dumplings in curd gravy" },
+          { item: "Govind Gatta & Jodhpuri Kabuli Pulao", servings: guests, quantityEstimate: `${Math.round(guests * 0.22)} kg`, notes: "Stuffed gatta curry and royal layered rice" },
+        ],
+        sideDishes: [
+          { item: "Bajre Ki Roti & Missi Roti with Desi Makhan", servings: Math.round(guests * 2), quantityEstimate: `${Math.round(guests * 2)} pieces`, notes: "Millet and chickpea flatbreads served with fresh white butter" },
+          { item: "Spicy Lehsun Ki Chutney & Kachumber", servings: guests, quantityEstimate: "Platter array", notes: "Fiery red garlic paste and fresh cucumber salad" },
+        ],
+        desserts: [
+          { item: "Royal Malai Ghevar with Rabdi", servings: guests, quantityEstimate: `${guests} pieces`, notes: "Honeycomb disc soaked in saffron syrup topped with thick rabdi" },
+          { item: "Moong Dal Halwa with Khoya", servings: guests, quantityEstimate: `${Math.round(guests * 0.10)} kg`, notes: "Slow-roasted yellow lentil pudding with toasted dry fruits" },
+        ],
+        dietaryAlternatives: [
+          { restrictionOrAllergy: "Gluten Free", substituteItem: "Bajre Ki Roti with Dal & Gatte Ki Sabzi", notes: "Millet bread prepared without wheat" },
+          { restrictionOrAllergy: "Vegan", substituteItem: "Ker Sangri & Steamed Pulao without Ghee", notes: "Prepared with mustard oil" },
+        ],
+        estimatedTotalCost: guests * 480,
+        costAssumptions: [
+          "Estimated at ₹450 - ₹550 per plate following Rajasthani royal banquet standards.",
+          "Includes pure desi ghee allocations and traditional brass/copper chaffing service.",
+        ],
+        wasteReductionTips: [
+          "Baatis kept in warming ovens and broken with ghee per table request.",
+          "Remaining feast components donated via EVORA Charity integration.",
+        ],
+      };
+    }
+
+    // 7. Gujarat
+    if (place.includes("gujarat") || place.includes("ahmedabad") || place.includes("surat")) {
+      return {
+        title: `Authentic Gujarati & Kathiyawadi Celebration Feast for ${guests} Guests`,
+        welcomeDrinks: [
+          { item: "Keri No Panna (Raw Mango Cooler)", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Spiced with roasted cumin and mint" },
+          { item: "Chilled Masala Chhas with Coriander", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Light digestive buttermilk" },
+        ],
+        starters: [
+          { item: "Nylon Khaman Dhokla with Fried Green Chillies", servings: Math.round(guests * 1.5), quantityEstimate: `${Math.round(guests * 1.5)} pieces`, notes: "Steamed fluffy gram flour cakes tempered with mustard seeds" },
+          { item: "Khandvi Rolls & Lilva Kachori", servings: guests, quantityEstimate: `${Math.round(guests * 0.12)} kg`, notes: "Silky rolled savory gram flour bites with fresh coconut garnish" },
+        ],
+        mainCourse: [
+          { item: "Authentic Surti Undhiyu", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} kg`, notes: "Seasonal winter vegetables and fenugreek muthiyas slow cooked with spices" },
+          { item: "Sweet & Tangy Gujarati Kadhi", servings: guests, quantityEstimate: `${Math.round(guests * 0.22)} Liters`, notes: "Yogurt and gram flour soup seasoned with cinnamon and cloves" },
+          { item: "Kathiyawadi Sev Tameta & Gujarati Dal-Bhat", servings: guests, quantityEstimate: `${Math.round(guests * 0.30)} kg`, notes: "Crisp sev in juicy tomato curry and aromatic sweet dal with rice" },
+        ],
+        sideDishes: [
+          { item: "Soft Phulka Rotli with Desi Ghee & Puri", servings: Math.round(guests * 3), quantityEstimate: `${Math.round(guests * 3)} pieces`, notes: "Ultra-thin whole wheat rotlis smeared with ghee" },
+          { item: "Sambharo (Warm Cabbage-Carrot Stir Fry) & Chhundo", servings: guests, quantityEstimate: `${Math.round(guests * 0.10)} kg`, notes: "Sweet mango pickle and crunchy mustard salad" },
+        ],
+        desserts: [
+          { item: "Kesar Pista Shrikhand with Warm Puri", servings: guests, quantityEstimate: `${Math.round(guests * 0.12)} kg`, notes: "Strained yogurt infused with saffron strands and crushed pistachios" },
+          { item: "Traditional Dudhi No Halwa / Mohanthal", servings: guests, quantityEstimate: `${guests} pieces`, notes: "Rich fudge sweetened with cardamom and mawa" },
+        ],
+        dietaryAlternatives: [
+          { restrictionOrAllergy: "Jain", substituteItem: "Jain Undhiyu (without root veggies) & Jain Kadhi", notes: "Strictly zero onion/garlic/potatoes" },
+          { restrictionOrAllergy: "Vegan", substituteItem: "Sev Tameta & Rotli without Ghee", notes: "Dairy-free Gujarati preparation" },
+        ],
+        estimatedTotalCost: guests * 410,
+        costAssumptions: [
+          "Estimated at ₹380 - ₹460 per plate reflecting traditional Gujarati caterer packages.",
+          "Includes continuous hot Phulka service from live rotli chulhas.",
+        ],
+        wasteReductionTips: [
+          "Phulkas rolled and puffed live on table-side request to minimize cold rotli waste.",
+          "Surplus dal and sabzi quickly coordinated with regional hunger relief teams.",
+        ],
+      };
+    }
+
+    // 8. Mumbai / Maharashtra
+    if (place.includes("mumbai") || place.includes("maharashtra") || place.includes("pune")) {
+      return {
+        title: `Authentic Maharashtrian Celebration Feast for ${guests} Guests`,
+        welcomeDrinks: [
+          { item: "Authentic Solkadhi", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Tangy kokum juice infused with fresh coconut milk and garlic" },
+          { item: "Kokum Sharbat with Sabja Seeds", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Sweet and sour cooling coastal beverage" },
+        ],
+        starters: [
+          { item: "Crispy Kothimbir Vadi with Green Chutney", servings: Math.round(guests * 1.5), quantityEstimate: `${Math.round(guests * 1.5)} pieces`, notes: "Steamed and fried coriander-gram flour cakes" },
+          { item: "Mini Batata Vada & Sabudana Vada", servings: guests, quantityEstimate: `${Math.round(guests * 0.12)} kg`, notes: "Golden potato fritters and tapioca peanut patties" },
+        ],
+        mainCourse: [
+          { item: "Bharli Vangi (Maharashtrian Stuffed Eggplant)", servings: guests, quantityEstimate: `${Math.round(guests * 0.22)} kg`, notes: "Cooked in roasted Goda masala, peanuts and grated coconut" },
+          { item: "Katachi Amti (Spiced Chana Dal Soup)", servings: guests, quantityEstimate: `${Math.round(guests * 0.20)} Liters`, notes: "Thin tempered dal with sweet and spicy flavor profile" },
+          { item: "Maharashtrian Masale Bhaat", servings: guests, quantityEstimate: `${Math.round(guests * 0.32)} kg`, notes: "Spiced rice cooked with Ivy gourd (tindora) and cashews" },
+        ],
+        sideDishes: [
+          { item: "Hot Poli (Chapati) & Poori Basket", servings: Math.round(guests * 2.5), quantityEstimate: `${Math.round(guests * 2.5)} pieces`, notes: "Soft wheat flatbreads with ghee" },
+          { item: "Khamang Kakdi Salad & Mirchi Cha Thecha", servings: guests, quantityEstimate: `${Math.round(guests * 0.10)} kg`, notes: "Cucumber peanut salad with fiery crushed green chilli relish" },
+        ],
+        desserts: [
+          { item: "Warm Puran Poli with Desi Ghee & Milk", servings: guests, quantityEstimate: `${Math.round(guests * 1.2)} pieces`, notes: "Sweet flatbread stuffed with jaggery and cardamom chana dal" },
+          { item: "Ukadiche Modak / Mango Shrikhand", servings: guests, quantityEstimate: `${guests} pieces`, notes: "Steamed rice flour dumplings stuffed with coconut and jaggery" },
+        ],
+        dietaryAlternatives: [
+          { restrictionOrAllergy: "Vegan", substituteItem: "Bharli Vangi & Steamed Rice without Ghee", notes: "Prepared with cold-pressed groundnut oil" },
+          { restrictionOrAllergy: "Gluten Free", substituteItem: "Jowar Bhakri with Katachi Amti", notes: "Traditional sorghum millet bread" },
+        ],
+        estimatedTotalCost: guests * 430,
+        costAssumptions: [
+          "Estimated at ₹400 - ₹480 per plate adhering to Mumbai/Pune event catering standards.",
+          "Includes live Puran Poli hot plate and trained hospitality personnel.",
+        ],
+        wasteReductionTips: [
+          "Hot poli and modak served in controlled buffet runs.",
+          "Food rescue volunteers notified for prompt surplus pickup.",
+        ],
+      };
+    }
+
+    // Default: Royal Hyderabad & Deccan Menu
     return {
-      title: "Celebration Feast Menu & Catering Plan",
+      title: `Royal Nizami & Hyderabadi Celebration Feast for ${guests} Guests`,
       welcomeDrinks: [
-        { item: "Fresh Mint & Lychee Cooler", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Served chilled at welcome counter" },
-        { item: "Spiced Masala Buttermilk", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Digestive cooler option" },
+        { item: "Royal Rose Falooda Sharbat with Basil Seeds", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Traditional cooling rose cooler garnished with slivered pistachios" },
+        { item: "Fresh Mint & Lychee Cooler", servings: guests, quantityEstimate: `${Math.round(guests * 0.25)} Liters`, notes: "Refreshing welcome beverage served chilled at entrance" },
       ],
       starters: [
-        { item: "Paneer Tikka Angara", servings: guests, quantityEstimate: `${Math.round(guests * 0.12)} kg paneer`, notes: "Live skewer counter" },
-        { item: "Crispy Corn & Water Chestnut Salt-and-Pepper", servings: guests, quantityEstimate: `${Math.round(guests * 0.10)} kg`, notes: "Golden tossed with fresh scallions" },
+        { item: "Paneer Tikka Angara", servings: guests, quantityEstimate: `${Math.round(guests * 0.12)} kg paneer`, notes: "Live skewer charcoal counter with spicy mint dip" },
+        { item: "Crispy Corn & Water Chestnut Salt-and-Pepper", servings: guests, quantityEstimate: `${Math.round(guests * 0.10)} kg`, notes: "Golden wok tossed with scallions and crushed pepper" },
       ],
       mainCourse: [
-        { item: "Hyderabadi Shahi Dum Biryani", servings: guests, quantityEstimate: `${Math.round(guests * 0.35)} kg`, notes: "Served with Mirchi Ka Salan and creamy Burrani Raita" },
-        { item: "Paneer Butter Masala", servings: guests, quantityEstimate: `${Math.round(guests * 0.18)} kg`, notes: "Rich cashew-tomato gravy" },
-        { item: "Dal Makhani", servings: guests, quantityEstimate: `${Math.round(guests * 0.20)} kg`, notes: "Slow-cooked overnight with white butter" },
+        { item: "Authentic Hyderabadi Shahi Dum Biryani", servings: guests, quantityEstimate: `${Math.round(guests * 0.35)} kg`, notes: "Cooked in 'Dum' with saffron, served with spicy Mirchi Ka Salan & Burrani Raita" },
+        { item: "Paneer Butter Masala", servings: guests, quantityEstimate: `${Math.round(guests * 0.18)} kg`, notes: "Rich cashew-tomato gravy simmered with fresh cream" },
+        { item: "Dal Makhani", servings: guests, quantityEstimate: `${Math.round(guests * 0.20)} kg`, notes: "Slow-cooked overnight with white butter and aromatic spices" },
       ],
       sideDishes: [
-        { item: "Butter Naan & Tandoori Roti Basket", servings: Math.round(guests * 2.5), quantityEstimate: `${Math.round(guests * 2.5)} pieces`, notes: "Fresh from live tandoor" },
-        { item: "Mixed Green Salad & Achar Platter", servings: guests, quantityEstimate: "Platter array", notes: "Fresh farm greens" },
+        { item: "Butter Naan & Tandoori Roti Basket", servings: Math.round(guests * 2.5), quantityEstimate: `${Math.round(guests * 2.5)} pieces`, notes: "Fresh from live clay tandoor" },
+        { item: "Mixed Green Salad & Achar Platter", servings: guests, quantityEstimate: "Platter array", notes: "Fresh farm greens with lemon wedges" },
       ],
       desserts: [
-        { item: "Warm Gulab Jamun with Rabdi", servings: guests, quantityEstimate: `${Math.round(guests * 1.5)} pieces`, notes: "Garnished with toasted pistachios" },
-        { item: "Kesar Pista Kulfi Sticks", servings: guests, quantityEstimate: `${guests} sticks`, notes: "Rich artisanal dry-fruit kulfi" },
+        { item: "Royal Double Ka Meetha with Rabdi", servings: guests, quantityEstimate: `${Math.round(guests * 1.5)} pieces`, notes: "Hyderabadi bread pudding soaked in saffron milk and cardamom" },
+        { item: "Kesar Pista Kulfi Sticks", servings: guests, quantityEstimate: `${guests} sticks`, notes: "Artisanal dry-fruit kulfi on sticks" },
       ],
       dietaryAlternatives: [
         { restrictionOrAllergy: "Vegan / Lactose Intolerant", substituteItem: "Tofu Makhani & Olive Oil Roti", notes: "Separate preparation station" },

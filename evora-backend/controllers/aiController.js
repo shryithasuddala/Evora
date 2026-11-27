@@ -339,27 +339,50 @@ exports.foodRecommendations = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Budget must be a valid non-negative number." });
     }
 
+    const targetPlace = String(location || "").trim() || "Hyderabad";
+
     const systemPrompt = `You are the EVORA AI Culinary & Menu Planner ("EVORA – Made to Celebrate").
 Return ONLY valid JSON matching the exact schema requested.
-Design practical, culturally appropriate Indian/event catering menus scaled accurately to guestCount and foodPreference.
-Strict rules:
-- Strictly obey foodPreference (e.g., if Vegetarian, Vegan, or Jain, include ZERO meat/poultry/fish/eggs).
-- Address any dietaryRestrictions or allergies explicitly with safe substitutes in dietaryAlternatives.
-- Provide realistic quantityEstimate per item (e.g. "${guestsNum} glasses / ~${Math.round(guestsNum * 0.25)}L", "${Math.round(guestsNum * 0.15)} kg", etc.) and explain costAssumptions clearly.
-- Include practical wasteReductionTips (e.g., 85-90% initial batch prep + live replenishment) to avoid excess food waste.`;
+Design practical, culturally authentic Indian/event catering menus scaled accurately to guestCount, foodPreference, and the specific place/region.
 
-    const userPrompt = `Generate an event menu plan in JSON for:
+Strict rules:
+1. PLACE & REGIONAL AUTHENTICITY (CRITICAL):
+   - Curate dishes and menu items deeply rooted in the specified City / Cuisine Region (the place: "${targetPlace}").
+   - Include celebrated local welcome drinks, starters, signature main courses, regional breads/rice, accompaniments, and authentic local desserts of that place.
+   - For example:
+     * Hyderabad / Telangana / Andhra: Hyderabadi Dum Biryani, Mirchi ka Salan, Bagara Baingan, Gongura delicacies, Double ka Meetha, Khubani ka Meetha, Irani Chai / Paan cooler.
+     * Chennai / Tamil Nadu: Nannari Sharbat / Filter Coffee cooler / Panakam, Medu Vada, Kuzhi Paniyaram, Chettinad curries, Ennai Kathirikai, Sambhar, Rasam, Elaneer Payasam, Mysore Pak.
+     * Kerala: Tender Coconut cooler, Kulukki Sarbath, Banana Chips, Appam with Vegetable/Chicken Stew, Avial, Malabar Parotta, Thoran, Ada Pradhaman / Palada Payasam.
+     * Bangalore / Karnataka: Badam Milk / Kokum cooler, Maddur Vada, Bisi Bele Bath, Udupi Sambhar, Akki Roti, Mysore Pak, Dharwad Peda.
+     * Delhi / Punjab / North India: Punjabi Lassi, Amritsari Kulcha, Paneer/Chicken Tikka, Dal Makhani, Sarson da Saag & Makki di Roti, Butter Gravies, Gulab Jamun, Kesar Kulfi.
+     * Kolkata / Bengal: Aam Pora Shorbat / Gondhoraj Ghol, Kolkata Biryani, Kosha Mangsho/Paneer, Chhanar Dalna, Radhabhallavi/Luchi, Chholar Dal, Mishti Doi, Rosogolla, Sandesh.
+     * Rajasthan: Jaljeera / Masala Chaas, Pyaaz Kachori, Dal Baati Churma, Ker Sangri, Gatte ki Sabzi, Ghevar, Malpua.
+     * Gujarat: Aam Panna, Khaman Dhokla, Khandvi, Undhiyu, Gujarati Kadhi, Rotli, Shrikhand, Basundi.
+     * Mumbai / Maharashtra: Solkadhi, Kothimbir Vadi, Bharli Vangi, Misal, Puran Poli, Modak, Shrikhand.
+     * Goa: Kokum Sharbat, Goan Vegetable/Fish Caldine, Poee bread, Bebinca.
+     * Other regions: Tailor items authentically to that region's renowned authentic celebration cuisine.
+   - Mention the place or regional style in the "title" and in item "notes" (e.g., explaining why it is a regional specialty).
+
+2. DIETARY PREFERENCE:
+   - Strictly obey foodPreference (e.g., if Vegetarian, Vegan, or Jain, include ZERO meat/poultry/fish/eggs; if Non-Vegetarian or Mixed, include celebrated regional meat/fish specialties alongside vegetarian options).
+   - Address any dietaryRestrictions or allergies explicitly with safe substitutes in dietaryAlternatives.
+
+3. ACCURATE PORTIONS & ESTIMATES:
+   - Provide realistic quantityEstimate per item (e.g. "${guestsNum} glasses / ~${Math.round(guestsNum * 0.25)}L", "${Math.round(guestsNum * 0.15)} kg", etc.) and explain costAssumptions clearly.
+   - Include practical wasteReductionTips (e.g., 85-90% initial batch prep + live replenishment) to avoid excess food waste.`;
+
+    const userPrompt = `Generate an authentic regional event menu plan in JSON for:
 - Event Type: ${eventType.trim()}
 - Guest Count: ${guestsNum}
 - Food Budget (INR): ${budgetNum > 0 ? budgetNum : "Flexible / suggest economical estimate"}
 - Food Preference: ${String(foodPreference).trim()}
 - Meal Type: ${String(mealType).trim()}
 - Dietary Restrictions / Allergies: ${String(dietaryRestrictions).trim() || "None specified"}
-- City / Region: ${String(location).trim() || "India (general)"}
+- Target Place / City / Cuisine Region: ${targetPlace} (Curate items authentic to this place!)
 
 Return strictly this JSON schema:
 {
-  "title": "string (e.g. Vegetarian Wedding Dinner Menu for 200 Guests)",
+  "title": "string (e.g. Authentic ${targetPlace} ${foodPreference} ${eventType} ${mealType} Menu for ${guestsNum} Guests)",
   "welcomeDrinks": [{ "item": "string", "servings": number, "quantityEstimate": "string", "notes": "string" }],
   "starters": [{ "item": "string", "servings": number, "quantityEstimate": "string", "notes": "string" }],
   "mainCourse": [{ "item": "string", "servings": number, "quantityEstimate": "string", "notes": "string" }],
@@ -468,6 +491,7 @@ exports.updateSavedFoodMenu = async (req, res, next) => {
     const payload = req.body || {};
     const guestsNum = Number(payload.guestCount) || existing.guestCount;
     if (payload.title !== undefined) existing.title = String(payload.title).trim();
+    if (payload.location !== undefined) existing.location = String(payload.location).trim();
     if (payload.estimatedTotalCost !== undefined) {
       existing.estimatedTotalCost = Number(payload.estimatedTotalCost) || 0;
       existing.costPerGuest = Math.round(existing.estimatedTotalCost / guestsNum);
