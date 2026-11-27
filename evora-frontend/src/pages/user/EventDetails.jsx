@@ -40,6 +40,7 @@ const EventDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [cancelling, setCancelling] = useState(false);
+  const [completing, setCompleting] = useState(false);
 
   // Service Resolution State
   const [resolvingCategory, setResolvingCategory] = useState(null);
@@ -173,6 +174,29 @@ const EventDetails = () => {
     }
   };
 
+  const handleCompleteEvent = async () => {
+    if (
+      !window.confirm(
+        `Mark celebration "${event.title}" as COMPLETED?\n\nThis will mark all services (Catering, Venue, Decor, Photography, etc.), vendor assignments, and volunteer operations as Completed across all portals.`
+      )
+    ) {
+      return;
+    }
+    setCompleting(true);
+    try {
+      await eventsAPI.complete(event._id || id);
+      toast.success(
+        "Celebration Completed! 🎉",
+        "Event and all service categories have been marked as Completed across all portals."
+      );
+      await loadData();
+    } catch (err) {
+      toast.error("Action Failed", err.message || "Failed to mark event completed.");
+    } finally {
+      setCompleting(false);
+    }
+  };
+
   if (loading) return (
     <div className="vendor-page" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "50vh" }}>
       <div style={{ textAlign: "center" }}>
@@ -294,7 +318,52 @@ const EventDetails = () => {
               <Edit3 size={14} /> Edit Celebration
             </button>
 
-            {event.status !== "Cancelled" && (
+            {event.status !== "Completed" && event.status !== "Cancelled" && (
+              <button
+                type="button"
+                disabled={completing}
+                onClick={handleCompleteEvent}
+                style={{
+                  background: "linear-gradient(135deg, #1B5E20, #2E7D32)",
+                  color: "#FFFFFF",
+                  border: "1px solid #4ADE80",
+                  borderRadius: "8px",
+                  padding: "8px 16px",
+                  fontSize: "13px",
+                  fontWeight: 700,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  cursor: completing ? "not-allowed" : "pointer",
+                  boxShadow: "0 2px 8px rgba(30, 142, 62, 0.4)",
+                }}
+                title="Conclude celebration and mark Completed across all service categories"
+              >
+                <CheckCircle2 size={15} color="#4ADE80" />
+                {completing ? "Completing…" : "Mark as Completed ✓"}
+              </button>
+            )}
+
+            {event.status === "Completed" && (
+              <span
+                style={{
+                  background: "linear-gradient(135deg, rgba(37,211,102,0.25), rgba(27,94,32,0.5))",
+                  color: "#4ADE80",
+                  border: "1px solid #4ADE80",
+                  borderRadius: "8px",
+                  padding: "8px 16px",
+                  fontSize: "13px",
+                  fontWeight: 700,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
+                <CheckCircle2 size={15} color="#4ADE80" /> Completed ✓ All Portals
+              </span>
+            )}
+
+            {event.status !== "Cancelled" && event.status !== "Completed" && (
               <button
                 type="button"
                 disabled={cancelling}

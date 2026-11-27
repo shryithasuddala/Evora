@@ -40,11 +40,11 @@ const VolunteerDashboard = () => {
     }
   };
 
-  const pendingTasks = tasks.filter((t) => t.status === "Assigned");
+  const pendingTasks = tasks.filter((t) => t.status === "Assigned" || t.status === "Pending");
   const inProgressTasks = tasks.filter((t) => t.status === "In Progress");
-  const completedTasks = tasks.filter((t) => t.status === "Done");
+  const completedTasks = tasks.filter((t) => t.status === "Done" || t.status === "Completed");
 
-  const nextTask = tasks.find((t) => t.status !== "Done") || tasks[0];
+  const nextTask = tasks.find((t) => t.status !== "Done" && t.status !== "Completed") || tasks[0];
 
   if (loading) {
     return (

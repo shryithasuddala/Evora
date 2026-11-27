@@ -1659,13 +1659,22 @@ exports.cancelEvent = async (req, res, next) => {
 // @access  Private (admin only)
 exports.completeEvent = async (req, res, next) => {
   try {
-    if (req.user.role !== "admin") {
-      return res.status(403).json({ success: false, message: "Access denied. Admin role required." });
-    }
-
     const event = await Event.findById(req.params.id).populate("organizerId", "fullName email phone");
     if (!event) {
       return res.status(404).json({ success: false, message: "Event not found." });
+    }
+
+    const organizerIdStr = event.organizerId?._id
+      ? event.organizerId._id.toString()
+      : (event.organizerId ? event.organizerId.toString() : "");
+    const isOwner = organizerIdStr === req.user.id.toString();
+    const isAdmin = req.user.role === "admin";
+
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only the celebration host or admin can mark this celebration as completed.",
+      });
     }
 
     if (event.status === "Cancelled") {
@@ -1697,10 +1706,10 @@ exports.completeEvent = async (req, res, next) => {
       });
     }
 
-    // 4. Mark all bookings for this event as Completed
+    // 4. Mark all bookings for this event as Completed (updates both status & bookingStatus for vendor portal)
     await Booking.updateMany(
       { eventId: event._id, status: { $ne: "Cancelled" } },
-      { $set: { status: "Completed" } }
+      { $set: { status: "Completed", bookingStatus: "Completed" } }
     );
 
     // 5. Mark all assigned volunteers as Completed
@@ -1712,10 +1721,10 @@ exports.completeEvent = async (req, res, next) => {
       });
     }
 
-    // 6. Mark all volunteer tasks as Completed
+    // 6. Mark all volunteer tasks as Completed / Done
     await Task.updateMany(
       { eventId: event._id, status: { $ne: "Cancelled" } },
-      { $set: { status: "Completed" } }
+      { $set: { status: "Done", completedAt: new Date() } }
     );
 
     // 7. Mark all checklist items as Completed
@@ -1734,12 +1743,25 @@ exports.completeEvent = async (req, res, next) => {
       title: "Celebration Successfully Completed! 🎉",
       message: `Congratulations! Your celebration "${event.title}" has been successfully executed and marked as completed across all categories. Thank you for celebrating with EVORA!`,
       link: `/user/events/${event._id}`,
-      idempotencyKey: `event-completed:${event._id}`,
+      idempotencyKey: `event-completed:${event._id}:host`,
       eventId: event._id,
       eventName: event.title,
     }).catch(() => {});
 
-    // 9. Notify vendors
+    // 9. If host completed it, notify platform admins
+    if (!isAdmin) {
+      notifyAdmins({
+        type: "success",
+        title: `Host Marked Event Completed: ${event.title} 🎉`,
+        message: `Celebration host ${event.organizerId?.fullName || "Organizer"} has marked event "${event.title}" as completed across all categories.`,
+        link: `/admin/events`,
+        idempotencyPrefix: `event-completed:${event._id}`,
+        eventId: event._id,
+        eventName: event.title,
+      }).catch(() => {});
+    }
+
+    // 10. Notify vendors
     const bookings = await Booking.find({ eventId: event._id }).select("vendorId");
     for (const b of bookings) {
       if (b.vendorId) {
@@ -1747,7 +1769,7 @@ exports.completeEvent = async (req, res, next) => {
           userId: b.vendorId,
           type: "success",
           title: `Celebration Completed: ${event.title} 🌟`,
-          message: `The celebration "${event.title}" on ${event.date} has been marked completed by EVORA Admin. Great job!`,
+          message: `The celebration "${event.title}" on ${event.date} has been marked completed across all portals. Great job!`,
           link: "/vendor/bookings",
           idempotencyKey: `event-completed:${event._id}:vendor:${b.vendorId}`,
           eventId: event._id,

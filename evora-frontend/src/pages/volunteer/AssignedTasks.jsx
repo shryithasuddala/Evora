@@ -60,6 +60,7 @@ const AssignedTasks = () => {
       (t.location || "").toLowerCase().includes(searchTerm.toLowerCase());
 
     if (activeTab === "All") return matchesSearch;
+    if (activeTab === "Done") return matchesSearch && (t.status === "Done" || t.status === "Completed");
     return matchesSearch && t.status === activeTab;
   });
 
@@ -107,6 +108,8 @@ const AssignedTasks = () => {
               {tab} (
               {tab === "All"
                 ? tasks.length
+                : tab === "Done"
+                ? tasks.filter((t) => t.status === "Done" || t.status === "Completed").length
                 : tasks.filter((t) => t.status === tab).length}
               )
             </button>

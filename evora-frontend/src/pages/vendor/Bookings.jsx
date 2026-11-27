@@ -34,7 +34,12 @@ const Bookings = () => {
   }, [bookings]);
 
   const filteredBookings = useMemo(() => {
-    return confirmedBookings.filter((booking) => (booking.bookingStatus || "Upcoming") === activeTab);
+    return confirmedBookings.filter((booking) => {
+      const isCompleted = booking.status === "Completed" || booking.bookingStatus === "Completed";
+      const isCancelled = booking.status === "Cancelled" || booking.bookingStatus === "Cancelled";
+      const effectiveStatus = isCompleted ? "Completed" : isCancelled ? "Cancelled" : (booking.bookingStatus || "Upcoming");
+      return effectiveStatus === activeTab;
+    });
   }, [confirmedBookings, activeTab]);
 
   const handleUpdateBookingStatus = async (bookingId, newBookingStatus) => {

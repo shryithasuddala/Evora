@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { CalendarDays, Trash2, Plus, Search, XCircle } from "lucide-react";
+import { CalendarDays, Trash2, Plus, Search, XCircle, CheckCircle2 } from "lucide-react";
 import { eventsAPI, expensesAPI } from "../../services/api";
 import { useToast } from "../../context/ToastContext";
 
@@ -49,6 +49,22 @@ const MyEvents = () => {
         toast.warning("Event Cancelled ⚠️", `"${title}" has been marked as cancelled.`);
       } catch (err) {
         toast.error("Cancel Failed", err.message || "Failed to cancel event.");
+      }
+    }
+  };
+
+  const handleComplete = async (id, title) => {
+    if (
+      window.confirm(
+        `Mark celebration "${title}" as COMPLETED?\n\nThis will mark all services, vendor bookings, and volunteers as Completed across all portals.`
+      )
+    ) {
+      try {
+        await eventsAPI.complete(id);
+        setEvents((prev) => prev.map((e) => (e._id === id ? { ...e, status: "Completed" } : e)));
+        toast.success("Celebration Completed! 🎉", `"${title}" is now marked Completed across all portals.`);
+      } catch (err) {
+        toast.error("Action Failed", err.message || "Failed to mark event completed.");
       }
     }
   };
@@ -191,7 +207,7 @@ const MyEvents = () => {
                     </div>
                   </div>
                 )}
-                <div style={{ display: "flex", gap: "8px", marginTop: 14 }}>
+                <div style={{ display: "flex", gap: "8px", marginTop: 14, flexWrap: "wrap" }}>
                   <Link
                     to={`/user/events/${event._id}`}
                     style={{
@@ -209,7 +225,47 @@ const MyEvents = () => {
                   >
                     View / Edit →
                   </Link>
-                  {event.status !== "Cancelled" && (
+                  {event.status !== "Completed" && event.status !== "Cancelled" && (
+                    <button
+                      type="button"
+                      onClick={() => handleComplete(event._id, event.title)}
+                      style={{
+                        background: "#E8F5E9",
+                        border: "1px solid #A5D6A7",
+                        borderRadius: 8,
+                        color: "#1B5E20",
+                        fontSize: 12,
+                        fontWeight: 700,
+                        padding: "8px 12px",
+                        cursor: "pointer",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                      title="Mark event and all service categories as Completed"
+                    >
+                      <CheckCircle2 size={13} color="#2E7D32" /> Complete ✓
+                    </button>
+                  )}
+                  {event.status === "Completed" && (
+                    <span
+                      style={{
+                        background: "#E8F5E9",
+                        border: "1px solid #A5D6A7",
+                        borderRadius: 8,
+                        color: "#2E7D32",
+                        fontSize: 12,
+                        fontWeight: 700,
+                        padding: "8px 10px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      <CheckCircle2 size={13} color="#2E7D32" /> Completed ✓
+                    </span>
+                  )}
+                  {event.status !== "Cancelled" && event.status !== "Completed" && (
                     <button
                       type="button"
                       onClick={() => handleCancel(event._id, event.title)}
