@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   BriefcaseBusiness,
   ClipboardList,
@@ -11,6 +11,7 @@ import {
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import { servicesAPI, bookingsAPI } from "../../services/api";
+import { usePortalSync, broadcastPortalSync } from "../../utils/portalSync";
 
 const VendorDashboard = () => {
   const navigate = useNavigate();
@@ -20,33 +21,33 @@ const VendorDashboard = () => {
   const [allBookings, setAllBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const [svcs, bkgs] = await Promise.all([
-          servicesAPI.getAll(),
-          bookingsAPI.getAll(),
-        ]);
-        setServices(svcs || []);
-        setAllBookings(bkgs || []);
-      } catch (err) {
-        console.error("Vendor dashboard error:", err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
-
-  const handleUpdateStatus = async (id, status) => {
+  const load = useCallback(async () => {
     try {
-      await bookingsAPI.updateStatus(id, status);
       const [svcs, bkgs] = await Promise.all([
         servicesAPI.getAll(),
         bookingsAPI.getAll(),
       ]);
       setServices(svcs || []);
       setAllBookings(bkgs || []);
+    } catch (err) {
+      console.error("Vendor dashboard error:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(load, 4000);
+
+  const handleUpdateStatus = async (id, status) => {
+    try {
+      await bookingsAPI.updateStatus(id, status);
+      broadcastPortalSync(status === "Completed" ? "BOOKING_COMPLETED" : "SYNC", { bookingId: id });
+      await load();
     } catch (err) {
       alert(err.message || "Failed to update status");
     }

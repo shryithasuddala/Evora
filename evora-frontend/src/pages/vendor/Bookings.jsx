@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import {
   CalendarDays,
   MapPin,
@@ -8,13 +8,14 @@ import {
   XCircle,
 } from "lucide-react";
 import { bookingsAPI } from "../../services/api";
+import { usePortalSync, broadcastPortalSync } from "../../utils/portalSync";
 
 const Bookings = () => {
   const [activeTab, setActiveTab] = useState("Upcoming");
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const loadBookings = async () => {
+  const loadBookings = useCallback(async () => {
     try {
       const data = await bookingsAPI.getAll();
       setBookings(data || []);
@@ -23,11 +24,14 @@ const Bookings = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadBookings();
-  }, []);
+  }, [loadBookings]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(loadBookings, 4000);
 
   const confirmedBookings = useMemo(() => {
     return bookings.filter((b) => b.status === "Accepted" || b.status === "Completed");
@@ -49,6 +53,7 @@ const Bookings = () => {
         newBookingStatus === "Completed" ? "Completed" : "Cancelled",
         newBookingStatus
       );
+      broadcastPortalSync("BOOKING_COMPLETED", { bookingId, status: newBookingStatus });
       await loadBookings();
     } catch (err) {
       alert(err.message || "Failed to update booking status.");

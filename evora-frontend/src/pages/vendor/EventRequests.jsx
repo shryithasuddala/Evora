@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import {
   Search,
@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { bookingsAPI } from "../../services/api";
 import { useToast } from "../../context/ToastContext";
+import { usePortalSync, broadcastPortalSync } from "../../utils/portalSync";
 
 const STATUS_OPTIONS = [
   "All requests",
@@ -40,7 +41,7 @@ const EventRequests = () => {
 
   const toast = useToast();
 
-  const loadRequests = async () => {
+  const loadRequests = useCallback(async () => {
     try {
       const data = await bookingsAPI.getAll();
       setRequests(data || []);
@@ -49,11 +50,14 @@ const EventRequests = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadRequests();
-  }, []);
+  }, [loadRequests]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(loadRequests, 4000);
 
   const filteredRequests = useMemo(() => {
     return requests.filter((request) => {

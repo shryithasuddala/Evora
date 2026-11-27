@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Users,
@@ -10,6 +10,7 @@ import {
   HeartHandshake,
 } from "lucide-react";
 import { adminAPI, eventsAPI, bookingsAPI } from "../../services/api";
+import { usePortalSync } from "../../utils/portalSync";
 
 // Decorative Bunting Banner Signature
 function Bunting() {
@@ -52,25 +53,29 @@ const AdminDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const [statsData, eventsData, bookingsData] = await Promise.all([
-          adminAPI.getStats(),
-          eventsAPI.getAll(),
-          bookingsAPI.getAll(),
-        ]);
-        if (statsData) setMetrics(statsData);
-        setEvents(eventsData || []);
-        setBookings(bookingsData || []);
-      } catch (err) {
-        console.error("Admin dashboard load error:", err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+  const load = useCallback(async () => {
+    try {
+      const [statsData, eventsData, bookingsData] = await Promise.all([
+        adminAPI.getStats(),
+        eventsAPI.getAll(),
+        bookingsAPI.getAll(),
+      ]);
+      if (statsData) setMetrics(statsData);
+      setEvents(eventsData || []);
+      setBookings(bookingsData || []);
+    } catch (err) {
+      console.error("Admin dashboard load error:", err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(load, 4000);
 
   const pendingRequests = bookings.filter((b) => b.status === "Pending");
 

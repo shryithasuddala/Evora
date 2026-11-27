@@ -72,17 +72,26 @@ app.get(["/api/health", "/healthz"], (req, res) => {
 
 // ── Serve Frontend Production Build (Single-Service Deployment fallback) ───
 const fs = require("fs");
-const frontendDist = path.join(__dirname, "../evora-frontend/dist");
-if (fs.existsSync(frontendDist)) {
-  app.use(express.static(frontendDist));
+const candidateDists = [
+  path.join(__dirname, "../evora-frontend/dist"),
+  path.join(__dirname, "dist"),
+  path.join(__dirname, "public"),
+];
+const resolvedDist = candidateDists.find((d) => fs.existsSync(d) && fs.existsSync(path.join(d, "index.html")));
+
+if (resolvedDist) {
+  app.use(express.static(resolvedDist));
   app.get("*", (req, res, next) => {
     if (req.path.startsWith("/api/")) return next();
-    res.sendFile(path.join(frontendDist, "index.html"));
+    res.sendFile(path.join(resolvedDist, "index.html"));
   });
 }
 
-// ── 404 ─────────────────────────────────────────────────────────────────────
+// ── 404 For unhandled API routes ─────────────────────────────────────────────
 app.use((req, res) => {
+  if (resolvedDist && req.method === "GET" && !req.path.startsWith("/api/")) {
+    return res.sendFile(path.join(resolvedDist, "index.html"));
+  }
   res.status(404).json({ success: false, message: `Route not found: ${req.method} ${req.originalUrl}` });
 });
 

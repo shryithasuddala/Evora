@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Search, ShieldCheck, CheckCircle2, Clock, XCircle, Send } from "lucide-react";
 import { bookingsAPI } from "../../services/api";
 import { useToast } from "../../context/ToastContext";
+import { usePortalSync, broadcastPortalSync } from "../../utils/portalSync";
 
 const STATUS_TABS = ["All", "Pending", "Proposal Sent", "Accepted", "Confirmed", "Completed", "Cancelled", "Declined"];
 
@@ -13,7 +14,7 @@ const ManageBookings = () => {
   const [actionLoadingId, setActionLoadingId] = useState(null);
   const toast = useToast();
 
-  const loadBookings = async () => {
+  const loadBookings = useCallback(async () => {
     try {
       const data = await bookingsAPI.getAll();
       setBookings(data || []);
@@ -22,11 +23,14 @@ const ManageBookings = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadBookings();
-  }, []);
+  }, [loadBookings]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(loadBookings, 4000);
 
   const handleGiveAssurance = async (booking) => {
     const bId = booking._id || booking.id;

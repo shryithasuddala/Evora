@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   ClipboardCheck,
   MapPin,
@@ -7,6 +7,7 @@ import {
   Search,
 } from "lucide-react";
 import { tasksAPI } from "../../services/api";
+import { usePortalSync, broadcastPortalSync } from "../../utils/portalSync";
 
 const TABS = ["All", "Assigned", "In Progress", "Done"];
 
@@ -18,7 +19,7 @@ const AssignedTasks = () => {
   const [editingNotesId, setEditingNotesId] = useState(null);
   const [notesText, setNotesText] = useState("");
 
-  const refreshTasks = async () => {
+  const refreshTasks = useCallback(async () => {
     try {
       const data = await tasksAPI.getAll();
       setTasks(data || []);
@@ -27,15 +28,19 @@ const AssignedTasks = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     refreshTasks();
-  }, []);
+  }, [refreshTasks]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(refreshTasks, 4000);
 
   const handleStatusChange = async (taskId, newStatus) => {
     try {
       await tasksAPI.updateStatus(taskId, newStatus);
+      broadcastPortalSync(newStatus === "Done" || newStatus === "Completed" ? "TASK_COMPLETED" : "SYNC", { taskId, status: newStatus });
       await refreshTasks();
     } catch (err) {
       alert(err.message || "Failed to update status.");
@@ -45,6 +50,7 @@ const AssignedTasks = () => {
   const handleSaveNotes = async (taskId) => {
     try {
       await tasksAPI.updateStatus(taskId, "Done", notesText);
+      broadcastPortalSync("TASK_COMPLETED", { taskId, status: "Done" });
       setEditingNotesId(null);
       setNotesText("");
       await refreshTasks();

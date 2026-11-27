@@ -23,6 +23,7 @@ import {
 import { eventsAPI, bookingsAPI, tasksAPI, expensesAPI } from "../../services/api";
 import { useToast } from "../../context/ToastContext";
 import PaymentGatewayModal from "../../components/common/PaymentGatewayModal";
+import { usePortalSync, broadcastPortalSync } from "../../utils/portalSync";
 
 const CATEGORIES = ["Wedding", "Birthday", "Corporate", "Anniversary", "Festival", "Graduation", "Engagement", "Other"];
 
@@ -107,6 +108,9 @@ const EventDetails = () => {
     loadData();
   }, [id]);
 
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(loadData, 4000);
+
   const openEditModal = () => {
     if (!event) return;
     setEditForm({
@@ -185,6 +189,7 @@ const EventDetails = () => {
     setCompleting(true);
     try {
       await eventsAPI.complete(event._id || id);
+      broadcastPortalSync("EVENT_COMPLETED", { eventId: event._id || id });
       toast.success(
         "Celebration Completed! 🎉",
         "Event and all service categories have been marked as Completed across all portals."

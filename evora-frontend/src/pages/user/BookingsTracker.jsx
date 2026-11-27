@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { bookingsAPI, reviewsAPI, paymentsAPI } from "../../services/api";
 import { Star, CheckCircle, X, MessageCircle, CreditCard, XCircle, AlertTriangle } from "lucide-react";
 import { useToast } from "../../context/ToastContext";
+import { usePortalSync, broadcastPortalSync } from "../../utils/portalSync";
 
 const STATUS_COLORS = {
   Pending: { bg: "#FFF8E8", color: "#C9A13A" },
@@ -37,32 +38,36 @@ const BookingsTracker = () => {
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewedBookings, setReviewedBookings] = useState({});
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const bkgs = await bookingsAPI.getAll();
-        setBookings(bkgs || []);
-        // Fetch proposals for Proposal Sent, Accepted, and Completed bookings
-        const propMap = {};
-        await Promise.all(
-          (bkgs || [])
-            .filter((b) => ["Proposal Sent", "Accepted", "Completed"].includes(b.status))
-            .map(async (b) => {
-              try {
-                const prop = await bookingsAPI.getProposal(b._id);
-                if (prop) propMap[b._id] = prop;
-              } catch { /* no proposal yet */ }
-            })
-        );
-        setProposals(propMap);
-      } catch (err) {
-        console.error(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+  const load = useCallback(async () => {
+    try {
+      const bkgs = await bookingsAPI.getAll();
+      setBookings(bkgs || []);
+      // Fetch proposals for Proposal Sent, Accepted, and Completed bookings
+      const propMap = {};
+      await Promise.all(
+        (bkgs || [])
+          .filter((b) => ["Proposal Sent", "Accepted", "Completed"].includes(b.status))
+          .map(async (b) => {
+            try {
+              const prop = await bookingsAPI.getProposal(b._id);
+              if (prop) propMap[b._id] = prop;
+            } catch { /* no proposal yet */ }
+          })
+      );
+      setProposals(propMap);
+    } catch (err) {
+      console.error(err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(load, 4000);
 
   const TABS = ["All", "Pending", "Proposal Sent", "Accepted", "Confirmed", "Completed", "Declined", "Cancelled"];
   const filtered = activeTab === "All" ? bookings : bookings.filter((b) => b.status === activeTab);
@@ -162,7 +167,9 @@ const BookingsTracker = () => {
     try {
       await bookingsAPI.updateStatus(booking._id, "Completed");
       setBookings((prev) => prev.map((b) => b._id === booking._id ? { ...b, status: "Completed" } : b));
+      broadcastPortalSync("BOOKING_COMPLETED", { bookingId: booking._id, eventId: booking.eventId });
       toast.success("Service Completed! ✨", "Artisan fulfillment verified. You can now leave a review.");
+      await load();
     } catch (err) {
       toast.error("Status Update Failed", err.message);
     } finally {

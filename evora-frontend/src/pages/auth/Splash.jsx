@@ -1,8 +1,23 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../components/common/Logo";
+import { useAuth } from "../../context/useAuth";
 
 const Splash = () => {
   const navigate = useNavigate();
+  const { currentUser, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated && currentUser?.role) {
+      const roleHomeMap = {
+        user: "/user",
+        vendor: "/vendor",
+        volunteer: "/volunteer",
+        admin: "/admin",
+      };
+      navigate(roleHomeMap[currentUser.role] || "/roles", { replace: true });
+    }
+  }, [isAuthenticated, currentUser, navigate]);
 
   const handleStart = () => {
     navigate("/roles");

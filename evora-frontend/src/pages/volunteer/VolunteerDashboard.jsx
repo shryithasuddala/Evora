@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   ClipboardCheck,
@@ -10,13 +10,14 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { tasksAPI } from "../../services/api";
+import { usePortalSync, broadcastPortalSync } from "../../utils/portalSync";
 
 const VolunteerDashboard = () => {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const loadTasks = async () => {
+  const loadTasks = useCallback(async () => {
     try {
       const data = await tasksAPI.getAll();
       setTasks(data || []);
@@ -25,15 +26,19 @@ const VolunteerDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadTasks();
-  }, []);
+  }, [loadTasks]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(loadTasks, 4000);
 
   const handleQuickComplete = async (taskId) => {
     try {
       await tasksAPI.updateStatus(taskId, "Done", "Verified by volunteer on site.");
+      broadcastPortalSync("TASK_COMPLETED", { taskId });
       await loadTasks();
     } catch (err) {
       alert(err.message || "Failed to update task status.");

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   ShieldCheck,
   Plus,
@@ -14,6 +14,7 @@ import {
   Building,
 } from "lucide-react";
 import { adminAPI, eventsAPI, tasksAPI } from "../../services/api";
+import { usePortalSync, broadcastPortalSync } from "../../utils/portalSync";
 
 const ManageVolunteers = () => {
   const [volunteers, setVolunteers] = useState([]);
@@ -50,7 +51,7 @@ const ManageVolunteers = () => {
     });
   }, [events]);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const [vols, evts, tsks] = await Promise.all([
         adminAPI.getUsers({ role: "volunteer" }),
@@ -89,12 +90,15 @@ const ManageVolunteers = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedVolunteerId, selectedEventId]);
 
   useEffect(() => {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loadData]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(loadData, 4000);
 
   const handleAssign = async (e) => {
     e.preventDefault();

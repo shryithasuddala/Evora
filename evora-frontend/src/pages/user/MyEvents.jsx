@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { CalendarDays, Trash2, Plus, Search, XCircle, CheckCircle2 } from "lucide-react";
 import { eventsAPI, expensesAPI } from "../../services/api";
 import { useToast } from "../../context/ToastContext";
+import { usePortalSync, broadcastPortalSync } from "../../utils/portalSync";
 
 const TABS = ["All", "Wedding", "Birthday", "Corporate", "Anniversary", "Other"];
 
@@ -14,38 +15,43 @@ const MyEvents = () => {
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState("All");
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const evts = await eventsAPI.getAll();
-        setEvents(evts || []);
-        // Load expenses for all events
-        const map = {};
-        await Promise.all(
-          (evts || []).map(async (ev) => {
-            try {
-              const exps = await expensesAPI.getByEvent(ev._id);
-              map[ev._id] = exps || [];
-            } catch {
-              map[ev._id] = [];
-            }
-          })
-        );
-        setExpenseMap(map);
-      } catch (err) {
-        console.error(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+  const load = useCallback(async () => {
+    try {
+      const evts = await eventsAPI.getAll();
+      setEvents(evts || []);
+      // Load expenses for all events
+      const map = {};
+      await Promise.all(
+        (evts || []).map(async (ev) => {
+          try {
+            const exps = await expensesAPI.getByEvent(ev._id);
+            map[ev._id] = exps || [];
+          } catch {
+            map[ev._id] = [];
+          }
+        })
+      );
+      setExpenseMap(map);
+    } catch (err) {
+      console.error(err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(load, 4000);
 
   const handleCancel = async (id, title) => {
     if (window.confirm(`Are you sure you want to cancel celebration "${title}"?`)) {
       try {
         await eventsAPI.cancel(id);
         setEvents((prev) => prev.map((e) => (e._id === id ? { ...e, status: "Cancelled" } : e)));
+        broadcastPortalSync("EVENT_CANCELLED", { eventId: id });
         toast.warning("Event Cancelled ⚠️", `"${title}" has been marked as cancelled.`);
       } catch (err) {
         toast.error("Cancel Failed", err.message || "Failed to cancel event.");
@@ -62,7 +68,9 @@ const MyEvents = () => {
       try {
         await eventsAPI.complete(id);
         setEvents((prev) => prev.map((e) => (e._id === id ? { ...e, status: "Completed" } : e)));
+        broadcastPortalSync("EVENT_COMPLETED", { eventId: id });
         toast.success("Celebration Completed! 🎉", `"${title}" is now marked Completed across all portals.`);
+        await load();
       } catch (err) {
         toast.error("Action Failed", err.message || "Failed to mark event completed.");
       }

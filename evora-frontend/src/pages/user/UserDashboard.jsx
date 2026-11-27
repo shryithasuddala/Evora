@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CalendarDays, Package, Wallet, Bell, Plus, ArrowUpRight, Sparkles, MessageCircle } from "lucide-react";
 import { useAuth } from "../../context/useAuth";
 import { eventsAPI, bookingsAPI } from "../../services/api";
+import { usePortalSync } from "../../utils/portalSync";
 
 const UserDashboard = () => {
   const { currentUser } = useAuth();
@@ -11,23 +12,27 @@ const UserDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const [evts, bkgs] = await Promise.all([
-          eventsAPI.getAll(),
-          bookingsAPI.getAll(),
-        ]);
-        setEvents(evts || []);
-        setBookings(bkgs || []);
-      } catch (err) {
-        console.error("Dashboard load error:", err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+  const load = useCallback(async () => {
+    try {
+      const [evts, bkgs] = await Promise.all([
+        eventsAPI.getAll(),
+        bookingsAPI.getAll(),
+      ]);
+      setEvents(evts || []);
+      setBookings(bkgs || []);
+    } catch (err) {
+      console.error("Dashboard load error:", err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(load, 4000);
 
   const activeEvents = events.filter((e) => e.status !== "Completed" && e.status !== "Cancelled");
   const pendingBookings = bookings.filter((b) => b.status === "Pending");

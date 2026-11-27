@@ -128,8 +128,8 @@ exports.getBooking = async (req, res, next) => {
 
     const isAuthorized =
       req.user.role === "admin" ||
-      String(booking.organizerId._id) === String(req.user._id) ||
-      String(booking.vendorId._id) === String(req.user._id);
+      String(booking.organizerId?._id || booking.organizerId || "") === String(req.user._id) ||
+      String(booking.vendorId?._id || booking.vendorId || "") === String(req.user._id);
 
     if (!isAuthorized) return res.status(403).json({ success: false, message: "Access denied." });
 
@@ -193,6 +193,9 @@ exports.updateStatus = async (req, res, next) => {
 
     const previousStatus = booking.status;
     booking.status = status;
+    if (status === "Completed") {
+      booking.bookingStatus = "Completed";
+    }
 
     // Apply 20% non-refundable cancellation policy if cancelling
     if (status === "Cancelled") {
@@ -208,6 +211,7 @@ exports.updateStatus = async (req, res, next) => {
         booking.refundAmount = refund;
       }
       booking.cancellationReason = reason || "Cancelled by host";
+      booking.bookingStatus = "Cancelled";
     }
 
     await booking.save();
@@ -219,49 +223,72 @@ exports.updateStatus = async (req, res, next) => {
       );
     }
 
-    // Synchronize vendor response with Event allocatedVendors and requestedServices
-    if (isVendor && booking.eventId) {
+    // Synchronize booking status updates with Event allocatedVendors and requestedServices across all portals
+    if (booking.eventId) {
       try {
         const Event = require("../models/Event");
-        const User = require("../models/User");
         const event = await Event.findById(booking.eventId);
         if (event) {
           // Sync requestedServices
           const s = (event.requestedServices || []).find(
             (item) =>
-              item.category.toLowerCase() === (booking.serviceCategory || "").toLowerCase() ||
+              item.category?.toLowerCase() === (booking.serviceCategory || "").toLowerCase() ||
               String(item.activeBookingId) === String(booking._id) ||
               String(item.assignedVendorId) === String(booking.vendorId)
           );
           if (s) {
             if (status === "Accepted" || status === "Accepted by Vendor") {
               s.status = "Accepted by Vendor";
-              s.assignedVendorId = req.user._id;
-              s.assignedVendorName = req.user.fullName;
+              s.assignedVendorId = booking.vendorId;
+              if (req.user?.role === "vendor") s.assignedVendorName = req.user.fullName;
             } else if (status === "Rejected" || status === "Declined" || status === "Declined by Vendor") {
               s.status = "Vendor Search in Progress";
               s.declineReason = req.body.declineReason || req.body.reason || "Declined by vendor";
               s.activeBookingId = null;
             } else if (status === "Confirmed" || status === "Confirmed by Admin") {
               s.status = "Confirmed";
+            } else if (status === "Completed") {
+              s.status = "Completed";
             }
           }
 
           event.allocatedVendors = event.allocatedVendors || [];
-          const alloc = event.allocatedVendors.find((a) => String(a.vendorId) === String(booking.vendorId));
+          const alloc = event.allocatedVendors.find(
+            (a) =>
+              String(a.vendorId) === String(booking.vendorId) ||
+              (a.bookingId && String(a.bookingId) === String(booking._id))
+          );
           if (alloc) {
-            alloc.status = (status === "Accepted" || status === "Accepted by Vendor") ? "Accepted" : "Declined";
+            if (status === "Completed") {
+              alloc.status = "Completed";
+            } else if (status === "Accepted" || status === "Accepted by Vendor") {
+              alloc.status = "Accepted";
+            } else if (status === "Rejected" || status === "Declined" || status === "Declined by Vendor") {
+              alloc.status = "Declined";
+            }
             alloc.note = `Vendor ${status.toLowerCase()} on ${new Date().toISOString().split("T")[0]}`;
           } else {
             event.allocatedVendors.push({
               category: booking.serviceCategory || booking.serviceName || "Service",
               vendorId: booking.vendorId,
-              vendorName: req.user.fullName,
-              status: (status === "Accepted" || status === "Accepted by Vendor") ? "Accepted" : "Declined",
+              vendorName: req.user?.fullName || "Vendor",
+              status: status === "Completed" ? "Completed" : (status === "Accepted" || status === "Accepted by Vendor") ? "Accepted" : "Declined",
               bookingId: booking._id,
               note: `Vendor ${status.toLowerCase()}`,
             });
           }
+
+          // If all active allocated vendors / requested services are completed, mark entire event as Completed
+          if (status === "Completed") {
+            const activeVendors = (event.allocatedVendors || []).filter(
+              (v) => v.status !== "Declined" && v.status !== "Unavailable" && v.status !== "None"
+            );
+            if (activeVendors.length > 0 && activeVendors.every((v) => v.status === "Completed")) {
+              event.status = "Completed";
+              event.completedAt = new Date();
+            }
+          }
+
           if (typeof event.recalculateStatus === "function") {
             event.recalculateStatus();
           }

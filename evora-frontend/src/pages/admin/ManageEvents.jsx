@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Search,
   Trash2,
@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { eventsAPI } from "../../services/api";
 import { useToast } from "../../context/ToastContext";
+import { usePortalSync, broadcastPortalSync } from "../../utils/portalSync";
 
 const STATUS_TABS = ["All", "Pending Approval", "Approved", "Confirmed", "Completed", "Cancelled"];
 
@@ -60,7 +61,7 @@ const ManageEvents = () => {
 
   const toast = useToast();
 
-  const loadEvents = async () => {
+  const loadEvents = useCallback(async () => {
     try {
       const data = await eventsAPI.getAll();
       setEvents(data || []);
@@ -69,11 +70,14 @@ const ManageEvents = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadEvents();
-  }, []);
+  }, [loadEvents]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(loadEvents, 4000);
 
   const loadCoordinationData = async (evtId) => {
     setReadinessLoading(true);
@@ -123,6 +127,7 @@ const ManageEvents = () => {
     setActionLoading(true);
     try {
       await eventsAPI.complete(evtId);
+      broadcastPortalSync("EVENT_COMPLETED", { eventId: evtId });
       toast.success(
         "Celebration Completed! ✓",
         `Event "${eventTitle}" and every service category marked as Completed.`

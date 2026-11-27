@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { bookingsAPI } from "../../services/api";
 import { useToast } from "../../context/ToastContext";
+import { usePortalSync, broadcastPortalSync } from "../../utils/portalSync";
 
 const RequestDetails = () => {
   const { id } = useParams();
@@ -30,7 +31,7 @@ const RequestDetails = () => {
 
   const toast = useToast();
 
-  const fetchRequest = async () => {
+  const fetchRequest = useCallback(async () => {
     try {
       const data = await bookingsAPI.getOne(id);
       setRequest(data);
@@ -40,11 +41,14 @@ const RequestDetails = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, toast]);
 
   useEffect(() => {
     fetchRequest();
-  }, [id]);
+  }, [fetchRequest]);
+
+  // Real-time synchronization across all portals and tabs
+  usePortalSync(fetchRequest, 4000);
 
   const handleAccept = async () => {
     if (!request) return;

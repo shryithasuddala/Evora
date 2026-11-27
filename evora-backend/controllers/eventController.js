@@ -160,7 +160,15 @@ exports.getEvent = async (req, res, next) => {
 
     if (!event) return res.status(404).json({ success: false, message: "Event not found." });
 
-    if (req.user.role !== "admin" && String(event.organizerId._id) !== String(req.user._id)) {
+    const organizerIdStr = String(event.organizerId?._id || event.organizerId || "");
+    const isOwner = organizerIdStr === String(req.user._id);
+    const isAdmin = req.user.role === "admin";
+    const isAllocatedVendor = Array.isArray(event.allocatedVendors) &&
+      event.allocatedVendors.some((v) => String(v.vendorId?._id || v.vendorId || "") === String(req.user._id));
+    const isAssignedVolunteer = Array.isArray(event.assignedVolunteers) &&
+      event.assignedVolunteers.some((vol) => String(vol.volunteerId?._id || vol.volunteerId || "") === String(req.user._id));
+
+    if (!isAdmin && !isOwner && !isAllocatedVendor && !isAssignedVolunteer) {
       return res.status(403).json({ success: false, message: "Access denied." });
     }
 
@@ -1724,7 +1732,7 @@ exports.completeEvent = async (req, res, next) => {
     // 6. Mark all volunteer tasks as Completed / Done
     await Task.updateMany(
       { eventId: event._id, status: { $ne: "Cancelled" } },
-      { $set: { status: "Done", completedAt: new Date() } }
+      { $set: { status: "Completed", completedAt: new Date() } }
     );
 
     // 7. Mark all checklist items as Completed
@@ -1775,6 +1783,25 @@ exports.completeEvent = async (req, res, next) => {
           eventId: event._id,
           eventName: event.title,
         }).catch(() => {});
+      }
+    }
+
+    // 11. Notify assigned volunteers
+    if (Array.isArray(event.assignedVolunteers)) {
+      for (const vol of event.assignedVolunteers) {
+        const vId = vol.volunteerId?._id || vol.volunteerId;
+        if (vId) {
+          emitNotification({
+            userId: vId,
+            type: "success",
+            title: `Celebration Completed: ${event.title} 🌟`,
+            message: `The celebration "${event.title}" on ${event.date} has been marked completed across all portals. Thank you for your volunteer service!`,
+            link: "/volunteer/tasks",
+            idempotencyKey: `event-completed:${event._id}:volunteer:${vId}`,
+            eventId: event._id,
+            eventName: event.title,
+          }).catch(() => {});
+        }
       }
     }
 

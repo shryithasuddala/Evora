@@ -16,13 +16,27 @@ export const AuthProvider = ({ children }) => {
   // On mount, verify token is still valid
   useEffect(() => {
     const token = localStorage.getItem("evoraToken");
-    if (token && currentUser) {
-      authAPI.getMe().catch(() => {
-        // Token expired — clear session
-        localStorage.removeItem("evoraToken");
-        localStorage.removeItem("evoraCurrentUser");
-        setCurrentUser(null);
-      });
+    if (token) {
+      authAPI
+        .getMe()
+        .then((freshUser) => {
+          if (freshUser) {
+            localStorage.setItem("evoraCurrentUser", JSON.stringify(freshUser));
+            setCurrentUser(freshUser);
+          }
+        })
+        .catch((err) => {
+          // Only clear session if explicitly unauthorized (token expired / invalid)
+          const msg = (err?.message || "").toLowerCase();
+          const is401 = err?.response?.status === 401 || err?.status === 401 || msg.includes("unauthorized") || msg.includes("invalid token") || msg.includes("jwt");
+          if (is401) {
+            localStorage.removeItem("evoraToken");
+            localStorage.removeItem("evoraCurrentUser");
+            localStorage.removeItem("evoraRole");
+            localStorage.removeItem("evoraVendorId");
+            setCurrentUser(null);
+          }
+        });
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
