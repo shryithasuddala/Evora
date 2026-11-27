@@ -12,6 +12,8 @@ const {
   updateChecklist,
   approveEvent,
   cancelEvent,
+  completeEvent,
+  reviewEventBudget,
   getEventVendorReadiness,
   assignVendorToEvent,
   sendVendorRequest,
@@ -49,6 +51,8 @@ router.post("/:id/send-vendor-request", restrictTo("admin"), sendVendorRequest);
 router.post("/:id/partial-feature-update", restrictTo("admin"), updateFeatureExclusion);
 router.post("/:id/assign-vendor", restrictTo("admin"), assignVendorToEvent);
 router.put("/:id/approve", restrictTo("admin"), approveEvent);
+router.put("/:id/complete", restrictTo("admin"), completeEvent);
+router.put("/:id/review-budget", restrictTo("admin"), reviewEventBudget);
 router.put("/:id/cancel", cancelEvent);
 router.route("/:id").get(getEvent).put(updateEvent).delete(deleteEvent);
 

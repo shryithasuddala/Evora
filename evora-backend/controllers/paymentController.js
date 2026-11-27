@@ -11,15 +11,66 @@ const { sendEventBookingWhatsApp } = require("../services/whatsappService");
 // @access  Private (organizer)
 exports.createPayment = async (req, res, next) => {
   try {
-    const { bookingId, mode = "advance50", method = "UPI" } = req.body;
+    let { bookingId, eventId, category, mode = "advance50", method = "UPI" } = req.body;
 
-    if (!bookingId) {
-      return res.status(400).json({ success: false, message: "bookingId is required." });
+    let booking = null;
+    if (bookingId) {
+      booking = await Booking.findById(bookingId);
+    } else if (eventId && category) {
+      booking = await Booking.findOne({
+        eventId,
+        $or: [{ serviceName: category }, { serviceCategory: category }],
+        status: { $ne: "Cancelled" },
+      });
+      if (!booking) {
+        const Event = require("../models/Event");
+        const User = require("../models/User");
+        const event = await Event.findById(eventId);
+        if (!event) {
+          return res.status(404).json({ success: false, message: "Event not found." });
+        }
+        const svc = (event.requestedServices || []).find((s) => s.category === category);
+        const targetPrice = svc?.agreedPrice || svc?.targetBudget || Math.round((event.totalBudget || 50000) / (event.requestedServices?.length || 1));
+        const vendorId = svc?.assignedVendorId || event.allocatedVendors?.find((v) => v.category === category)?.vendorId;
+        
+        let targetVendor = null;
+        if (vendorId) {
+          targetVendor = await User.findById(vendorId);
+        }
+        if (!targetVendor) {
+          targetVendor = await User.findOne({ role: "vendor", isActive: true });
+        }
+        if (!targetVendor) {
+          targetVendor = await User.findOne({ role: "admin" });
+        }
+
+        booking = await Booking.create({
+          organizerId: req.user._id,
+          vendorId: targetVendor?._id || req.user._id,
+          eventId: event._id,
+          eventName: event.title,
+          serviceName: category,
+          serviceCategory: category,
+          eventDate: event.date,
+          guestCount: event.guestCount || 100,
+          totalPrice: targetPrice,
+          proposedPrice: targetPrice,
+          status: "Accepted",
+        });
+
+        if (svc) {
+          svc.activeBookingId = booking._id;
+          if (targetVendor) {
+            svc.assignedVendorId = targetVendor._id;
+            svc.assignedVendorName = targetVendor.businessName || targetVendor.fullName;
+          }
+          await event.save();
+        }
+      }
     }
 
-    const booking = await Booking.findById(bookingId);
     if (!booking) {
-      return res.status(404).json({ success: false, message: "Booking not found." });
+      return res.status(400).json({ success: false, message: "bookingId or eventId with category is required." });
     }
 
     if (String(booking.organizerId) !== String(req.user._id) && req.user.role !== "admin") {
@@ -225,11 +276,13 @@ exports.payBalance = async (req, res, next) => {
 exports.getAdminPayments = async (req, res, next) => {
   try {
     const payments = await Payment.find()
-      .populate("userId", "fullName email phone role")
+      .populate("payerId", "fullName email phone role")
+      .populate("vendorId", "fullName businessName phone serviceType")
+      .populate("eventId", "title date venue location totalBudget")
       .populate("bookingId")
       .sort({ createdAt: -1 });
 
-    const totalVolume = payments.reduce((sum, p) => sum + (p.status === "Success" ? p.amount : 0), 0);
+    const totalVolume = payments.reduce((sum, p) => sum + (p.amountPaid || 0), 0);
     const platformFees = Math.round(totalVolume * 0.05);
 
     res.status(200).json({

@@ -14,9 +14,15 @@ import {
   Sparkles,
   FileText,
   HeartHandshake,
+  CreditCard,
+  ShieldCheck,
+  CheckCircle2,
+  Clock,
+  Award,
 } from "lucide-react";
 import { eventsAPI, bookingsAPI, tasksAPI, expensesAPI } from "../../services/api";
 import { useToast } from "../../context/ToastContext";
+import PaymentGatewayModal from "../../components/common/PaymentGatewayModal";
 
 const CATEGORIES = ["Wedding", "Birthday", "Corporate", "Anniversary", "Festival", "Graduation", "Engagement", "Other"];
 
@@ -39,6 +45,9 @@ const EventDetails = () => {
   const [resolvingCategory, setResolvingCategory] = useState(null);
   const [resolutionLoading, setResolutionLoading] = useState(false);
   const [resolutionNotes, setResolutionNotes] = useState("");
+
+  // Payment Gateway Modal State
+  const [paymentModalData, setPaymentModalData] = useState(null);
 
   const [editForm, setEditForm] = useState({
     title: "",
@@ -216,6 +225,8 @@ const EventDetails = () => {
                 badgeStyle = { bg: "rgba(96,165,250,0.2)", color: "#93C5FD", border: "rgba(96,165,250,0.4)", text: "🔄 Coordination in Progress" };
               } else if (event.status === "Partially Confirmed") {
                 badgeStyle = { bg: "rgba(201,161,58,0.25)", color: "#FDE047", border: "rgba(201,161,58,0.5)", text: `✨ Partially Confirmed (${confCount}/${servicesList.length} Services)` };
+              } else if (event.status === "Completed") {
+                badgeStyle = { bg: "linear-gradient(135deg, rgba(37,211,102,0.35), rgba(201,161,58,0.35))", color: "#4ADE80", border: "rgba(74,222,128,0.7)", text: "🎉 Celebration Completed & Delivered ✓" };
               } else if (event.status === "Confirmed" || event.status === "Approved") {
                 badgeStyle = { bg: "rgba(37,211,102,0.25)", color: "#4ADE80", border: "rgba(37,211,102,0.5)", text: "✅ Confirmed & Assured" };
               } else if (event.status === "Cancelled") {
@@ -338,14 +349,85 @@ const EventDetails = () => {
               userDecision: "None",
             }));
 
+        const isEventCompleted = event.status === "Completed";
         const totalCount = servicesList.length;
         const activeCount = servicesList.filter((s) => s.status !== "Cancelled by User").length;
-        const confCount = servicesList.filter((s) => s.status === "Confirmed").length;
-        const unavailItems = servicesList.filter((s) => s.status === "Unavailable");
-        const progressPct = activeCount > 0 ? Math.round((confCount / activeCount) * 100) : 0;
+        const confCount = isEventCompleted ? activeCount : servicesList.filter((s) => s.status === "Confirmed" || s.status === "Completed").length;
+        const unavailItems = isEventCompleted ? [] : servicesList.filter((s) => s.status === "Unavailable");
+        const progressPct = isEventCompleted ? 100 : (activeCount > 0 ? Math.round((confCount / activeCount) * 100) : 0);
 
         return (
           <div style={{ marginBottom: 24 }}>
+            {/* Live Celebration Tracking & Milestones Bar */}
+            <div
+              style={{
+                background: "#FFFFFF",
+                border: "1px solid #E8DCC8",
+                borderRadius: 14,
+                padding: "18px 22px",
+                marginBottom: 18,
+                boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <Clock size={16} color="#8C6435" />
+                  <strong style={{ fontSize: 15, color: "#2B1D12" }}>
+                    Live Celebration Milestones & Tracking
+                  </strong>
+                </div>
+                {event.budgetReviewStatus === "Budget Approved" ? (
+                  <span
+                    style={{
+                      background: "#E8F9EE",
+                      border: "1px solid #A3E7B8",
+                      color: "#1E8E46",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      padding: "3px 10px",
+                      borderRadius: 20,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4,
+                    }}
+                  >
+                    <ShieldCheck size={12} /> Budget Verified with Vendors & Volunteers ✓
+                  </span>
+                ) : event.budgetReviewNotes ? (
+                  <span style={{ fontSize: 11, color: "#8C6435", background: "#FFFBF0", border: "1px solid #E8C882", padding: "3px 10px", borderRadius: 20 }}>
+                    💡 {event.budgetReviewNotes}
+                  </span>
+                ) : null}
+              </div>
+
+              {/* 5-Step Milestone Steps */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 10 }}>
+                {[
+                  { step: 1, title: "1. Submitted", desc: "Request logged", done: true },
+                  { step: 2, title: "2. Budget Audit", desc: "Artisan rate check", done: event.budgetReviewStatus === "Budget Approved" || ["Coordination in Progress", "Partially Confirmed", "Confirmed", "Approved", "Completed"].includes(event.status) },
+                  { step: 3, title: "3. Coordination", desc: "Artisans assigned", done: ["Partially Confirmed", "Confirmed", "Approved", "Completed"].includes(event.status) },
+                  { step: 4, title: "4. Advance Secured", desc: "50% in Escrow", done: bookings.some(b => b.paidAmount > 0) || ["Confirmed", "Approved", "Completed"].includes(event.status) },
+                  { step: 5, title: "5. Completed", desc: "Event delivered", done: isEventCompleted },
+                ].map((m) => (
+                  <div
+                    key={m.step}
+                    style={{
+                      background: m.done ? "#F0FFF4" : "#FAF6EF",
+                      border: m.done ? "1.5px solid #25D366" : "1px solid #E8DCC8",
+                      borderRadius: 10,
+                      padding: "10px 12px",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 3 }}>
+                      <strong style={{ fontSize: 12, color: m.done ? "#1E8E46" : "#6B5240" }}>{m.title}</strong>
+                      {m.done ? <CheckCircle2 size={14} color="#1E8E46" /> : <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#D5C2A5", display: "inline-block" }} />}
+                    </div>
+                    <span style={{ fontSize: 10, color: "#8A7D75" }}>{m.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Progress Summary Card */}
             <div style={{ background: "#FFF", border: "1px solid #E8DCC8", borderRadius: 14, padding: "20px 24px", marginBottom: 18 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, marginBottom: 10 }}>
@@ -488,19 +570,25 @@ const EventDetails = () => {
             {/* Service-wise Tracking Cards Grid */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14 }}>
               {servicesList.map((service) => {
-                const isConfirmed = service.status === "Confirmed";
-                const isAccepted = service.status === "Accepted by Vendor";
-                const isUnavailable = service.status === "Unavailable";
+                const isCompleted = service.status === "Completed" || isEventCompleted;
+                const isConfirmed = !isCompleted && (service.status === "Confirmed" || service.status === "Approved");
+                const isAccepted = !isCompleted && service.status === "Accepted by Vendor";
+                const isUnavailable = !isCompleted && service.status === "Unavailable";
                 const isCancelled = service.status === "Cancelled by User";
-                const isAltSearch = service.status === "Alternative Search Requested";
-                const isWaiting = service.status === "Awaiting Vendor Response" || service.status === "Vendor Search in Progress";
+                const isAltSearch = !isCompleted && service.status === "Alternative Search Requested";
+                const isWaiting = !isCompleted && (service.status === "Awaiting Vendor Response" || service.status === "Vendor Search in Progress");
 
                 let cardBorder = "#E8DCC8";
                 let badgeBg = "#FAF5EA";
                 let badgeColor = "#8C6435";
                 let badgeText = service.status || "Requested";
 
-                if (isConfirmed) {
+                if (isCompleted) {
+                  cardBorder = "#25D366";
+                  badgeBg = "#E8F9EE";
+                  badgeColor = "#1E8E46";
+                  badgeText = "Completed ✓";
+                } else if (isConfirmed) {
                   cardBorder = "#25D366";
                   badgeBg = "#E8F9EE";
                   badgeColor = "#1E8E46";
@@ -543,7 +631,7 @@ const EventDetails = () => {
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "space-between",
-                      boxShadow: isConfirmed ? "0 2px 8px rgba(37,211,102,0.1)" : "0 2px 6px rgba(0,0,0,0.03)",
+                      boxShadow: isCompleted || isConfirmed ? "0 2px 8px rgba(37,211,102,0.12)" : "0 2px 6px rgba(0,0,0,0.03)",
                     }}
                   >
                     <div>
@@ -574,7 +662,7 @@ const EventDetails = () => {
                               {service.assignedVendorId.businessName}
                             </div>
                           )}
-                          {isConfirmed && service.assignedVendorId?.phone && (
+                          {(isConfirmed || isCompleted) && service.assignedVendorId?.phone && (
                             <div style={{ fontSize: 11, color: "#25D366", marginTop: 2, fontWeight: 600 }}>
                               📞 {service.assignedVendorId.phone}
                             </div>
@@ -597,15 +685,119 @@ const EventDetails = () => {
                       )}
                     </div>
 
-                    {/* Pricing Footer */}
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #F0E8D8", paddingTop: 8, marginTop: 10, fontSize: 12 }}>
-                      <span style={{ color: "#8A7D75" }}>
-                        Budget: ₹{(service.targetBudget || 0).toLocaleString("en-IN")}
-                      </span>
-                      {service.agreedPrice > 0 && (
-                        <span style={{ color: "#1E8E46", fontWeight: 700 }}>
-                          Agreed: ₹{service.agreedPrice.toLocaleString("en-IN")}
+                    {/* Pricing & Payment Actions */}
+                    <div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #F0E8D8", paddingTop: 8, marginTop: 10, fontSize: 12 }}>
+                        <span style={{ color: "#8A7D75" }}>
+                          Budget: ₹{(service.targetBudget || 0).toLocaleString("en-IN")}
                         </span>
+                        {service.agreedPrice > 0 && (
+                          <span style={{ color: "#1E8E46", fontWeight: 700 }}>
+                            Agreed: ₹{service.agreedPrice.toLocaleString("en-IN")}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Completed Badge Indicator */}
+                      {isCompleted && (
+                        <div style={{ marginTop: 8, paddingTop: 6, borderTop: "1px dashed #A3E7B8", display: "flex", alignItems: "center", gap: 6, color: "#1E8E46", fontSize: 11, fontWeight: 700 }}>
+                          <CheckCircle2 size={13} /> Service Successfully Delivered & Completed ✓
+                        </div>
+                      )}
+
+                      {/* Payment Action for Confirmed Service */}
+                      {isConfirmed && !isCompleted && (
+                        <div style={{ marginTop: 8, paddingTop: 6, borderTop: "1px dashed #E8DCC8" }}>
+                          {(() => {
+                            const bkg = bookings.find((b) => b.serviceName === service.category || b.serviceCategory === service.category || String(b._id) === String(service.activeBookingId));
+                            const targetPrice = bkg?.totalPrice || service.agreedPrice || service.targetBudget || 25000;
+                            const isPaid = bkg?.paymentStatus === "Paid" || (bkg?.paidAmount && bkg.paidAmount >= targetPrice);
+                            const isAdvancePaid = (bkg?.paidAmount && bkg.paidAmount > 0) || bkg?.paymentStatus === "Partially Paid";
+
+                            if (isPaid) {
+                              return (
+                                <span style={{ fontSize: 11, fontWeight: 700, color: "#1E8E46", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                                  <CheckCircle2 size={13} /> Paid in Full (Escrow Secured)
+                                </span>
+                              );
+                            }
+
+                            if (isAdvancePaid) {
+                              return (
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
+                                  <span style={{ fontSize: 10, color: "#1E8E46", fontWeight: 600 }}>
+                                    ✓ 50% Advance Paid
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setPaymentModalData({
+                                        bookingId: bkg?._id,
+                                        eventId: event._id,
+                                        category: service.category,
+                                        eventTitle: event.title,
+                                        totalPrice: targetPrice - bkg.paidAmount,
+                                        mode: "full",
+                                      })
+                                    }
+                                    style={{
+                                      background: "#304B35",
+                                      color: "#FAF5EA",
+                                      border: "none",
+                                      borderRadius: 6,
+                                      padding: "4px 8px",
+                                      fontSize: 10,
+                                      fontWeight: 700,
+                                      cursor: "pointer",
+                                      display: "inline-flex",
+                                      alignItems: "center",
+                                      gap: 4,
+                                    }}
+                                  >
+                                    <CreditCard size={11} /> Clear Balance (₹{(targetPrice - bkg.paidAmount).toLocaleString("en-IN")})
+                                  </button>
+                                </div>
+                              );
+                            }
+
+                            return (
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
+                                <span style={{ fontSize: 10, color: "#8C6435", fontWeight: 600 }}>
+                                  Advance due: ₹{Math.round(targetPrice * 0.5).toLocaleString("en-IN")}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setPaymentModalData({
+                                      bookingId: bkg?._id,
+                                      eventId: event._id,
+                                      category: service.category,
+                                      eventTitle: event.title,
+                                      totalPrice: targetPrice,
+                                      mode: "advance50",
+                                    })
+                                  }
+                                  style={{
+                                    background: "linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%)",
+                                    color: "#FFFFFF",
+                                    border: "none",
+                                    borderRadius: 6,
+                                    padding: "4px 10px",
+                                    fontSize: 11,
+                                    fontWeight: 700,
+                                    cursor: "pointer",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: 4,
+                                    boxShadow: "0 2px 4px rgba(27, 94, 32, 0.25)",
+                                  }}
+                                >
+                                  <CreditCard size={11} /> Pay 50% Advance
+                                </button>
+                              </div>
+                            );
+                          })()}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -682,6 +874,50 @@ const EventDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* Volunteer Team & Workforce Tracking */}
+      {event.assignedVolunteers && event.assignedVolunteers.length > 0 && (
+        <div style={{ marginTop: 20, background: "#fff", border: "1px solid #E8DCC8", borderRadius: 14, padding: 22 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
+            <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: 18, margin: 0, color: "#2B1D12", display: "flex", alignItems: "center", gap: 8 }}>
+              <Users size={18} color="#8C6435" /> Assigned Community Volunteers & Event Coordinators
+            </h3>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#1E8E46", background: "#E8F9EE", padding: "3px 10px", borderRadius: 20 }}>
+              {event.status === "Completed"
+                ? "All Volunteers Completed ✓"
+                : `${event.assignedVolunteers.length} Active On-Ground Volunteers`}
+            </span>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
+            {event.assignedVolunteers.map((vol, idx) => {
+              const isVolCompleted = vol.status === "Completed" || event.status === "Completed";
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    background: "#FAF6EF",
+                    border: `1px solid ${isVolCompleted ? "#A3E7B8" : "#E8DCC8"}`,
+                    borderRadius: 10,
+                    padding: "12px 14px",
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                    <strong style={{ fontSize: 13, color: "#2B1D12" }}>{vol.role || "Event Operations"}</strong>
+                    <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 6, background: isVolCompleted ? "#E8F9EE" : "#FFF8E8", color: isVolCompleted ? "#1E8E46" : "#8C6435" }}>
+                      {isVolCompleted ? "Completed ✓" : vol.status || "Assigned"}
+                    </span>
+                  </div>
+                  {vol.instructions && (
+                    <p style={{ margin: "4px 0 0", fontSize: 11, color: "#6B5240", lineHeight: 1.4 }}>
+                      Instructions: {vol.instructions}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Bookings */}
       {bookings.length > 0 && (
@@ -925,6 +1161,17 @@ const EventDetails = () => {
             </form>
           </div>
         </div>
+      )}
+      {/* Payment Gateway Modal */}
+      {paymentModalData && (
+        <PaymentGatewayModal
+          isOpen={Boolean(paymentModalData)}
+          onClose={() => setPaymentModalData(null)}
+          {...paymentModalData}
+          onPaymentSuccess={() => {
+            loadData();
+          }}
+        />
       )}
     </div>
   );

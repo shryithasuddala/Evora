@@ -1653,3 +1653,176 @@ exports.cancelEvent = async (req, res, next) => {
     });
   } catch (err) { next(err); }
 };
+
+// @desc    Mark event as completed (by admin)
+// @route   PUT /api/events/:id/complete
+// @access  Private (admin only)
+exports.completeEvent = async (req, res, next) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ success: false, message: "Access denied. Admin role required." });
+    }
+
+    const event = await Event.findById(req.params.id).populate("organizerId", "fullName email phone");
+    if (!event) {
+      return res.status(404).json({ success: false, message: "Event not found." });
+    }
+
+    if (event.status === "Cancelled") {
+      return res.status(400).json({ success: false, message: "Cannot mark a cancelled event as completed." });
+    }
+
+    const Booking = require("../models/Booking");
+    const Task = require("../models/Task");
+
+    // 1. Mark overall event status as Completed
+    event.status = "Completed";
+    event.completedAt = new Date();
+
+    // 2. Mark every active service category as Completed
+    if (Array.isArray(event.requestedServices)) {
+      event.requestedServices.forEach((s) => {
+        if (s.status !== "Cancelled by User") {
+          s.status = "Completed";
+        }
+      });
+    }
+
+    // 3. Mark all allocated vendors as Completed
+    if (Array.isArray(event.allocatedVendors)) {
+      event.allocatedVendors.forEach((v) => {
+        if (v.status !== "Declined" && v.status !== "Unavailable") {
+          v.status = "Completed";
+        }
+      });
+    }
+
+    // 4. Mark all bookings for this event as Completed
+    await Booking.updateMany(
+      { eventId: event._id, status: { $ne: "Cancelled" } },
+      { $set: { status: "Completed" } }
+    );
+
+    // 5. Mark all assigned volunteers as Completed
+    if (Array.isArray(event.assignedVolunteers)) {
+      event.assignedVolunteers.forEach((vol) => {
+        if (vol.status !== "Withdrawn") {
+          vol.status = "Completed";
+        }
+      });
+    }
+
+    // 6. Mark all volunteer tasks as Completed
+    await Task.updateMany(
+      { eventId: event._id, status: { $ne: "Cancelled" } },
+      { $set: { status: "Completed" } }
+    );
+
+    // 7. Mark all checklist items as Completed
+    if (Array.isArray(event.checklist)) {
+      event.checklist.forEach((item) => {
+        item.status = "Completed";
+      });
+    }
+
+    await event.save();
+
+    // 8. Notify host / organizer
+    emitNotification({
+      userId: event.organizerId._id || event.organizerId,
+      type: "success",
+      title: "Celebration Successfully Completed! 🎉",
+      message: `Congratulations! Your celebration "${event.title}" has been successfully executed and marked as completed across all categories. Thank you for celebrating with EVORA!`,
+      link: `/user/events/${event._id}`,
+      idempotencyKey: `event-completed:${event._id}`,
+      eventId: event._id,
+      eventName: event.title,
+    }).catch(() => {});
+
+    // 9. Notify vendors
+    const bookings = await Booking.find({ eventId: event._id }).select("vendorId");
+    for (const b of bookings) {
+      if (b.vendorId) {
+        emitNotification({
+          userId: b.vendorId,
+          type: "success",
+          title: `Celebration Completed: ${event.title} 🌟`,
+          message: `The celebration "${event.title}" on ${event.date} has been marked completed by EVORA Admin. Great job!`,
+          link: "/vendor/bookings",
+          idempotencyKey: `event-completed:${event._id}:vendor:${b.vendorId}`,
+          eventId: event._id,
+          eventName: event.title,
+        }).catch(() => {});
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Celebration "${event.title}" marked completed across all categories!`,
+      event,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Admin reviews budget against vendor & volunteer rates
+// @route   PUT /api/events/:id/review-budget
+// @access  Private (admin only)
+exports.reviewEventBudget = async (req, res, next) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ success: false, message: "Access denied. Admin role required." });
+    }
+
+    const { budgetReviewStatus = "Budget Approved", budgetReviewNotes = "", updatedServiceBudgets = [] } = req.body;
+
+    const event = await Event.findById(req.params.id);
+    if (!event) {
+      return res.status(404).json({ success: false, message: "Event not found." });
+    }
+
+    event.budgetReviewStatus = budgetReviewStatus;
+    event.budgetReviewNotes = String(budgetReviewNotes || "").trim();
+    event.budgetReviewedAt = new Date();
+
+    // Optionally update target budgets or tiers if negotiated
+    if (Array.isArray(updatedServiceBudgets) && updatedServiceBudgets.length > 0) {
+      updatedServiceBudgets.forEach((update) => {
+        const s = event.requestedServices.find((rs) => rs.category === update.category);
+        if (s) {
+          if (update.targetBudget !== undefined) s.targetBudget = Number(update.targetBudget) || s.targetBudget;
+          if (update.agreedPrice !== undefined) s.agreedPrice = Number(update.agreedPrice) || s.agreedPrice;
+          if (update.budgetTier) s.budgetTier = update.budgetTier;
+        }
+      });
+      // Recalculate total budget if updated
+      const sum = event.requestedServices.reduce((acc, curr) => acc + (curr.targetBudget || 0), 0);
+      if (sum > 0) event.totalBudget = sum;
+    }
+
+    await event.save();
+
+    // Notify organizer
+    emitNotification({
+      userId: event.organizerId,
+      type: budgetReviewStatus === "Budget Approved" ? "success" : "info",
+      title: `Budget Review Update: ${event.title}`,
+      message: budgetReviewStatus === "Budget Approved"
+        ? `EVORA Admin reviewed your celebration budget with vendors and volunteers. Your budget is approved and verified as realistic & budget-friendly!`
+        : `EVORA Admin provided budget review recommendations: ${budgetReviewNotes || "Please review vendor budget options."}`,
+      link: `/user/events/${event._id}`,
+      idempotencyKey: `budget-review:${event._id}:${Date.now()}`,
+      eventId: event._id,
+      eventName: event.title,
+    }).catch(() => {});
+
+    res.status(200).json({
+      success: true,
+      message: "Budget review updated successfully.",
+      event,
+    });
+  } catch (err) {
+    next(err);
+  }
+};

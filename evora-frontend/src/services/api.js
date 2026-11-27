@@ -116,6 +116,14 @@ export const eventsAPI = {
     const { data } = await apiClient.put(`/events/${id}/cancel`);
     return data;
   },
+  complete: async (id) => {
+    const { data } = await apiClient.put(`/events/${id}/complete`);
+    return data;
+  },
+  reviewBudget: async (id, payload) => {
+    const { data } = await apiClient.put(`/events/${id}/review-budget`, payload);
+    return data;
+  },
   remove: async (id) => {
     const { data } = await apiClient.delete(`/events/${id}`);
     return data;

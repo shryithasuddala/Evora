@@ -54,6 +54,10 @@ const ManageEvents = () => {
   const [activeDispatchingVendor, setActiveDispatchingVendor] = useState(null);
   const [activeUnavailableService, setActiveUnavailableService] = useState(null);
 
+  // Budget Review State
+  const [budgetReviewNotes, setBudgetReviewNotes] = useState("");
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+
   const toast = useToast();
 
   const loadEvents = async () => {
@@ -98,12 +102,68 @@ const ManageEvents = () => {
   // Open Vendor Availability & Acceptance Review Modal
   const openVendorReviewModal = async (event) => {
     setSelectedEvent(event);
+    setBudgetReviewNotes(event.budgetReviewNotes || "");
     setReviewModalOpen(true);
     setActiveConfirmingVendor(null);
     setActiveDispatchingVendor(null);
     setActiveUnavailableService(null);
     setNotifyingCategory(null);
     await loadCoordinationData(event._id || event.id);
+  };
+
+  // Complete entire event across all categories, bookings, vendors, volunteers
+  const handleCompleteEvent = async (evtId, eventTitle) => {
+    if (
+      !window.confirm(
+        `Mark event "${eventTitle}" as COMPLETED across all service categories, vendor bookings, and volunteer assignments?`
+      )
+    ) {
+      return;
+    }
+    setActionLoading(true);
+    try {
+      await eventsAPI.complete(evtId);
+      toast.success(
+        "Celebration Completed! ✓",
+        `Event "${eventTitle}" and every service category marked as Completed.`
+      );
+      if (selectedEvent && (selectedEvent._id === evtId || selectedEvent.id === evtId)) {
+        setReviewModalOpen(false);
+        setSelectedEvent(null);
+      }
+      await loadEvents();
+    } catch (err) {
+      toast.error("Completion Failed", err.message || "Failed to mark event completed.");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // Submit Budget Review (Approve or Request Revision)
+  const handleBudgetReview = async (status) => {
+    if (!selectedEvent) return;
+    const evtId = selectedEvent._id || selectedEvent.id;
+    setIsSubmittingReview(true);
+    try {
+      const res = await eventsAPI.reviewBudget(evtId, {
+        budgetReviewStatus: status,
+        budgetReviewNotes: budgetReviewNotes || (status === "Budget Approved" ? "Budget vetted & approved against vendor and volunteer allocations." : "Revision requested on service budget lines."),
+      });
+      toast.success(
+        status === "Budget Approved" ? "Budget Approved! ✓" : "Revision Requested ⚠️",
+        `Host notified of budget alignment decision.`
+      );
+      setSelectedEvent((prev) => ({
+        ...prev,
+        budgetReviewStatus: status,
+        budgetReviewNotes: res.budgetReviewNotes || budgetReviewNotes,
+      }));
+      await loadEvents();
+    } catch (err) {
+      toast.error("Review Failed", err.message || "Failed to record budget review.");
+    } finally {
+      setIsSubmittingReview(false);
+    }
   };
 
   // Send request to vendor (Step 1 in flow)
@@ -482,22 +542,46 @@ const ManageEvents = () => {
                             </button>
                           )}
 
-                          {isApproved && (
+                          {evt.status !== "Cancelled" && evt.status !== "Completed" && (
+                            <button
+                              type="button"
+                              onClick={() => handleCompleteEvent(evtId, evt.title)}
+                              style={{
+                                background: "#E8F5E9",
+                                color: "#1B5E20",
+                                border: "1px solid #A5D6A7",
+                                borderRadius: "6px",
+                                padding: "6px 12px",
+                                fontSize: "11px",
+                                fontWeight: 700,
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px",
+                                cursor: "pointer",
+                              }}
+                              title="Mark event and all service categories as Completed"
+                            >
+                              <CheckCircle2 size={13} color="#2E7D32" />
+                              Mark Completed
+                            </button>
+                          )}
+
+                          {evt.status === "Completed" && (
                             <span
                               style={{
                                 fontSize: "11px",
-                                color: "#1E8E46",
+                                color: "#2E7D32",
                                 fontWeight: 700,
-                                background: "#EAF8EF",
+                                background: "#E8F5E9",
+                                border: "1px solid #A5D6A7",
                                 padding: "4px 8px",
                                 borderRadius: "6px",
                                 display: "inline-flex",
                                 alignItems: "center",
-                                gap: "3px",
-                                marginRight: "4px",
+                                gap: "4px",
                               }}
                             >
-                              <CheckCircle2 size={12} /> Assured Live
+                              <CheckCircle2 size={12} color="#2E7D32" /> Completed ✓ All Services
                             </span>
                           )}
 
@@ -622,6 +706,176 @@ const ManageEvents = () => {
 
             {/* Modal Body: Vendor Availability Check by Service Category */}
             <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px" }}>
+              {/* BUDGET REVIEW & TIER ALIGNMENT AUDIT SECTION */}
+              <div
+                style={{
+                  background: "#FCFAF6",
+                  border: "1px solid #E7DED5",
+                  borderRadius: "14px",
+                  padding: "16px",
+                  marginBottom: "20px",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 10, marginBottom: 12 }}>
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 10, letterSpacing: "1px", fontWeight: 800, color: "#8C6435", textTransform: "uppercase" }}>
+                        BUDGET-FRIENDLY CONCEPT REVIEW
+                      </span>
+                      <span
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 700,
+                          padding: "2px 8px",
+                          borderRadius: 6,
+                          background:
+                            selectedEvent.budgetReviewStatus === "Budget Approved"
+                              ? "#E8F5E9"
+                              : selectedEvent.budgetReviewStatus === "Revision Needed"
+                              ? "#FFF3E0"
+                              : "#F5F5F5",
+                          color:
+                            selectedEvent.budgetReviewStatus === "Budget Approved"
+                              ? "#2E7D32"
+                              : selectedEvent.budgetReviewStatus === "Revision Needed"
+                              ? "#E65100"
+                              : "#616161",
+                          border: `1px solid ${
+                            selectedEvent.budgetReviewStatus === "Budget Approved"
+                              ? "#A5D6A7"
+                              : selectedEvent.budgetReviewStatus === "Revision Needed"
+                              ? "#FFCC80"
+                              : "#E0E0E0"
+                          }`,
+                        }}
+                      >
+                        {selectedEvent.budgetReviewStatus || "Pending Review"}
+                      </span>
+                    </div>
+                    <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: 16, margin: "4px 0 2px", color: "#2B1D12" }}>
+                      Host Budget Audit & Artisan/Volunteer Tier Alignment
+                    </h3>
+                    <p style={{ margin: 0, fontSize: 12, color: "#766C67" }}>
+                      Verify host target budget vs vendor quotes and on-ground volunteer costs across all price tiers (Low/Budget-Friendly, Standard, Premium).
+                    </p>
+                  </div>
+
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: 11, color: "#8C6435", fontWeight: 600 }}>HOST TOTAL BUDGET</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: "#2E7D32" }}>
+                      ₹{Number(selectedEvent.totalBudget || 0).toLocaleString("en-IN")}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Service-by-service Target vs Tier vs Vendor Breakdown */}
+                {selectedEvent.requestedServices && selectedEvent.requestedServices.length > 0 && (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 8, marginBottom: 14 }}>
+                    {selectedEvent.requestedServices.map((rs, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          background: "#FFFFFF",
+                          border: "1px solid #EBE4DC",
+                          borderRadius: 8,
+                          padding: "8px 10px",
+                          fontSize: 11,
+                        }}
+                      >
+                        <div style={{ fontWeight: 700, color: "#2B1D12" }}>{rs.serviceType}</div>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                          <span style={{ color: "#766C67" }}>Target:</span>
+                          <strong style={{ color: "#304B35" }}>₹{Number(rs.targetBudget || 0).toLocaleString("en-IN")}</strong>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 2 }}>
+                          <span style={{ color: "#766C67" }}>Tier:</span>
+                          <span
+                            style={{
+                              fontSize: 10,
+                              fontWeight: 700,
+                              color: rs.budgetTier === "Budget" ? "#1B5E20" : rs.budgetTier === "Premium" ? "#6A1B9A" : "#8C6435",
+                              background: rs.budgetTier === "Budget" ? "#E8F5E9" : rs.budgetTier === "Premium" ? "#F3E5F5" : "#FAF5EA",
+                              padding: "1px 6px",
+                              borderRadius: 4,
+                            }}
+                          >
+                            {rs.budgetTier || "Budget"} ({rs.budgetTier === "Budget" ? "Low-Cost ₹" : rs.budgetTier === "Premium" ? "Luxury ₹₹₹" : "Mid ₹₹"})
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Volunteer Allocations Status */}
+                <div style={{ fontSize: 11, color: "#6B5240", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+                  <strong>On-ground Volunteers:</strong>{" "}
+                  {selectedEvent.volunteers && selectedEvent.volunteers.length > 0
+                    ? `${selectedEvent.volunteers.length} volunteer(s) assigned for low-cost operational support`
+                    : "No dedicated volunteers assigned yet (Host self-coordinating or standard vendor team)"}
+                </div>
+
+                {/* Review Controls */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <input
+                    type="text"
+                    value={budgetReviewNotes}
+                    onChange={(e) => setBudgetReviewNotes(e.target.value)}
+                    placeholder="Admin review notes: e.g. Budget vetted and aligned with budget-friendly caterers and volunteer crew..."
+                    style={{
+                      width: "100%",
+                      padding: "8px 12px",
+                      borderRadius: 6,
+                      border: "1px solid #D8CFC4",
+                      fontSize: 12,
+                      background: "#FFF",
+                      boxSizing: "border-box",
+                    }}
+                  />
+
+                  <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+                    <button
+                      type="button"
+                      disabled={isSubmittingReview}
+                      onClick={() => handleBudgetReview("Revision Needed")}
+                      style={{
+                        padding: "6px 14px",
+                        background: "#FFF3E0",
+                        color: "#E65100",
+                        border: "1px solid #FFCC80",
+                        borderRadius: 6,
+                        fontSize: 11,
+                        fontWeight: 700,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Request Budget Revision
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isSubmittingReview}
+                      onClick={() => handleBudgetReview("Budget Approved")}
+                      style={{
+                        padding: "6px 16px",
+                        background: "linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%)",
+                        color: "#FFF",
+                        border: "none",
+                        borderRadius: 6,
+                        fontSize: 11,
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 4,
+                      }}
+                    >
+                      <CheckCircle2 size={13} />
+                      Approve Budget Alignment
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               <div style={{ marginBottom: 16 }}>
                 <h4 style={{ fontFamily: "Playfair Display, serif", fontSize: 16, margin: "0 0 4px", color: "#2B1D12" }}>
                   Celebration Service Coordination & Verification Matrix ({selectedEvent.date})
@@ -1120,7 +1374,31 @@ const ManageEvents = () => {
                     )}
                   </div>
 
-                  <div style={{ display: "flex", gap: 10 }}>
+                  <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                    {selectedEvent && selectedEvent.status !== "Completed" && (
+                      <button
+                        type="button"
+                        disabled={actionLoading}
+                        onClick={() => handleCompleteEvent(selectedEvent._id || selectedEvent.id, selectedEvent.title)}
+                        style={{
+                          padding: "8px 14px",
+                          background: "#E8F5E9",
+                          color: "#1B5E20",
+                          border: "1px solid #A5D6A7",
+                          borderRadius: 8,
+                          fontSize: 12,
+                          fontWeight: 700,
+                          cursor: "pointer",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 6,
+                        }}
+                      >
+                        <CheckCircle2 size={14} color="#1B5E20" />
+                        Mark Completed (All Categories)
+                      </button>
+                    )}
+
                     <button
                       type="button"
                       onClick={() => setReviewModalOpen(false)}

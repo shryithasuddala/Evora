@@ -939,26 +939,52 @@ const CreateEvent = () => {
   });
 
   const handleServiceReqChange = (featureId, field, value) => {
-    setServiceRequirements((prev) => ({
-      ...prev,
-      [featureId]: {
-        ...(prev[featureId] || {}),
-        [field]: value,
-      },
-    }));
+    setServiceRequirements((prev) => {
+      const updated = {
+        ...prev,
+        [featureId]: {
+          ...(prev[featureId] || {}),
+          [field]: value,
+        },
+      };
+
+      if (field === "targetBudget") {
+        // Auto-sum total budget dynamically from service-wise inputs
+        const autoSum = selectedFeatures.reduce((sum, fId) => {
+          const val = fId === featureId ? value : updated[fId]?.targetBudget;
+          return sum + (Number(val) || 0);
+        }, 0);
+        if (autoSum > 0) {
+          setForm((f) => ({ ...f, totalBudget: String(autoSum) }));
+        }
+      }
+
+      return updated;
+    });
   };
 
   const toggleFeature = (featureId) => {
     setSelectedFeatures((prev) => {
+      let nextFeatures;
       if (prev.includes(featureId)) {
         if (prev.length === 1) {
           toast.info("Feature Required", "Please select at least one celebration service.");
           return prev;
         }
-        return prev.filter((f) => f !== featureId);
+        nextFeatures = prev.filter((f) => f !== featureId);
       } else {
-        return [...prev, featureId];
+        nextFeatures = [...prev, featureId];
       }
+
+      // Auto-recalculate total budget based on active selected services
+      const autoSum = nextFeatures.reduce((sum, fId) => {
+        return sum + (Number(serviceRequirements[fId]?.targetBudget) || 0);
+      }, 0);
+      if (autoSum > 0) {
+        setForm((f) => ({ ...f, totalBudget: String(autoSum) }));
+      }
+
+      return nextFeatures;
     });
   };
 
@@ -1027,6 +1053,7 @@ const CreateEvent = () => {
         category: featId,
         specificRequirements: serviceRequirements[featId]?.requirements?.trim() || "",
         targetBudget: Number(serviceRequirements[featId]?.targetBudget) || 0,
+        budgetTier: serviceRequirements[featId]?.budgetTier || "Budget",
         status: "Requested",
       }));
 
@@ -1441,16 +1468,28 @@ const CreateEvent = () => {
                                 <span style={{ fontSize: 15 }}>{feat.icon}</span>
                                 <strong style={{ fontSize: 13, color: "#2B1D12" }}>{feat.name}</strong>
                               </div>
-                              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                                <label style={{ fontSize: 11, fontWeight: 600, color: "#766C67" }}>Target Budget (₹):</label>
-                                <input
-                                  type="number"
-                                  min="0"
-                                  placeholder="Budget"
-                                  value={serviceRequirements[featId]?.targetBudget || ""}
-                                  onChange={(e) => handleServiceReqChange(featId, "targetBudget", e.target.value)}
-                                  style={{ width: 120, padding: "5px 8px", fontSize: 12, borderRadius: 6, border: "1px solid #D5C2A5", background: "#FFF" }}
-                                />
+                              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                                <select
+                                  value={serviceRequirements[featId]?.budgetTier || "Budget"}
+                                  onChange={(e) => handleServiceReqChange(featId, "budgetTier", e.target.value)}
+                                  style={{ padding: "4px 8px", fontSize: 11, borderRadius: 6, border: "1px solid #D5C2A5", background: "#FFF", color: "#3B2D22", fontWeight: 600 }}
+                                  title="EVORA provides options from budget-friendly to luxury artisans"
+                                >
+                                  <option value="Budget">💰 Low / Budget-Friendly</option>
+                                  <option value="Standard">⚖️ Standard / Mid-Range</option>
+                                  <option value="Premium">✨ High / Premium Luxury</option>
+                                </select>
+                                <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                                  <label style={{ fontSize: 11, fontWeight: 600, color: "#766C67" }}>Budget (₹):</label>
+                                  <input
+                                    type="number"
+                                    min="0"
+                                    placeholder="Budget"
+                                    value={serviceRequirements[featId]?.targetBudget || ""}
+                                    onChange={(e) => handleServiceReqChange(featId, "targetBudget", e.target.value)}
+                                    style={{ width: 110, padding: "5px 8px", fontSize: 12, borderRadius: 6, border: "1px solid #D5C2A5", background: "#FFF" }}
+                                  />
+                                </div>
                               </div>
                             </div>
                             <input
@@ -1469,8 +1508,28 @@ const CreateEvent = () => {
               </div>
 
               <div>
-                <label style={labelStyle}><Wallet size={13} style={{ verticalAlign: "middle", marginRight: 4 }} />Total Budget (₹)</label>
-                <input type="number" name="totalBudget" value={form.totalBudget} onChange={handleChange} placeholder="0" min="0" style={inputStyle} />
+                {(() => {
+                  const serviceBudgetSum = selectedFeatures.reduce((acc, fId) => acc + (Number(serviceRequirements[fId]?.targetBudget) || 0), 0);
+                  return (
+                    <div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, flexWrap: "wrap", gap: 4 }}>
+                        <label style={{ ...labelStyle, marginBottom: 0 }}>
+                          <Wallet size={13} style={{ verticalAlign: "middle", marginRight: 4 }} />
+                          Total Budget (₹) <span style={{ fontSize: 11, color: "#8C6435", fontWeight: 400 }}>(In Your Control)</span>
+                        </label>
+                        {serviceBudgetSum > 0 && (
+                          <span style={{ fontSize: 11, fontWeight: 700, color: "#1E8E46", background: "#E8F9EE", padding: "2px 8px", borderRadius: 10 }}>
+                            ⚡ Auto-calculated sum: ₹{serviceBudgetSum.toLocaleString("en-IN")}
+                          </span>
+                        )}
+                      </div>
+                      <input type="number" name="totalBudget" value={form.totalBudget} onChange={handleChange} placeholder="0" min="0" style={inputStyle} />
+                      <span style={{ fontSize: 11, color: "#766C67", marginTop: 4, display: "block" }}>
+                        Total budget automatically sums up as you specify service budgets. You can also customize or add a buffer manually.
+                      </span>
+                    </div>
+                  );
+                })()}
               </div>
 
               <div>

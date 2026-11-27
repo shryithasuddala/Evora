@@ -20,6 +20,7 @@ const SERVICE_STATUSES = [
   "Awaiting Vendor Response",
   "Accepted by Vendor",
   "Confirmed",
+  "Completed",
   "Unavailable",
   "Alternative Search Requested",
   "Cancelled by User",

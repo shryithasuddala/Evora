@@ -32,18 +32,20 @@ const ManagePayments = () => {
     try {
       const res = await adminAPI.exportReportData("payments");
       const csvRows = [
-        ["Payment ID", "Transaction ID", "User", "Amount", "Mode", "Status", "Date"].join(","),
-        ...res.data.map((p) =>
-          [
-            p._id,
+        ["Payment ID", "Transaction ID", "User", "Amount Paid", "Remaining Balance", "Mode", "Status", "Date"].join(","),
+        ...res.data.map((p) => {
+          const payer = p.payerId || p.userId || {};
+          return [
+            p.paymentRef || p._id,
             p.gatewayTransactionId || "DEMO-TXN",
-            `"${p.userId?.fullName || "User"}"`,
-            p.amount,
+            `"${payer.fullName || "User"}"`,
+            p.amountPaid || p.amount || 0,
+            p.remainingBalance || 0,
             p.mode,
             p.status,
             new Date(p.createdAt).toLocaleDateString(),
-          ].join(",")
-        ),
+          ].join(",");
+        }),
       ];
 
       const blob = new Blob([csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
@@ -158,12 +160,14 @@ const ManagePayments = () => {
           </div>
         ) : (
           <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "750px", fontSize: "13px" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "850px", fontSize: "13px" }}>
               <thead>
                 <tr style={{ borderBottom: "2px solid #EADBBE", textAlign: "left", color: "#766C67" }}>
                   <th style={{ padding: "12px 10px" }}>Payment Ref</th>
-                  <th style={{ padding: "12px 10px" }}>Payer</th>
-                  <th style={{ padding: "12px 10px" }}>Amount</th>
+                  <th style={{ padding: "12px 10px" }}>Payer & Contact</th>
+                  <th style={{ padding: "12px 10px" }}>Celebration & Service</th>
+                  <th style={{ padding: "12px 10px" }}>Amount Paid</th>
+                  <th style={{ padding: "12px 10px" }}>Remaining Balance</th>
                   <th style={{ padding: "12px 10px" }}>Mode</th>
                   <th style={{ padding: "12px 10px" }}>Status</th>
                   <th style={{ padding: "12px 10px" }}>Gateway Txn</th>
@@ -171,36 +175,64 @@ const ManagePayments = () => {
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((p) => (
-                  <tr key={p._id} style={{ borderBottom: "1px solid #FAF5EA" }}>
-                    <td style={{ padding: "14px 10px", fontFamily: "monospace", fontSize: "12px", color: "#8C6435", fontWeight: 700 }}>
-                      {p._id.slice(-8).toUpperCase()}
-                    </td>
-                    <td style={{ padding: "14px 10px" }}>
-                      <div style={{ fontWeight: 600, color: "#2B1D12" }}>{p.userId?.fullName || "User"}</div>
-                      <div style={{ fontSize: "11px", color: "#8B7355" }}>{p.userId?.email}</div>
-                    </td>
-                    <td style={{ padding: "14px 10px", fontWeight: 700, color: "#2B1D12" }}>
-                      ₹{p.amount.toLocaleString("en-IN")}
-                    </td>
-                    <td style={{ padding: "14px 10px" }}>
-                      <span style={{ fontSize: "11px", background: "#FAF5EA", border: "1px solid #D5B36A", color: "#6B5240", padding: "2px 8px", borderRadius: "4px", fontWeight: 600 }}>
-                        {p.mode === "advance50" ? "50% Advance" : p.mode === "full" ? "100% Full" : "Express"}
-                      </span>
-                    </td>
-                    <td style={{ padding: "14px 10px" }}>
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", background: "#E8F5E9", color: "#2E7D32", padding: "3px 8px", borderRadius: "6px", fontSize: "11px", fontWeight: 700 }}>
-                        <CheckCircle2 size={12} /> {p.status}
-                      </span>
-                    </td>
-                    <td style={{ padding: "14px 10px", fontFamily: "monospace", fontSize: "11px", color: "#766C67" }}>
-                      {p.gatewayTransactionId}
-                    </td>
-                    <td style={{ padding: "14px 10px", color: "#766C67", fontSize: "12px" }}>
-                      {new Date(p.createdAt).toLocaleDateString()}
-                    </td>
-                  </tr>
-                ))}
+                {filtered.map((p) => {
+                  const payer = p.payerId || p.userId || {};
+                  const eventTitle = p.eventId?.title || "Direct Booking";
+                  const categoryName = p.category || (p.vendorId?.businessName ? p.vendorId.businessName : "Platform Escrow");
+                  const paid = p.amountPaid || p.amount || 0;
+                  const balance = p.remainingBalance || 0;
+
+                  return (
+                    <tr key={p._id} style={{ borderBottom: "1px solid #FAF5EA" }}>
+                      <td style={{ padding: "14px 10px", fontFamily: "monospace", fontSize: "12px", color: "#8C6435", fontWeight: 700 }}>
+                        {p.paymentRef || p._id.slice(-8).toUpperCase()}
+                      </td>
+                      <td style={{ padding: "14px 10px" }}>
+                        <div style={{ fontWeight: 600, color: "#2B1D12" }}>{payer.fullName || "Celebration Host"}</div>
+                        <div style={{ fontSize: "11px", color: "#8B7355" }}>{payer.email || payer.phone || "Verified"}</div>
+                      </td>
+                      <td style={{ padding: "14px 10px" }}>
+                        <strong style={{ color: "#2B1D12", display: "block" }}>{eventTitle}</strong>
+                        <span
+                          style={{
+                            fontSize: "10px",
+                            fontWeight: 700,
+                            background: "#FAF5EA",
+                            color: "#8C6435",
+                            padding: "2px 6px",
+                            borderRadius: "4px",
+                            display: "inline-block",
+                            marginTop: "2px",
+                          }}
+                        >
+                          {categoryName}
+                        </span>
+                      </td>
+                      <td style={{ padding: "14px 10px", fontWeight: 700, color: "#2E7D32" }}>
+                        ₹{Number(paid).toLocaleString("en-IN")}
+                      </td>
+                      <td style={{ padding: "14px 10px", fontWeight: 600, color: balance > 0 ? "#E65100" : "#2E7D32" }}>
+                        {balance > 0 ? `₹${Number(balance).toLocaleString("en-IN")}` : "Settled ✓"}
+                      </td>
+                      <td style={{ padding: "14px 10px" }}>
+                        <span style={{ fontSize: "11px", background: "#FAF5EA", border: "1px solid #D5B36A", color: "#6B5240", padding: "2px 8px", borderRadius: "4px", fontWeight: 600 }}>
+                          {p.mode === "advance50" ? "50% Advance" : p.mode === "full" ? "100% Full" : p.mode || "Online"}
+                        </span>
+                      </td>
+                      <td style={{ padding: "14px 10px" }}>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", background: "#E8F5E9", color: "#2E7D32", padding: "3px 8px", borderRadius: "6px", fontSize: "11px", fontWeight: 700 }}>
+                          <CheckCircle2 size={12} /> {p.status || "Completed"}
+                        </span>
+                      </td>
+                      <td style={{ padding: "14px 10px", fontFamily: "monospace", fontSize: "11px", color: "#766C67" }}>
+                        {p.gatewayTransactionId || "DEMO-TXN"}
+                      </td>
+                      <td style={{ padding: "14px 10px", color: "#766C67", fontSize: "12px" }}>
+                        {new Date(p.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

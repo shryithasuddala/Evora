@@ -6,6 +6,7 @@ const requestedServiceSchema = new mongoose.Schema(
     category:             { type: String, required: true },
     specificRequirements: { type: String, default: "" },
     targetBudget:         { type: Number, default: 0 },
+    budgetTier:           { type: String, enum: ["Budget", "Standard", "Premium"], default: "Budget" },
     status: {
       type: String,
       enum: SERVICE_STATUSES,
@@ -70,12 +71,22 @@ const eventSchema = new mongoose.Schema(
         category:    { type: String, required: true },
         vendorId:    { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         vendorName:  { type: String, default: "" },
-        status:      { type: String, enum: ["None", "Requested", "Accepted", "Declined", "Assigned", "Unavailable"], default: "None" },
+        status:      { type: String, enum: ["None", "Requested", "Accepted", "Declined", "Assigned", "Unavailable", "Completed"], default: "None" },
         bookingId:   { type: mongoose.Schema.Types.ObjectId, ref: "Booking" },
         assignedAt:  { type: Date, default: null },
         note:        { type: String, default: "" },
       },
     ],
+
+    // Budget Review & Alignment with Vendors & Volunteers
+    budgetReviewStatus: {
+      type: String,
+      enum: ["Pending Review", "Budget Approved", "Revision Needed"],
+      default: "Pending Review",
+    },
+    budgetReviewNotes: { type: String, default: "" },
+    budgetReviewedAt:  { type: Date, default: null },
+    completedAt:       { type: Date, default: null },
 
     // Partial approval / Feature update communication
     adminNoteToHost:       { type: String, default: "" },
